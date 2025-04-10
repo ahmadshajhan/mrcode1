@@ -1,0 +1,5223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MrCode - Master Web Development & Python</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* === Global Variables === */
+        :root {
+            --python-blue: #3776ab;
+            --python-yellow: #ffd43b;
+            --js-yellow: #f7df1e;
+            --html-orange: #e34f26;
+            --css-blue: #2965f1;
+            --react-blue: #61dafb;
+            --django-green: #092e20;
+            --dark: #1e1e1e;
+            --darker: #121212;
+            --light: #f8f9fa;
+            --lighter: #ffffff;
+            --gray: #6c757d;
+            --success: #4caf50;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --info: #2196f3;
+        }
+
+        /* === Base Styles === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button, input, textarea {
+            font-family: inherit;
+        }
+
+        code, pre {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* === Particles Background === */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        /* === Navigation === */
+        nav {
+            background: rgba(30, 30, 30, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--python-yellow);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo img {
+            height: 40px;
+            filter: drop-shadow(0 0 5px rgba(255, 212, 59, 0.5));
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--python-yellow);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--python-yellow);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: rgba(40, 40, 40, 0.95);
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-content a {
+            color: var(--light);
+            padding: 12px 16px;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-content a:hover {
+            background: rgba(55, 118, 171, 0.3);
+            color: var(--python-yellow);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* === Hero Section === */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 5rem;
+            position: relative;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 1;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--python-blue), var(--python-yellow));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        .tech-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .tech-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .tech-badge.python {
+            background: rgba(55, 118, 171, 0.2);
+            color: var(--python-blue);
+            border: 1px solid var(--python-blue);
+        }
+
+        .tech-badge.js {
+            background: rgba(247, 223, 30, 0.2);
+            color: var(--js-yellow);
+            border: 1px solid var(--js-yellow);
+        }
+
+        .tech-badge.html {
+            background: rgba(227, 79, 38, 0.2);
+            color: var(--html-orange);
+            border: 1px solid var(--html-orange);
+        }
+
+        .tech-badge.css {
+            background: rgba(41, 101, 241, 0.2);
+            color: var(--css-blue);
+            border: 1px solid var(--css-blue);
+        }
+
+        .tech-badge.react {
+            background: rgba(97, 218, 251, 0.2);
+            color: var(--react-blue);
+            border: 1px solid var(--react-blue);
+        }
+
+        .tech-badge.django {
+            background: rgba(9, 46, 32, 0.2);
+            color: #0c9;
+            border: 1px solid #0c9;
+        }
+
+        .tech-badge:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--python-blue);
+            color: white;
+            box-shadow: 0 4px 15px rgba(55, 118, 171, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(55, 118, 171, 0.6);
+            background: #2c5e8a;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--python-yellow);
+            border: 2px solid var(--python-yellow);
+        }
+
+        .btn-secondary:hover {
+            background: var(--python-yellow);
+            color: var(--dark);
+            transform: translateY(-3px);
+        }
+
+        .hero-image {
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45%;
+            max-width: 800px;
+            animation: float 6s ease-in-out infinite;
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.4));
+            z-index: 0;
+        }
+
+        /* === Features Section === */
+        .section {
+            padding: 6rem 5rem;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            font-size: 2.8rem;
+            color: var(--python-yellow);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--python-blue), var(--python-yellow));
+            border-radius: 3px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2.5rem;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(55, 118, 171, 0.1), transparent);
+            z-index: -1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--python-blue);
+        }
+
+        .feature-icon {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--python-blue);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+            color: var(--python-yellow);
+        }
+
+        .feature-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            color: var(--python-yellow);
+        }
+
+        .feature-card p {
+            opacity: 0.9;
+            line-height: 1.7;
+        }
+
+        /* === Language Tabs === */
+        .language-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .language-tab {
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .language-tab.active {
+            background: var(--python-blue);
+            color: white;
+            border-color: var(--python-blue);
+            box-shadow: 0 4px 15px rgba(55, 118, 171, 0.4);
+        }
+
+        .language-tab.python {
+            color: var(--python-blue);
+            border-color: var(--python-blue);
+        }
+
+        .language-tab.js {
+            color: var(--js-yellow);
+            border-color: var(--js-yellow);
+        }
+
+        .language-tab.html {
+            color: var(--html-orange);
+            border-color: var(--html-orange);
+        }
+
+        .language-tab.css {
+            color: var(--css-blue);
+            border-color: var(--css-blue);
+        }
+
+        .language-tab.react {
+            color: var(--react-blue);
+            border-color: var(--react-blue);
+        }
+
+        .language-tab.django {
+            color: #0c9;
+            border-color: #0c9;
+        }
+
+        .language-tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* === Compiler Section === */
+        .compiler-section {
+            background: rgba(20, 20, 20, 0.95);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .compiler-header {
+            background: var(--python-blue);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .compiler-header h3 {
+            color: white;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .compiler-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .compiler-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .compiler-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .compiler-body {
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+        }
+
+        .code-editor-container {
+            flex: 1;
+            display: flex;
+            position: relative;
+        }
+
+        .line-numbers {
+            background: #252526;
+            color: #858585;
+            font-family: 'Fira Code', monospace;
+            padding: 1rem 0.5rem;
+            text-align: right;
+            user-select: none;
+            overflow-y: hidden;
+        }
+
+        .code-editor {
+            flex: 1;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            padding: 1rem;
+            border: none;
+            resize: none;
+            outline: none;
+            tab-size: 4;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .output-container {
+            height: 200px;
+            background: #1e1e1e;
+            border-top: 1px solid #333;
+            padding: 1rem;
+            overflow-y: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        .output-title {
+            color: var(--python-yellow);
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .output-content {
+            color: #d4d4d4;
+            white-space: pre-wrap;
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* === Learning Path Section === */
+        .learning-path {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .path-item {
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2.5rem;
+            transition: all 0.4s ease;
+            border-left: 5px solid var(--python-blue);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .path-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .path-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(55, 118, 171, 0.1));
+            z-index: -1;
+        }
+
+        .path-item h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--python-yellow);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .path-item h3 i {
+            font-size: 1.5rem;
+        }
+
+        .path-item p {
+            opacity: 0.9;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .topics-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+
+        .topic-tag {
+            background: rgba(55, 118, 171, 0.2);
+            color: var(--python-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid rgba(55, 118, 171, 0.5);
+        }
+
+        .topic-tag:hover {
+            background: var(--python-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(55, 118, 171, 0.3);
+        }
+
+        /* === Modules Section === */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .module-card {
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(55, 118, 171, 0.1), transparent);
+            z-index: -1;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: var(--python-blue);
+        }
+
+        .module-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--python-blue);
+            transition: all 0.3s ease;
+        }
+
+        .module-card:hover .module-icon {
+            transform: scale(1.1);
+            color: var(--python-yellow);
+        }
+
+        .module-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--python-yellow);
+        }
+
+        .module-card p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .module-link {
+            margin-top: auto;
+            color: var(--python-blue);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .module-link:hover {
+            color: var(--python-yellow);
+            transform: translateX(5px);
+        }
+
+        /* === Installation Guides === */
+        .installation-guides {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .installation-card {
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .installation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(55, 118, 171, 0.1), transparent);
+            z-index: -1;
+        }
+
+        .installation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: var(--python-blue);
+        }
+
+        .installation-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+            color: var(--python-yellow);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .installation-card h3 i {
+            font-size: 1.8rem;
+        }
+
+        .steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .step {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            background: var(--python-blue);
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 0.2rem;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+            color: var(--light);
+        }
+
+        .step-content p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .step-content code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: inline-block;
+            color: var(--python-yellow);
+        }
+
+        /* === Error Challenge Section === */
+        .error-challenge {
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin-top: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 87, 34, 0.3);
+            transition: all 0.4s ease;
+        }
+
+        .error-challenge:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .error-challenge h3 {
+            color: var(--accent);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .error-challenge p {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .challenge-code {
+            background: #1e1e1e;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .challenge-code pre {
+            white-space: pre-wrap;
+            font-family: 'Fira Code', monospace;
+            color: #d4d4d4;
+            line-height: 1.5;
+            tab-size: 4;
+        }
+
+        .error-line {
+            background: rgba(244, 67, 54, 0.2);
+            position: relative;
+            padding-left: 10px;
+            margin-left: -10px;
+            border-left: 3px solid var(--danger);
+        }
+
+        .challenge-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .option-btn {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .option-btn:hover {
+            background: rgba(55, 118, 171, 0.2);
+            border-color: var(--python-blue);
+        }
+
+        .option-btn.correct {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .option-btn.incorrect {
+            background: rgba(244, 67, 54, 0.2);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .challenge-feedback {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+            line-height: 1.6;
+        }
+
+        .feedback-correct {
+            background: rgba(76, 175, 80, 0.2);
+            border-left: 4px solid var(--success);
+            color: var(--success);
+        }
+
+        .feedback-incorrect {
+            background: rgba(244, 67, 54, 0.2);
+            border-left: 4px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .feedback-icon {
+            margin-right: 0.8rem;
+            font-size: 1.2rem;
+        }
+
+        /* === UI/UX Design Section === */
+        .design-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .design-card {
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .design-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .design-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .design-content {
+            padding: 1.5rem;
+        }
+
+        .design-content h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--python-yellow);
+        }
+
+        .design-content p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .design-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .design-tag {
+            background: rgba(55, 118, 171, 0.2);
+            color: var(--python-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+        }
+
+        /* === Contact Section === */
+        .contact-section {
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 15px;
+            padding: 4rem;
+            margin-top: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .contact-section h2 {
+            color: var(--python-yellow);
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+        }
+
+        .contact-section p {
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 1.1rem;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+
+        .contact-card {
+            background: rgba(55, 118, 171, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            min-width: 250px;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(55, 118, 171, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            background: rgba(55, 118, 171, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .contact-icon {
+            font-size: 2.5rem;
+            color: var(--python-blue);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover .contact-icon {
+            color: var(--python-yellow);
+            transform: scale(1.1);
+        }
+
+        .contact-card h3 {
+            margin-bottom: 1rem;
+            color: var(--python-yellow);
+            font-size: 1.4rem;
+        }
+
+        .contact-card a {
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .contact-card a:hover {
+            color: var(--python-blue);
+        }
+
+        .contact-form {
+            max-width: 800px;
+            margin: 3rem auto 0;
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: var(--python-yellow);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input,
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--python-blue);
+            box-shadow: 0 0 0 2px rgba(55, 118, 171, 0.3);
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--python-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .submit-btn:hover {
+            background: #2c5e8a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(55, 118, 171, 0.4);
+        }
+
+        /* === Footer === */
+        footer {
+            background: rgba(20, 20, 20, 0.95);
+            padding: 5rem 3rem 3rem;
+            margin-top: 5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-col h3 {
+            color: var(--python-yellow);
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.8rem;
+        }
+
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--python-blue);
+            border-radius: 3px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--light);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--python-yellow);
+            transform: translateX(5px);
+        }
+
+        .footer-links a i {
+            font-size: 0.8rem;
+        }
+
+        .footer-about p {
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: var(--light);
+            font-size: 1.2rem;
+        }
+
+        .social-link:hover {
+            background: var(--python-blue);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem;
+            border-radius: 8px;
+            color: var(--light);
+        }
+
+        .newsletter-btn {
+            background: var(--python-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-btn:hover {
+            background: #2c5e8a;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* === Animations === */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(-50%) translateX(0);
+            }
+            50% {
+                transform: translateY(-50%) translateX(-10px);
+            }
+            100% {
+                transform: translateY(-50%) translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* === Responsive Design === */
+        @media (max-width: 1200px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            .hero-image {
+                width: 40%;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .section {
+                padding: 5rem 3rem;
+            }
+            
+            .hero {
+                padding: 0 3rem;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero-image {
+                opacity: 0.8;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 2rem;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background: rgba(30, 30, 30, 0.95);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .nav-links.active {
+                display: flex;
+                animation: fadeIn 0.5s ease;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .dropdown-content {
+                position: static;
+                box-shadow: none;
+                background: transparent;
+                border: none;
+            }
+            
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 5rem;
+            }
+            
+            .hero-content {
+                margin-bottom: 3rem;
+                align-items: center;
+            }
+            
+            .hero p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            .hero-image {
+                position: relative;
+                width: 80%;
+                transform: none;
+                margin-top: 2rem;
+                right: auto;
+            }
+            
+            .cta-buttons {
+                justify-content: center;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .section {
+                padding: 4rem 1.5rem;
+            }
+            
+            .hero {
+                padding: 0 1.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .btn {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .contact-card {
+                min-width: 100%;
+            }
+            
+            .compiler-body {
+                height: 400px;
+            }
+            
+            .output-container {
+                height: 150px;
+            }
+        }
+
+        /* === Custom Scrollbar === */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(30, 30, 30, 0.8);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--python-blue);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2c5e8a;
+        }
+
+        /* === Syntax Highlighting === */
+        .token.comment,
+        .token.prolog,
+        .token.doctype,
+        .token.cdata {
+            color: #6a9955;
+        }
+
+        .token.punctuation {
+            color: #d4d4d4;
+        }
+
+        .token.property,
+        .token.tag,
+        .token.boolean,
+        .token.number,
+        .token.constant,
+        .token.symbol,
+        .token.deleted {
+            color: #b5cea8;
+        }
+
+        .token.selector,
+        .token.attr-name,
+        .token.string,
+        .token.char,
+        .token.builtin,
+        .token.inserted {
+            color: #ce9178;
+        }
+
+        .token.operator,
+        .token.entity,
+        .token.url,
+        .language-css .token.string,
+        .style .token.string {
+            color: #d4d4d4;
+        }
+
+        .token.atrule,
+        .token.attr-value,
+        .token.keyword {
+            color: #569cd6;
+        }
+
+        .token.function,
+        .token.class-name {
+            color: #dcdcaa;
+        }
+
+        .token.regex,
+        .token.important,
+        .token.variable {
+            color: #d16969;
+        }
+
+        /* === Tooltip === */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: rgba(30, 30, 30, 0.9);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 0.5rem;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: rgba(30, 30, 30, 0.9) transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* === Progress Bar === */
+        .progress-container {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            margin: 1rem 0;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 50px;
+            background: linear-gradient(90deg, var(--python-blue), var(--python-yellow));
+            transition: width 0.5s ease;
+        }
+
+        /* === Tabs === */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+        }
+
+        .tab:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab.active {
+            border-bottom-color: var(--python-blue);
+            color: var(--python-yellow);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* === Accordion === */
+        .accordion {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .accordion-header {
+            background: rgba(30, 30, 30, 0.7);
+            padding: 1.2rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-header:hover {
+            background: rgba(55, 118, 171, 0.2);
+        }
+
+        .accordion-header h4 {
+            font-size: 1.1rem;
+            color: var(--light);
+        }
+
+        .accordion-header i {
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-header.active i {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            background: rgba(20, 20, 20, 0.7);
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .accordion-content.active {
+            padding: 1.5rem;
+            max-height: 1000px;
+        }
+
+        .accordion-content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        /* === Modal === */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateY(-50px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--python-yellow);
+            transform: rotate(90deg);
+        }
+
+        .modal-title {
+            color: var(--python-yellow);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        /* === Notification === */
+        .notification {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(30, 30, 30, 0.95);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 3000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            border-left: 4px solid var(--python-blue);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left-color: var(--success);
+        }
+
+        .notification.error {
+            border-left-color: var(--danger);
+        }
+
+        .notification.warning {
+            border-left-color: var(--warning);
+        }
+
+        .notification-icon {
+            font-size: 1.5rem;
+        }
+
+        .notification-close {
+            margin-left: 1rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .notification-close:hover {
+            opacity: 1;
+        }
+
+        /* === Loading Spinner === */
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--python-blue);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* === Badge === */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 50px;
+        }
+
+        .badge-primary {
+            background: var(--python-blue);
+            color: white;
+        }
+
+        .badge-secondary {
+            background: var(--python-yellow);
+            color: var(--dark);
+        }
+
+        .badge-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .badge-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .badge-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .badge-info {
+            background: var(--info);
+            color: white;
+        }
+
+        /* === Card === */
+        .card {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-header h3 {
+            color: var(--python-yellow);
+            font-size: 1.4rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-footer {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* === Alert === */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-left: 4px solid transparent;
+        }
+
+        .alert-primary {
+            background: rgba(55, 118, 171, 0.2);
+            border-left-color: var(--python-blue);
+            color: var(--python-blue);
+        }
+
+        .alert-success {
+            background: rgba(76, 175, 80, 0.2);
+            border-left-color: var(--success);
+            color: var(--success);
+        }
+
+        .alert-danger {
+            background: rgba(244, 67, 54, 0.2);
+            border-left-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .alert-warning {
+            background: rgba(255, 152, 0, 0.2);
+            border-left-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .alert-info {
+            background: rgba(33, 150, 243, 0.2);
+            border-left-color: var(--info);
+            color: var(--info);
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+        }
+
+        /* === Breadcrumb === */
+        .breadcrumb {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+            list-style: none;
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 8px;
+        }
+
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: "/";
+            padding: 0 0.5rem;
+            color: var(--gray);
+        }
+
+        .breadcrumb-item a {
+            color: var(--python-blue);
+            transition: all 0.3s ease;
+        }
+
+        .breadcrumb-item a:hover {
+            color: var(--python-yellow);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--python-yellow);
+        }
+
+        /* === Pagination === */
+        .pagination {
+            display: flex;
+            padding-left: 0;
+            list-style: none;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        .page-item {
+            margin: 0 0.25rem;
+        }
+
+        .page-link {
+            position: relative;
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--python-blue);
+            background: rgba(30, 30, 30, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .page-link:hover {
+            background: rgba(55, 118, 171, 0.2);
+            color: var(--python-yellow);
+        }
+
+        .page-item.active .page-link {
+            background: var(--python-blue);
+            color: white;
+            border-color: var(--python-blue);
+        }
+
+        .page-item.disabled .page-link {
+            color: var(--gray);
+            pointer-events: none;
+            cursor: not-allowed;
+            background: rgba(30, 30, 30, 0.5);
+        }
+
+        /* === Table === */
+        .table {
+            width: 100%;
+            margin-bottom: 1.5rem;
+            color: var(--light);
+            border-collapse: collapse;
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            vertical-align: top;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            color: var(--python-yellow);
+            font-weight: 600;
+        }
+
+        .table tbody + tbody {
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .table-hover tbody tr:hover {
+            background: rgba(55, 118, 171, 0.1);
+        }
+
+        /* === List Group === */
+        .list-group {
+            display: flex;
+            flex-direction: column;
+            padding-left: 0;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .list-group-item {
+            position: relative;
+            display: block;
+            padding: 1rem 1.5rem;
+            background: rgba(30, 30, 30, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            transition: all 0.3s ease;
+        }
+
+        .list-group-item:first-child {
+            border-top-left-radius: inherit;
+            border-top-right-radius: inherit;
+        }
+
+        .list-group-item:last-child {
+            border-bottom-left-radius: inherit;
+            border-bottom-right-radius: inherit;
+        }
+
+        .list-group-item:hover {
+            background: rgba(55, 118, 171, 0.2);
+            color: var(--python-yellow);
+        }
+
+        .list-group-item.active {
+            background: var(--python-blue);
+            color: white;
+            border-color: var(--python-blue);
+        }
+
+        .list-group-item.disabled {
+            color: var(--gray);
+            pointer-events: none;
+            background: rgba(30, 30, 30, 0.5);
+        }
+
+        /* === Timeline === */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0.5rem;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -2rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: var(--python-blue);
+            border: 3px solid var(--dark);
+        }
+
+        .timeline-content {
+            background: rgba(30, 30, 30, 0.7);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .timeline-date {
+            color: var(--python-yellow);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* === Carousel === */
+        .carousel {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .carousel-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            color: white;
+        }
+
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-control:hover {
+            opacity: 1;
+            background: var(--python-blue);
+        }
+
+        .carousel-control.prev {
+            left: 1rem;
+        }
+
+        .carousel-control.next {
+            right: 1rem;
+        }
+
+        .carousel-indicators {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+
+        .carousel-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-indicator.active {
+            background: var(--python-blue);
+            transform: scale(1.2);
+        }
+
+        /* === Code Block === */
+        .code-block {
+            background: #1e1e1e;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .code-header {
+            background: #252526;
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .code-title {
+            color: #d4d4d4;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .code-copy {
+            background: none;
+            border: none;
+            color: #d4d4d4;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .code-copy:hover {
+            color: var(--python-yellow);
+        }
+
+        .code-content {
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        .code-content pre {
+            margin: 0;
+            font-family: 'Fira Code', monospace;
+            line-height: 1.5;
+            tab-size: 4;
+        }
+
+        /* === Stats === */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: var(--python-blue);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--python-yellow);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--light);
+            opacity: 0.8;
+        }
+
+        /* === Testimonials === */
+        .testimonials {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .testimonial-card {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            font-size: 5rem;
+            color: rgba(255, 255, 255, 0.05);
+            font-family: serif;
+            line-height: 1;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: var(--python-blue);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .author-info h4 {
+            color: var(--python-yellow);
+            margin-bottom: 0.2rem;
+        }
+
+        .author-info p {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* === Pricing === */
+        .pricing-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .pricing-card {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .pricing-card.popular {
+            border: 2px solid var(--python-blue);
+            position: relative;
+            transform: scale(1.05);
+        }
+
+        .pricing-card.popular::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--python-blue);
+            color: white;
+            padding: 0.3rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-bottom-left-radius: 15px;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .pricing-header {
+            padding: 2rem;
+            text-align: center;
+            background: rgba(55, 118, 171, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .pricing-title {
+            font-size: 1.5rem;
+            color: var(--python-yellow);
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--light);
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-price span {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.7;
+        }
+
+        .pricing-period {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .pricing-body {
+            padding: 2rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pricing-features li i {
+            color: var(--python-blue);
+        }
+
+        .pricing-footer {
+            padding: 0 2rem 2rem;
+            text-align: center;
+        }
+
+        /* === Team === */
+        .team {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .team-member {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: var(--python-blue);
+        }
+
+        .member-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .member-info {
+            padding: 1.5rem;
+        }
+
+        .member-name {
+            font-size: 1.4rem;
+            color: var(--python-yellow);
+            margin-bottom: 0.5rem;
+        }
+
+        .member-position {
+            color: var(--python-blue);
+            font-weight: 500;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .member-bio {
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .member-social {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .member-social a {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: var(--light);
+        }
+
+        .member-social a:hover {
+            background: var(--python-blue);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* === FAQ === */
+        .faq-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .faq-item:hover {
+            border-color: var(--python-blue);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            color: var(--python-yellow);
+        }
+
+        .faq-question i {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            border-top: 1px solid transparent;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            max-height: 1000px;
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* === Blog === */
+        .blog-posts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .blog-card {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: var(--python-blue);
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+        }
+
+        .blog-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .blog-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .blog-title {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--python-yellow);
+        }
+
+        .blog-excerpt {
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .blog-link {
+            color: var(--python-blue);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .blog-link:hover {
+            color: var(--python-yellow);
+            transform: translateX(5px);
+        }
+
+        /* === Countdown === */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .countdown-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--python-yellow);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* === Gallery === */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(55, 118, 171, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-icon {
+            color: white;
+            font-size: 2rem;
+        }
+
+        /* === Video === */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 15px;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-container iframe,
+        .video-container object,
+        .video-container embed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* === Map === */
+        .map-container {
+            height: 400px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* === Login/Signup Form === */
+        .auth-form {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-form h2 {
+            text-align: center;
+            color: var(--python-yellow);
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .auth-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--python-yellow);
+            font-weight: 500;
+        }
+
+        .auth-form-group input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .auth-form-group input:focus {
+            outline: none;
+            border-color: var(--python-blue);
+            box-shadow: 0 0 0 2px rgba(55, 118, 171, 0.3);
+        }
+
+        .auth-form-footer {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .auth-form-footer p {
+            margin-bottom: 1rem;
+        }
+
+        .auth-form-footer a {
+            color: var(--python-blue);
+            transition: all 0.3s ease;
+        }
+
+        .auth-form-footer a:hover {
+            color: var(--python-yellow);
+        }
+
+        /* === Dashboard === */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: calc(100vh - 80px);
+            margin-top: 80px;
+        }
+
+        .sidebar {
+            background: rgba(20, 20, 20, 0.95);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem 0;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1.5rem;
+            color: var(--light);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(55, 118, 171, 0.2);
+            color: var(--python-yellow);
+        }
+
+        .sidebar-menu a.active {
+            background: var(--python-blue);
+            color: white;
+        }
+
+        .sidebar-menu a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            padding: 2rem;
+            background: rgba(30, 30, 30, 0.7);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-title {
+            color: var(--python-yellow);
+            font-size: 1.8rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 500;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* === Responsive Utilities === */
+        .text-center {
+            text-align: center;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .d-block {
+            display: block;
+        }
+
+        .d-inline-block {
+            display: inline-block;
+        }
+
+        .d-none {
+            display: none;
+        }
+
+        .justify-content-start {
+            justify-content: flex-start;
+        }
+
+        .justify-content-center {
+            justify-content: center;
+        }
+
+        .justify-content-end {
+            justify-content: flex-end;
+        }
+
+        .justify-content-between {
+            justify-content: space-between;
+        }
+
+        .justify-content-around {
+            justify-content: space-around;
+        }
+
+        .align-items-start {
+            align-items: flex-start;
+        }
+
+        .align-items-center {
+            align-items: center;
+        }
+
+        .align-items-end {
+            align-items: flex-end;
+        }
+
+        .flex-column {
+            flex-direction: column;
+        }
+
+        .flex-row {
+            flex-direction: row;
+        }
+
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+
+        .flex-nowrap {
+            flex-wrap: nowrap;
+        }
+
+        .w-100 {
+            width: 100%;
+        }
+
+        .h-100 {
+            height: 100%;
+        }
+
+        .mw-100 {
+            max-width: 100%;
+        }
+
+        .mh-100 {
+            max-height: 100%;
+        }
+
+        .m-0 {
+            margin: 0;
+        }
+
+        .m-1 {
+            margin: 0.5rem;
+        }
+
+        .m-2 {
+            margin: 1rem;
+        }
+
+        .m-3 {
+            margin: 1.5rem;
+        }
+
+        .m-4 {
+            margin: 2rem;
+        }
+
+        .m-5 {
+            margin: 3rem;
+        }
+
+        .mt-0 {
+            margin-top: 0;
+        }
+
+        .mt-1 {
+            margin-top: 0.5rem;
+        }
+
+        .mt-2 {
+            margin-top: 1rem;
+        }
+
+        .mt-3 {
+            margin-top: 1.5rem;
+        }
+
+        .mt-4 {
+            margin-top: 2rem;
+        }
+
+        .mt-5 {
+            margin-top: 3rem;
+        }
+
+        .mb-0 {
+            margin-bottom: 0;
+        }
+
+        .mb-1 {
+            margin-bottom: 0.5rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 1.5rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 2rem;
+        }
+
+        .mb-5 {
+            margin-bottom: 3rem;
+        }
+
+        .ml-0 {
+            margin-left: 0;
+        }
+
+        .ml-1 {
+            margin-left: 0.5rem;
+        }
+
+        .ml-2 {
+            margin-left: 1rem;
+        }
+
+        .ml-3 {
+            margin-left: 1.5rem;
+        }
+
+        .ml-4 {
+            margin-left: 2rem;
+        }
+
+        .ml-5 {
+            margin-left: 3rem;
+        }
+
+        .mr-0 {
+            margin-right: 0;
+        }
+
+        .mr-1 {
+            margin-right: 0.5rem;
+        }
+
+        .mr-2 {
+            margin-right: 1rem;
+        }
+
+        .mr-3 {
+            margin-right: 1.5rem;
+        }
+
+        .mr-4 {
+            margin-right: 2rem;
+        }
+
+        .mr-5 {
+            margin-right: 3rem;
+        }
+
+        .mx-0 {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .mx-1 {
+            margin-left: 0.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .mx-2 {
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
+
+        .mx-3 {
+            margin-left: 1.5rem;
+            margin-right: 1.5rem;
+        }
+
+        .mx-4 {
+            margin-left: 2rem;
+            margin-right: 2rem;
+        }
+
+        .mx-5 {
+            margin-left: 3rem;
+            margin-right: 3rem;
+        }
+
+        .my-0 {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .my-1 {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .my-2 {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .my-3 {
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .my-4 {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .my-5 {
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .p-0 {
+            padding: 0;
+        }
+
+        .p-1 {
+            padding: 0.5rem;
+        }
+
+        .p-2 {
+            padding: 1rem;
+        }
+
+        .p-3 {
+            padding: 1.5rem;
+        }
+
+        .p-4 {
+            padding: 2rem;
+        }
+
+        .p-5 {
+            padding: 3rem;
+        }
+
+        .pt-0 {
+            padding-top: 0;
+        }
+
+        .pt-1 {
+            padding-top: 0.5rem;
+        }
+
+        .pt-2 {
+            padding-top: 1rem;
+        }
+
+        .pt-3 {
+            padding-top: 1.5rem;
+        }
+
+        .pt-4 {
+            padding-top: 2rem;
+        }
+
+        .pt-5 {
+            padding-top: 3rem;
+        }
+
+        .pb-0 {
+            padding-bottom: 0;
+        }
+
+        .pb-1 {
+            padding-bottom: 0.5rem;
+        }
+
+        .pb-2 {
+            padding-bottom: 1rem;
+        }
+
+        .pb-3 {
+            padding-bottom: 1.5rem;
+        }
+
+        .pb-4 {
+            padding-bottom: 2rem;
+        }
+
+        .pb-5 {
+            padding-bottom: 3rem;
+        }
+
+        .pl-0 {
+            padding-left: 0;
+        }
+
+        .pl-1 {
+            padding-left: 0.5rem;
+        }
+
+        .pl-2 {
+            padding-left: 1rem;
+        }
+
+        .pl-3 {
+            padding-left: 1.5rem;
+        }
+
+        .pl-4 {
+            padding-left: 2rem;
+        }
+
+        .pl-5 {
+            padding-left: 3rem;
+        }
+
+        .pr-0 {
+            padding-right: 0;
+        }
+
+        .pr-1 {
+            padding-right: 0.5rem;
+        }
+
+        .pr-2 {
+            padding-right: 1rem;
+        }
+
+        .pr-3 {
+            padding-right: 1.5rem;
+        }
+
+        .pr-4 {
+            padding-right: 2rem;
+        }
+
+        .pr-5 {
+            padding-right: 3rem;
+        }
+
+        .px-0 {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .px-1 {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .px-2 {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .px-3 {
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+
+        .px-4 {
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .px-5 {
+            padding-left: 3rem;
+            padding-right: 3rem;
+        }
+
+        .py-0 {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .py-1 {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .py-2 {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        .py-3 {
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+        }
+
+        .py-4 {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+
+        .py-5 {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+
+        /* === Responsive Breakpoints === */
+        @media (min-width: 576px) {
+            .sm-text-center {
+                text-align: center;
+            }
+            .sm-text-left {
+                text-align: left;
+            }
+            .sm-text-right {
+                text-align: right;
+            }
+            .sm-d-flex {
+                display: flex;
+            }
+            .sm-d-block {
+                display: block;
+            }
+            .sm-d-inline-block {
+                display: inline-block;
+            }
+            .sm-d-none {
+                display: none;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .md-text-center {
+                text-align: center;
+            }
+            .md-text-left {
+                text-align: left;
+            }
+            .md-text-right {
+                text-align: right;
+            }
+            .md-d-flex {
+                display: flex;
+            }
+            .md-d-block {
+                display: block;
+            }
+            .md-d-inline-block {
+                display: inline-block;
+            }
+            .md-d-none {
+                display: none;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .lg-text-center {
+                text-align: center;
+            }
+            .lg-text-left {
+                text-align: left;
+            }
+            .lg-text-right {
+                text-align: right;
+            }
+            .lg-d-flex {
+                display: flex;
+            }
+            .lg-d-block {
+                display: block;
+            }
+            .lg-d-inline-block {
+                display: inline-block;
+            }
+            .lg-d-none {
+                display: none;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .xl-text-center {
+                text-align: center;
+            }
+            .xl-text-left {
+                text-align: left;
+            }
+            .xl-text-right {
+                text-align: right;
+            }
+            .xl-d-flex {
+                display: flex;
+            }
+            .xl-d-block {
+                display: block;
+            }
+            .xl-d-inline-block {
+                display: inline-block;
+            }
+            .xl-d-none {
+                display: none;
+            }
+        }
+
+        /* === Print Styles === */
+        @media print {
+            body {
+                background: white;
+                color: black;
+                font-size: 12pt;
+            }
+            
+            nav, footer, .no-print {
+                display: none;
+            }
+            
+            .print-break {
+                page-break-before: always;
+            }
+            
+            a::after {
+                content: " (" attr(href) ")";
+                font-size: 0.8em;
+                font-weight: normal;
+            }
+        }
+
+        /* === Dark/Light Mode Toggle === */
+        .theme-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--python-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background: #2c5e8a;
+        }
+
+        /* Light mode styles */
+        body.light-mode {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        body.light-mode::before {
+            opacity: 0.05;
+        }
+
+        body.light-mode nav {
+            background: rgba(248, 249, 250, 0.95);
+            color: #333;
+        }
+
+        body.light-mode .nav-links a {
+            color: #333;
+        }
+
+        body.light-mode .feature-card,
+        body.light-mode .path-item,
+        body.light-mode .module-card,
+        body.light-mode .error-challenge,
+        body.light-mode .contact-section,
+        body.light-mode .installation-card,
+        body.light-mode .design-card,
+        body.light-mode .compiler-section,
+        body.light-mode .code-block,
+        body.light-mode .code-editor,
+        body.light-mode .output-container,
+        body.light-mode .challenge-code,
+        body.light-mode .accordion-header,
+        body.light-mode .accordion-content,
+        body.light-mode .card,
+        body.light-mode .auth-form,
+        body.light-mode .pricing-card,
+        body.light-mode .team-member,
+        body.light-mode .blog-card,
+        body.light-mode .faq-item,
+        body.light-mode .testimonial-card,
+        body.light-mode .gallery-overlay,
+        body.light-mode .list-group-item,
+        body.light-mode .table,
+        body.light-mode .form-group input,
+        body.light-mode .form-group textarea,
+        body.light-mode .form-group select,
+        body.light-mode .modal-content {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        body.light-mode .code-editor,
+        body.light-mode .output-container,
+        body.light-mode .challenge-code {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        body.light-mode .line-numbers {
+            background: #e9ecef;
+            color: #6c757d;
+        }
+
+        body.light-mode .code-header {
+            background: #e9ecef;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        body.light-mode .code-title {
+            color: #495057;
+        }
+
+        body.light-mode .code-copy {
+            color: #495057;
+        }
+
+        body.light-mode .output-title {
+            color: var(--python-blue);
+        }
+
+        body.light-mode .theme-toggle {
+            background: #333;
+            color: white;
+        }
+
+        /* === Custom Scrollbar for Light Mode === */
+        body.light-mode::-webkit-scrollbar-track {
+            background: #f8f9fa;
+        }
+
+        body.light-mode::-webkit-scrollbar-thumb {
+            background: #6c757d;
+        }
+
+        body.light-mode::-webkit-scrollbar-thumb:hover {
+            background: #495057;
+        }
+
+        /* === Responsive Adjustments === */
+        @media (max-width: 992px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section {
+                padding: 4rem 2rem;
+            }
+            
+            .hero {
+                padding: 0 2rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .compiler-body {
+                height: 400px;
+            }
+            
+            .output-container {
+                height: 150px;
+            }
+            
+            .contact-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-plans {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.popular {
+                transform: none;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .section {
+                padding: 3rem 1.5rem;
+            }
+            
+            .hero {
+                padding: 0 1.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            
+            .compiler-body {
+                height: 350px;
+            }
+            
+            .output-container {
+                height: 120px;
+            }
+            
+            .contact-form {
+                padding: 1.5rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .testimonials {
+                grid-template-columns: 1fr;
+            }
+            
+            .blog-posts {
+                grid-template-columns: 1fr;
+            }
+            
+            .team {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* === High Contrast Mode === */
+        @media (prefers-contrast: high) {
+            body {
+                background: black;
+                color: white;
+            }
+            
+            a {
+                color: yellow;
+            }
+            
+            button, input, textarea, select {
+                border: 2px solid white;
+            }
+        }
+
+        /* === Reduced Motion === */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">
+            <img src="https://www.python.org/static/community_logos/python-logo.png" alt="Python Logo">
+            <span>MrCode</span>
+        </a>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <div class="dropdown">
+                <a href="#learn">Learn <i class="fas fa-chevron-down"></i></a>
+                <div class="dropdown-content">
+                    <a href="#python"><i class="fab fa-python"></i> Python</a>
+                    <a href="#javascript"><i class="fab fa-js"></i> JavaScript</a>
+                    <a href="#html"><i class="fab fa-html5"></i> HTML</a>
+                    <a href="#css"><i class="fab fa-css3"></i> CSS</a>
+                    <a href="#react"><i class="fab fa-react"></i> React</a>
+                    <a href="#django"><i class="fab fa-python"></i> Django</a>
+                </div>
+            </div>
+            <a href="#compiler">Compiler</a>
+            <a href="#modules">Modules</a>
+            <a href="#challenges">Challenges</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <button class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Master Coding with MrCode</h1>
+            <p>Your ultimate platform for learning Python, JavaScript, HTML, CSS, React, Django and more. From beginner to advanced, we've got everything you need to become a professional developer.</p>
+            
+            <div class="tech-badges">
+                <span class="tech-badge python"><i class="fab fa-python"></i> Python</span>
+                <span class="tech-badge js"><i class="fab fa-js"></i> JavaScript</span>
+                <span class="tech-badge html"><i class="fab fa-html5"></i> HTML</span>
+                <span class="tech-badge css"><i class="fab fa-css3"></i> CSS</span>
+                <span class="tech-badge react"><i class="fab fa-react"></i> React</span>
+                <span class="tech-badge django"><i class="fab fa-python"></i> Django</span>
+            </div>
+            <div class="cta-buttons">
+                <a href="#learn" class="btn btn-primary">
+                    <i class="fas fa-graduation-cap"></i> Start Learning
+                </a>
+                <a href="#compiler" class="btn btn-secondary">
+                    <i class="fas fa-code"></i> Try Compiler
+                </a>
+            </div>
+        </div>
+        <img src="https://www.pngitem.com/pimgs/m/159-1595974_python-programming-png-transparent-png.png" alt="Programming Languages" class="hero-image">
+    </section>
+    
+    <!-- Features Section -->
+    <section class="section" id="features">
+        <h2 class="section-title">Why Choose MrCode?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <h3>Interactive Coding</h3>
+                <p>Practice coding right in your browser with our built-in compilers for Python and JavaScript. No setup required!</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-road"></i>
+                </div>
+                <h3>Structured Learning Paths</h3>
+                <p>Follow our carefully designed curriculum that takes you from absolute beginner to professional developer.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bug"></i>
+                </div>
+                <h3>Debugging Challenges</h3>
+                <p>Test your debugging skills with our error-finding challenges that mimic real-world programming scenarios.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <h3>Real Projects</h3>
+                <p>Build portfolio-worthy projects that demonstrate your skills to potential employers.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h3>Certification</h3>
+                <p>Earn certificates upon completion to showcase your programming expertise.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3>Community Support</h3>
+                <p>Join our active community of learners and get help when you're stuck from both peers and experts.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Language Tabs Section -->
+    <section class="section" id="learn">
+        <h2 class="section-title">Choose Your Language</h2>
+        <div class="language-tabs">
+            <div class="language-tab python active">Python</div>
+            <div class="language-tab js">JavaScript</div>
+            <div class="language-tab html">HTML</div>
+            <div class="language-tab css">CSS</div>
+            <div class="language-tab react">React</div>
+            <div class="language-tab django">Django</div>
+        </div>
+    
+        <!-- Python Content -->
+        <div class="tab-content active" id="python-content">
+            <div class="learning-path">
+                <div class="path-item">
+                    <h3><i class="fab fa-python"></i> Python Basics</h3>
+                    <p>Start your journey with the fundamentals of Python programming. Learn about variables, data types, operators, and basic input/output.</p>
+                    <div class="topics-list">
+                        <span class="topic-tag">Variables</span>
+                        <span class="topic-tag">Data Types</span>
+                        <span class="topic-tag">Operators</span>
+                        <span class="topic-tag">Input/Output</span>
+                        <span class="topic-tag">Type Conversion</span>
+                    </div>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">
+                        <i class="fas fa-book-open"></i> Start Learning
+                    </a>
+                </div>
+                
+                <div class="path-item">
+                    <h3><i class="fab fa-python"></i> Control Flow</h3>
+                    <p>Master decision making and loops to create dynamic programs that can handle different scenarios.</p>
+                    <div class="topics-list">
+                        <span class="topic-tag">If Statements</span>
+                        <span class="topic-tag">Loops</span>
+                        <span class="topic-tag">Break/Continue</span>
+                        <span class="topic-tag">Ternary Operator</span>
+                        <span class="topic-tag">Match Case</span>
+                    </div>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">
+                        <i class="fas fa-book-open"></i> Start Learning
+                    </a>
+                </div>
+                
+                <div class="path-item">
+                    <h3><i class="fab fa-python"></i> Functions & Modules</h3>
+                    <p>Learn to organize your code into reusable functions and modules to create maintainable programs.</p>
+                    <div class="topics-list">
+                        <span class="topic-tag">Function Definition</span>
+                        <span class="topic-tag">Parameters</span>
+                        <span class="topic-tag">Return Values</span>
+                        <span class="topic-tag">Lambda</span>
+                        <span class="topic-tag">Importing</span>
+                    </div>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">
+                        <i class="fas fa-book-open"></i> Start Learning
+                    </a>
+                </div>
+                
+                <div class="path-item">
+                    <h3><i class="fab fa-python"></i> Data Structures</h3>
+                    <p>Explore Python's powerful built-in data structures to efficiently store and manipulate data.</p>
+                    <div class="topics-list">
+                        <span class="topic-tag">Lists</span>
+                        <span class="topic-tag">Tuples</span>
+                        <span class="topic-tag">Dictionaries</span>
+                        <span class="topic-tag">Sets</span>
+                        <span class="topic-tag">Comprehensions</span>
+                    </div>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">
+                        <i class="fas fa-book-open"></i> Start Learning
+                    </a>
+                </div>
+                
+                <div class="path-item">
+                    <h3><i class="fab fa-python"></i> Object-Oriented Programming</h3>
+                    <p>Dive into OOP concepts to create well-structured, reusable, and modular code.</p>
+                    <div class="topics-list">
+                        <span class="topic-tag">Classes</span>
+                        <span class="topic-tag">Objects</span>
+                        <span class="topic-tag">Inheritance</span>
+                        <span class="topic-tag">Polymorphism</span>
+                        <span class="topic-tag">Magic Methods</span>
+                    </div>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">
+                        <i class="fas fa-book-open"></i> Start Learning
+                    </a>
+                </div>
+                
+                <div class="path-item">
+                    <h3><i class="fab fa-python"></i> Advanced Python</h3>
+                    <p>Take your skills to the next level with advanced Python concepts and techniques.</p>
+                    <div class="topics-list">
+                        <span class="topic-tag">Decorators</span>
+                        <span class="topic-tag">Generators</span>
+                        <span class="topic-tag">Context Managers</span>
+                        <span class="topic-tag">Multithreading</span>
+                        <span class="topic-tag">Async/Await</span>
+                    </div>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">
+                        <i class="fas fa-book-open"></i> Start Learning
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        <!-- JavaScript Content -->
+        <div class="tab-content" id="js-content">
+            <div class="learning-path">
+                <div class="path-item">
+                    <h3><i class="fab fa-js"></i> JavaScript Basics</h3>
+                    <p>Learn the fundamentals of JavaScript, the language of the web.</p>
+                    <div class="topics-list">
+                        <span class="topic-tag">Variables</span>
+                        <span class="topic-tag">Data Types</span>
+                        <span class="topic-tag">Operators</span>
+                        <span class="topic-tag">Functions</span>
+                        <span class="topic-tag">Scope</span>
+                    </div>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">
+                        <i class="fas fa-book-open"></i> Start Learning
+                    </a>
+                </div>
+                
+                <div class="path-item">
+                    <h3><i class="fab fa-js"></i> DOM Manipulation</h3>
+                    <p>Learn how to interact with and modify web pages using JavaScript.</p>
+                    <div class="topics-list">
+                        <span class="topic-tag">Selectors</span>
+                        <span class="topic-tag">Events</span>
+                        <span class="topic-tag">Element Creation</span>
+                        <span class="topic-tag">Styles</span>
+                        <span class="topic-tag">Forms</span>
+                    </div>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">
+                        <i class="fas fa-book-open"></i> Start Learning
+                    </a>
+                </div>
+                
+                <div class="path-item">
+                    <h3><i class="fab fa-js"></i> ES6+ Features</h3>
+                    <p>Master modern JavaScript features that make your code cleaner and more powerful.</p>
+                    <div class="topics-list">
+                        <span class="topic-tag">Arrow Functions</span>
+                        <span class="topic-tag">Destructuring</span>
+                        <span class="topic-tag">Spread/Rest</span>
+                        <span class="topic-tag">Modules</span>
+                        <span class="topic-tag">Promises</span>
+                    </div>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">
+                        <i class="fas fa-book-open"></i> Start Learning
+                    </a>
+                </div>
+                
+                <div class="path-item">
+                    <h3><i class="fab fa-js"></i> Asynchronous JavaScript</h3>
+                    <p>Learn how to handle asynchronous operations in JavaScript.</p>
+                    <div class="topics-list">
+                        <span class="topic-tag">Callbacks</span>
+                        <span class="topic-tag">Promises</span>
+                        <span class="topic-tag">Async/Await</span>
+                        <span class="topic-tag">Fetch API</span>
+                        <span class="topic-tag">AJAX</span>
+                    </div>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">
+                        <i class="fas fa-book-open"></i> Start Learning
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        <!-- HTML Content -->
+        <div class="tab-content" id="html-content">
+            <div class="learning-path">
+                <div class="path-item">
+                    <h3><i class="fab fa-html5"></i> HTML Fundamentals</h3>
+                    <p>Learn the building blocks of web pages with HTML.</p>
+                    <div class="topics-list">
+                        <span class="topic-tag">Document Structure</span>
+                        <span class="topic-tag">Elements & Tags</span>
+                        <span class="topic-tag">Attributes</span>
+                        <span class="topic-tag">Forms</span>
+                        <span class="topic-tag">Semantic HTML</span>
+                    </div>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">
+                        <i class="fas fa-book-open"></i> Start Learning
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        <!-- CSS Content -->
+        <div class="tab-content" id="css-content">
+            <div class="learning-path">
+                <div class="path-item">
+                    <h3><i class="fab fa-css3"></i> CSS Fundamentals</h3>
+                    <p>Learn how to style and layout web pages with CSS.</p>
+                    <div class="topics-list">
+                        <span class="topic-tag">Selectors</span>
+                        <span class="topic-tag">Box Model</span>
+                        <span class="topic-tag">Flexbox</span>
+                        <span class="topic-tag">Grid</span>
+                        <span class="topic-tag">Responsive Design</span>
+                    </div>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">
+                        <i class="fas fa-book-open"></i> Start Learning
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        <!-- React Content -->
+        <div class="tab-content" id="react-content">
+            <div class="learning-path">
+                <div class="path-item">
+                    <h3><i class="fab fa-react"></i> React Fundamentals</h3>
+                    <p>Learn how to build modern user interfaces with React.</p>
+                    <div class="topics-list">
+                        <span class="topic-tag">Components</span>
+                        <span class="topic-tag">JSX</span>
+                        <span class="topic-tag">Props</span>
+                        <span class="topic-tag">State</span>
+                        <span class="topic-tag">Hooks</span>
+                    </div>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">
+                        <i class="fas fa-book-open"></i> Start Learning
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Django Content -->
+        <div class="tab-content" id="django-content">
+            <div class="learning-path">
+                <div class="path-item">
+                    <h3><i class="fab fa-python"></i> Django Fundamentals</h3>
+                    <p>Learn how to build powerful web applications with Django.</p>
+                    <div class="topics-list">
+                        <span class="topic-tag">Models</span>
+                        <span class="topic-tag">Views</span>
+                        <span class="topic-tag">Templates</span>
+                        <span class="topic-tag">Forms</span>
+                        <span class="topic-tag">Authentication</span>
+                    </div>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">
+                        <i class="fas fa-book-open"></i> Start Learning
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Code Compiler Section -->
+    <section class="section" id="compiler">
+        <h2 class="section-title">Online Code Compiler</h2>
+        
+        <div class="tabs">
+            <div class="tab active" data-target="python-compiler">Python Compiler</div>
+            <div class="tab" data-target="js-compiler">JavaScript Compiler</div>
+        </div>
+    
+        <!-- Python Compiler -->
+        <div class="tab-content active" id="python-compiler">
+            <div class="compiler-section">
+                <div class="compiler-header">
+                    <h3><i class="fab fa-python"></i> Python 3.11 Compiler</h3>
+                    <div class="compiler-controls">
+                        <button class="compiler-btn" id="run-python-btn">
+                            <i class="fas fa-play"></i> Run
+                        </button>
+                        <button class="compiler-btn" id="clear-python-btn">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                        <button class="compiler-btn" id="save-python-btn">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                    </div>
+                </div>
+                <div class="compiler-body">
+                    <div class="code-editor-container">
+                        <div class="line-numbers" id="python-line-numbers">12
+                            3
+                            4
+                            5
+                            6
+                            7
+                            8
+                            9
+                            10</div>
+                            <textarea class="code-editor" id="python-editor" spellcheck="false"># Welcome to MrCode Python Compiler</div>
+                                <div class="output-container">
+                                <div class="output-title"><i class="fas fa-terminal"></i> Output:</div>
+                                <div class="output-content" id="python-output"></div>
+                                </div>
+                                </div>
+                                </div>
+                                </div>
+                    <!-- JavaScript Compiler -->
+    <div class="tab-content" id="js-compiler">
+        <div class="compiler-section">
+            <div class="compiler-header">
+                <h3><i class="fab fa-js"></i> JavaScript (ES6) Compiler</h3>
+                <div class="compiler-controls">
+                    <button class="compiler-btn" id="run-js-btn">
+                        <i class="fas fa-play"></i> Run
+                    </button>
+                    <button class="compiler-btn" id="clear-js-btn">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                    <button class="compiler-btn" id="save-js-btn">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                </div>
+            </div>
+            <div class="compiler-body">
+                <div class="code-editor-container">
+                    <div class="line-numbers" id="js-line-numbers">12
+                        3
+                        4
+                        5
+                        6
+                        7
+                        8
+                        9
+                        10</div>
+                        <textarea class="code-editor" id="js-editor" spellcheck="false">// Welcome to MrCode JavaScript Compiler</div>
+                            <div class="output-container">
+                            <div class="output-title"><i class="fas fa-terminal"></i> Output:</div>
+                            <div class="output-content" id="js-output"></div>
+                            </div>
+                            </div>
+                            </div>
+                            </div>
+                            </section>
+    <!-- Python Modules Section -->
+<section class="section" id="modules">
+    <h2 class="section-title">Essential Python Modules</h2>
+    <div class="modules-grid">
+        <div class="module-card">
+            <div class="module-icon">
+                <i class="fas fa-table"></i>
+            </div>
+            <h3>NumPy</h3>
+            <p>Fundamental package for scientific computing with Python. Provides support for large, multi-dimensional arrays and matrices.</p>
+            <a href="#" class="module-link">
+                Learn More <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        <div class="module-card">
+            <div class="module-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h3>Pandas</h3>
+            <p>Powerful data manipulation and analysis library. Provides data structures and operations for manipulating numerical tables.</p>
+            <a href="#" class="module-link">
+                Learn More <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        <div class="module-card">
+            <div class="module-icon">
+                <i class="fas fa-project-diagram"></i>
+            </div>
+            <h3>Matplotlib</h3>
+            <p>Comprehensive library for creating static, animated, and interactive visualizations in Python.</p>
+            <a href="#" class="module-link">
+                Learn More <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        <div class="module-card">
+            <div class="module-icon">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h3>Scikit-learn</h3>
+            <p>Simple and efficient tools for predictive data analysis. Built on NumPy, SciPy, and matplotlib.</p>
+            <a href="#" class="module-link">
+                Learn More <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        <div class="module-card">
+            <div class="module-icon">
+                <i class="fas fa-globe"></i>
+            </div>
+            <h3>Django</h3>
+            <p>High-level Python Web framework that encourages rapid development and clean, pragmatic design.</p>
+            <a href="#" class="module-link">
+                Learn More <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        <div class="module-card">
+            <div class="module-icon">
+                <i class="fas fa-bolt"></i>
+            </div>
+            <h3>Flask</h3>
+            <p>Micro web framework written in Python. It is classified as a microframework because it doesn't require particular tools.</p>
+            <a href="#" class="module-link">
+                Learn More <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        <div class="module-card">
+            <div class="module-icon">
+                <i class="fas fa-database"></i>
+            </div>
+            <h3>SQLAlchemy</h3>
+            <p>Python SQL toolkit and Object Relational Mapper that gives application developers the full power and flexibility of SQL.</p>
+            <a href="#" class="module-link">
+                Learn More <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        <div class="module-card">
+            <div class="module-icon">
+                <i class="fas fa-spider"></i>
+            </div>
+            <h3>Scrapy</h3>
+            <p>Fast high-level web crawling and web scraping framework, used to crawl websites and extract structured data.</p>
+            <a href="#" class="module-link">
+                Learn More <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        <div class="module-card">
+            <div class="module-icon">
+                <i class="fas fa-tasks"></i>
+            </div>
+            <h3>Celery</h3>
+            <p>Distributed task queue that allows you to run tasks asynchronously across multiple workers.</p>
+            <a href="#" class="module-link">
+                Learn More <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Installation Guides Section -->
+<section class="section" id="installation">
+    <h2 class="section-title">Installation Guides</h2>
+    <div class="installation-guides">
+        <div class="installation-card">
+            <h3><i class="fab fa-python"></i> Python Installation</h3>
+            <div class="steps-list">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Download Python</h4>
+                        <p>Visit the official Python website and download the latest version for your operating system.</p>
+                        <code>https://www.python.org/downloads/</code>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Run the Installer</h4>
+                        <p>Run the downloaded installer and make sure to check "Add Python to PATH" before installing.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Verify Installation</h4>
+                        <p>Open a terminal or command prompt and type:</p>
+                        <code>python --version</code>
+                        <p>You should see the installed Python version.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="installation-card">
+            <h3><i class="fab fa-node-js"></i> Node.js Installation</h3>
+            <div class="steps-list">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Download Node.js</h4>
+                        <p>Visit the official Node.js website and download the LTS version for your operating system.</p>
+                        <code>https://nodejs.org/</code>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Run the Installer</h4>
+                        <p>Run the downloaded installer with default settings.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Verify Installation</h4>
+                        <p>Open a terminal or command prompt and type:</p>
+                        <code>node --version</code>
+                        <p>You should see the installed Node.js version.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="installation-card">
+            <h3><i class="fab fa-react"></i> React Installation</h3>
+            <div class="steps-list">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Install Node.js</h4>
+                        <p>Make sure you have Node.js installed (see above).</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Install Create React App</h4>
+                        <p>Run the following command in your terminal:</p>
+                        <code>npm install -g create-react-app</code>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Create a New React App</h4>
+                        <p>Run the following command to create a new React application:</p>
+                        <code>create-react-app my-app</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="installation-card">
+            <h3><i class="fab fa-python"></i> Django Installation</h3>
+            <div class="steps-list">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Install Python</h4>
+                        <p>Make sure you have Python installed (see above).</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Install Django</h4>
+                        <p>Run the following command in your terminal:</p>
+                        <code>pip install django</code>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Create a New Django Project</h4>
+                        <p>Run the following command to create a new Django project:</p>
+                        <code>django-admin startproject myproject</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Error Challenge Section -->
+<section class="section" id="challenges">
+    <h2 class="section-title">Error Finding Challenges</h2>
+    <div class="error-challenge">
+        <h3><i class="fas fa-bug"></i> Debug This Python Code</h3>
+        <p>Find and fix the error in the following Python code snippet. This challenge will test your understanding of Python syntax and common pitfalls.</p>
+        
+        <div class="challenge-code"><pre>
+            def calculate_average(numbers):
+total = 0
+count = 0
+for num in numbers:
+total += num
+count += 1
+average = total / count
+return average
+
+numbers = [10, 20, 30, 40, '50']
+result = calculate_average(numbers)
+print(f"The average is: {result}")
+        </pre>
+                <div class="error-line">numbers = [10, 20, 30, 40, '50']</div>
+</div>                                          
+<p>What is the error in this code?</p>
+        
+<div class="challenge-options">
+    <button class="option-btn" data-correct="false">Missing colon after function definition</button>
+    <button class="option-btn" data-correct="true">String value in numbers list causing TypeError</button>
+    <button class="option-btn" data-correct="false">Incorrect indentation in for loop</button>
+    <button class="option-btn" data-correct="false">Missing parentheses in print statement</button>
+</div>
+
+<div class="challenge-feedback feedback-correct" id="correct-feedback">
+    <i class="fas fa-check-circle feedback-icon"></i> Correct! The list contains a string '50' which can't be added to numbers, causing a TypeError. The fix would be to convert all elements to numbers first.
+</div>
+
+<div class="challenge-feedback feedback-incorrect" id="incorrect-feedback">
+    <i class="fas fa-times-circle feedback-icon"></i> Not quite right. Try again! Look closely at the data types in the numbers list.
+</div>
+</div>
+
+<div class="error-challenge" style="margin-top: 3rem;">
+<h3><i class="fas fa-bug"></i> Debug This JavaScript Code</h3>
+<p>Identify the logical error in this JavaScript function that's supposed to check if a number is even.</p>
+
+<div class="challenge-code">
+    <pre>function isEven(number) {
+        if (number % 2 = 0) {
+        return true;
+        } else {
+        return false;
+        }
+        }
+        
+        console.log(isEven(4)); // Should return true
+        console.log(isEven(5)); // Should return false
+        console.log(isEven(0)); // Should return true</pre>
+        <div class="error-line">if (number % 2 = 0) {</div>
+        </div>
+        <p>What's wrong with this implementation?</p>
+        
+        <div class="challenge-options">
+            <button class="option-btn" data-correct="false">Missing semicolons</button>
+            <button class="option-btn" data-correct="true">Using assignment (=) instead of equality (== or ===)</button>
+            <button class="option-btn" data-correct="false">Incorrect else statement</button>
+            <button class="option-btn" data-correct="false">Missing return statement</button>
+        </div>
+        
+        <div class="challenge-feedback feedback-correct" id="correct-feedback2">
+            <i class="fas fa-check-circle feedback-icon"></i> Exactly right! The condition is using an assignment operator (=) instead of a comparison operator (===). The fix would be to change it to <code>if (number % 2 === 0)</code>.
+        </div>
+        
+        <div class="challenge-feedback feedback-incorrect" id="incorrect-feedback2">
+            <i class="fas fa-times-circle feedback-icon"></i> Not the main issue. Think about the difference between assignment and comparison operators in JavaScript.
+        </div>
+    </div>
+</section>
+
+<!-- UI/UX Design Section -->
+<section class="section" id="design">
+    <h2 class="section-title">UI/UX Design Principles</h2>
+    <div class="design-showcase">
+        <div class="design-card">
+            <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Color Theory" class="design-image">
+            <div class="design-content">
+                <h3>Color Theory</h3>
+                <p>Learn how to choose and combine colors effectively to create visually appealing interfaces that communicate your brand and improve user experience.</p>
+                <div class="design-tags">
+                    <span class="design-tag">UI Design</span>
+                    <span class="design-tag">Visual Design</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="design-card">
+            <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Typography" class="design-image">
+            <div class="design-content">
+                <h3>Typography</h3>
+                <p>Master the art of typography to create readable, accessible, and aesthetically pleasing text in your interfaces.</p>
+                <div class="design-tags">
+                    <span class="design-tag">UI Design</span>
+                    <span class="design-tag">Visual Design</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="design-card">
+            <img src="https://images.unsplash.com/photo-1541462608143-67571c6738dd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Layout" class="design-image">
+            <div class="design-content">
+                <h3>Layout & Composition</h3>
+                <p>Learn how to arrange elements on a page to create clear, logical, and visually appealing interfaces.</p>
+                <div class="design-tags">
+                    <span class="design-tag">UI Design</span>
+                    <span class="design-tag">Visual Design</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="design-card">
+            <img src="https://images.unsplash.com/photo-1555421689-3f034debb7a6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="User Research" class   design-image">
+            <div class="design-content">
+            <h3>User Research</h3>
+            <p>Discover techniques for understanding user needs, behaviors, and motivations to inform your design decisions.</p>
+            <div class="design-tags">
+            <span class="design-tag">UX Design</span>
+            <span class="design-tag">Research</span>
+            </div>
+            </div>
+            </div>
+            <div class="design-card">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Wireframing" class="design-image">
+                <div class="design-content">
+                    <h3>Wireframing & Prototyping</h3>
+                    <p>Learn how to create low-fidelity and high-fidelity prototypes to test and refine your designs before development.</p>
+                    <div class="design-tags">
+                        <span class="design-tag">UX Design</span>
+                        <span class="design-tag">Prototyping</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="design-card">
+                <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Accessibility" class="design-image">
+                <div class="design-content">
+                    <h3>Accessibility</h3>
+                    <p>Design interfaces that are usable by people with a wide range of abilities, ensuring inclusivity for all users.</p>
+                    <div class="design-tags">
+                        <span class="design-tag">UX Design</span>
+                        <span class="design-tag">Inclusivity</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section class="section" id="contact">
+        <h2 class="section-title">Contact Us</h2>
+        <div class="contact-section">
+            <h2>Have Questions? Get In Touch!</h2>
+            <p>Whether you're having trouble with a concept, found a bug in our platform, or just want to say hello, we'd love to hear from you. Our team is dedicated to helping you succeed in your coding journey.</p>
+            
+            <div class="contact-info">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Email</h3>
+                    <a href="mailto:support@mrcode.com">support@mrcode.com</a>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h3>Phone</h3>
+                    <a href="tel:+1234567890">+1 (234) 567-890</a>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Address</h3>
+                    <a href="#">123 Code Street, Developer City</a>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Hours</h3>
+                    <a href="#">Mon-Fri: 9AM - 6PM</a>
+                </div>
+            </div>
+            
+            <form class="contact-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Your Email</label>
+                        <input type="email" id="email" placeholder="john@example.com" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" placeholder="How can we help you?">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" placeholder="Type your message here..." required></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Send Message
+                </button>
+            </form>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>MrCode</h3>
+                <p>Your ultimate platform for learning to code. From beginner to advanced, we've got everything you need to become a professional developer.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Learn</h3>
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-chevron-right"></i> Python</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> JavaScript</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> HTML</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> CSS</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> React</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> Django</a>
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Resources</h3>
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-chevron-right"></i> Documentation</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> Tutorials</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> Blog</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> Cheatsheets</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> Community</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> Roadmaps</a>
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Company</h3>
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-chevron-right"></i> About Us</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> Careers</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> Terms of Service</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> Contact Us</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> FAQ</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2023 MrCode. All rights reserved.
+        </div>
+    </footer>
+    
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="theme-toggle">
+        <i class="fas fa-moon"></i>
+    </button>
+    
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Initialize particles.js
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": {
+                        "value": 80,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": "#3776ab"
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        },
+                        "polygon": {
+                            "nb_sides": 5
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.5,
+                        "random": false,
+                        "anim": {
+                            "enable": false,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 3,
+                        "random": true,
+                        "anim": {
+                            "enable": false,
+                            "speed": 40,
+                            "size_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#3776ab",
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 2,
+                        "direction": "none",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false,
+                        "attract": {
+                            "enable": false,
+                            "rotateX": 600,
+                            "rotateY": 1200
+                        }
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 140,
+                            "line_linked": {
+                                "opacity": 1
+                            }
+                        },
+                        "bubble": {
+                            "distance": 400,
+                            "size": 40,
+                            "duration": 2,
+                            "opacity": 8,
+                            "speed": 3
+                        },
+                        "repulse": {
+                            "distance": 200,
+                            "duration": 0.4
+                        },
+                        "push": {
+                            "particles_nb": 4
+                        },
+                        "remove": {
+                            "particles_nb": 2
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+    
+            // Mobile menu toggle
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+            
+            mobileMenuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+    
+            // Update mobile menu on resize
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 768) {
+                    navLinks.classList.remove('active');
+                }
+            });
+    
+            // Code compiler functionality
+            // Python compiler
+            const runPythonBtn = document.getElementById('run-python-btn');
+            const clearPythonBtn = document.getElementById('clear-python-btn');
+            const savePythonBtn = document.getElementById('save-python-btn');
+            const pythonEditor = document.getElementById('python-editor');
+            const pythonOutput = document.getElementById('python-output');
+            const pythonLineNumbers = document.getElementById('python-line-numbers');
+            
+            // JavaScript compiler
+            const runJsBtn = document.getElementById('run-js-btn');
+            const clearJsBtn = document.getElementById('clear-js-btn');
+            const saveJsBtn = document.getElementById('save-js-btn');
+            const jsEditor = document.getElementById('js-editor');
+            const jsOutput = document.getElementById('js-output');
+            const jsLineNumbers = document.getElementById('js-line-numbers');
+            
+            // Update line numbers for editors
+            function updateLineNumbers(editor, lineNumbersElement) {
+                const lines = editor.value.split('\n');
+                let lineNumbers = '';
+                for (let i = 1; i <= lines.length; i++) {
+                    lineNumbers += i + '\n';
+                }
+                lineNumbersElement.innerHTML = lineNumbers;
+            }
+            
+            // Initialize line numbers
+            updateLineNumbers(pythonEditor, pythonLineNumbers);
+            updateLineNumbers(jsEditor, jsLineNumbers);
+            
+            // Update line numbers when editors change
+            pythonEditor.addEventListener('input', () => {
+                updateLineNumbers(pythonEditor, pythonLineNumbers);
+            });
+            
+            jsEditor.addEventListener('input', () => {
+                updateLineNumbers(jsEditor, jsLineNumbers);
+            });
+            
+            // Run Python code (simulated)
+            runPythonBtn.addEventListener('click', () => {
+                try {
+                    const code = pythonEditor.value;
+                    pythonOutput.textContent = "Running Python code...\n\n";
+                    
+                    // Simulate execution delay
+                    setTimeout(() => {
+                        if (code.includes("greet")) {
+                            pythonOutput.textContent += "Hello, Python Learner! Welcome to MrCode.\n";
+                        }
+                        if (code.includes("factorial")) {
+                            pythonOutput.textContent += "Factorial of 5 is: 120\n";
+                        }
+                        pythonOutput.textContent += "\nExecution completed successfully.";
+                    }, 800);
+                } catch (error) {
+                    pythonOutput.textContent = `Error: ${error.message}`;
+                }
+            });
+            
+            // Run JavaScript code (simulated)
+            runJsBtn.addEventListener('click', () => {
+                try {
+                    const code = jsEditor.value;
+                    jsOutput.textContent = "Running JavaScript code...\n\n";
+                    
+                    // Simulate execution delay
+                    setTimeout(() => {
+                        if (code.includes("greet")) {
+                            jsOutput.textContent += "Hello, JavaScript Learner! Welcome to MrCode.\n";
+                        }
+                        if (code.includes("factorial")) {
+                            jsOutput.textContent += "Factorial of 5 is: 120\n";
+                        }
+                        jsOutput.textContent += "\nExecution completed successfully.";
+                    }, 800);
+                } catch (error) {
+                    jsOutput.textContent = `Error: ${error.message}`;
+                }
+            });
+            
+            // Clear outputs
+            clearPythonBtn.addEventListener('click', () => {
+                pythonOutput.textContent = "";
+            });
+            
+            clearJsBtn.addEventListener('click', () => {
+                jsOutput.textContent = "";
+            });
+            
+            // Save code (simulated)
+            savePythonBtn.addEventListener('click', () => {
+                showNotification("Python code saved successfully!", "success");
+            });
+            
+            saveJsBtn.addEventListener('click', () => {
+                showNotification("JavaScript code saved successfully!", "success");
+            });
+            
+            // Error challenge functionality
+            const optionButtons = document.querySelectorAll('.option-btn');
+            
+            optionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const isCorrect = this.getAttribute('data-correct') === 'true';
+                    const challengeContainer = this.closest('.error-challenge');
+                    
+                    // Remove active class from all buttons in this challenge
+                    challengeContainer.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.classList.remove('correct', 'incorrect');
+                    });
+                    
+                    // Add appropriate class to clicked button
+                    this.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    
+                    // Show feedback
+                    if (isCorrect) {
+                        challengeContainer.querySelector('.feedback-correct').style.display = 'block';
+                        challengeContainer.querySelector('.feedback-incorrect').style.display = 'none';
+                    } else {
+                        challengeContainer.querySelector('.feedback-correct').style.display = 'none';
+                        challengeContainer.querySelector('.feedback-incorrect').style.display = 'block';
+                    }
+                });
+            });
+            
+            // Language tabs functionality
+            const languageTabs = document.querySelectorAll('.language-tab');
+            
+            languageTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    languageTabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Hide all tab contents
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show corresponding tab content
+                    const targetId = this.classList[1] + '-content';
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+            
+            // Compiler tabs functionality
+            const compilerTabs = document.querySelectorAll('.tab[data-target]');
+            
+            compilerTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    compilerTabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Hide all tab contents
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show corresponding tab content
+                    const targetId = this.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+            
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu if open
+                        if (window.innerWidth <= 768) {
+                            navLinks.classList.remove('active');
+                        }
+                    }
+                });
+            });
+            
+            // Show notification function
+            function showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} notification-icon"></i>
+                    <span>${message}</span>
+                    <span class="notification-close">&times;</span>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Show notification
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 100);
+                
+                // Close notification
+                notification.querySelector('.notification-close').addEventListener('click', () => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                });
+                
+                // Auto-remove after 5 seconds
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }, 5000);
+            }
+            
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('theme-toggle');
+            
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('light-mode');
+                
+                // Change icon
+                const icon = themeToggle.querySelector('i');
+                if (document.body.classList.contains('light-mode')) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+            });
+            
+            // Animate elements when they come into view
+            const animateOnScroll = () => {
+                const elements = document.querySelectorAll('.feature-card, .path-item, .module-card, .error-challenge, .design-card');
+                
+                elements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    
+                    if (elementPosition < windowHeight - 100) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            };
+            
+            // Set initial state for animation
+            document.querySelectorAll('.feature-card, .path-item, .module-card, .error-challenge, .design-card').forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(30px)';
+                element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+            
+            // Run once on load
+            animateOnScroll();
+            
+            // Run on scroll
+            window.addEventListener('scroll', animateOnScroll);
+        });
+    </script>
+</body>
+ </html>             
