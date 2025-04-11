@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Science with Python - From Basics to Advanced</title>
+    <style>
+        /* Base Styles */
+        :root {
+            --ds-blue: #1F77B4;
+            --ds-orange: #FF7F0E;
+            --ds-green: #2CA02C;
+            --ds-light: #f8f9fa;
+            --ds-dark: #0d1117;
+            --code-green: #7CFC00;
+            --code-purple: #9370DB;
+            --code-orange: #FFA500;
+            --code-red: #FF4500;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        
+        body {
+            background-color: var(--ds-dark);
+            color: var(--ds-light);
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* 3D Animation Background */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.2;
+        }
+        
+        /* Header Styles */
+        header {
+            background: rgba(13, 17, 23, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--ds-blue);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+        
+        .logo h1 {
+            color: var(--ds-orange);
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--ds-orange), var(--ds-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        
+        nav a {
+            color: var(--ds-light);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        
+        nav a:hover {
+            color: var(--ds-orange);
+            background: rgba(31, 119, 180, 0.2);
+        }
+        
+        /* Main Content Styles */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        section {
+            margin-bottom: 3rem;
+            background: rgba(13, 17, 23, 0.8);
+            padding: 2rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--ds-blue);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+        
+        section:hover {
+            transform: translateY(-5px);
+        }
+        
+        h2 {
+            color: var(--ds-orange);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--ds-orange), var(--ds-blue));
+            border-radius: 3px;
+        }
+        
+        h3 {
+            color: var(--ds-blue);
+            margin: 1.5rem 0 1rem;
+            font-size: 1.5rem;
+        }
+        
+        p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Code Block Styles */
+        .code-block {
+            background: #1e1e1e;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--ds-orange);
+            position: relative;
+        }
+        
+        .code-block::before {
+            content: 'Python';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--ds-blue);
+            color: white;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.8rem;
+            border-radius: 0 0 0 6px;
+        }
+        
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: 'Consolas', 'Courier New', monospace;
+            line-height: 1.5;
+        }
+        
+        .keyword {
+            color: var(--code-purple);
+            font-weight: bold;
+        }
+        
+        .function {
+            color: var(--code-green);
+        }
+        
+        .string {
+            color: var(--code-orange);
+        }
+        
+        .comment {
+            color: #6A9955;
+            font-style: italic;
+        }
+        
+        .number {
+            color: #B5CEA8;
+        }
+        
+        .operator {
+            color: #D4D4D4;
+        }
+        
+        /* Data Visualization Styles */
+        .visualization {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 2rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .visualization img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .visualization-caption {
+            text-align: center;
+            margin-top: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Interactive Elements */
+        .example-container {
+            margin: 2rem 0;
+        }
+        
+        .example-tabs {
+            display: flex;
+            border-bottom: 1px solid #444;
+            margin-bottom: 1rem;
+        }
+        
+        .example-tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            background: #333;
+            border: none;
+            color: #ccc;
+            font-weight: bold;
+            border-radius: 6px 6px 0 0;
+            margin-right: 0.5rem;
+        }
+        
+        .example-tab.active {
+            background: var(--ds-blue);
+            color: white;
+        }
+        
+        .example-content {
+            display: none;
+        }
+        
+        .example-content.active {
+            display: block;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background: rgba(13, 17, 23, 0.9);
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--ds-blue);
+            margin-top: 3rem;
+        }
+        
+        footer p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            color: var(--ds-light);
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--ds-orange);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+            
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+            
+            nav ul {
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+            
+            main {
+                padding: 1rem;
+            }
+            
+            section {
+                padding: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            h3 {
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            nav ul {
+                gap: 0.5rem;
+            }
+            
+            section {
+                padding: 1rem;
+            }
+            
+            .code-block {
+                padding: 1rem;
+            }
+        }
+        
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--ds-orange), var(--ds-blue));
+            z-index: 1000;
+            transition: width 0.1s;
+        }
+        
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--ds-blue);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 99;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background: var(--ds-orange);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Animation Background -->
+    <div id="canvas-container"></div>
+    
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+    
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python Logo">
+            <h1>Data Science with Python</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#intro">Introduction</a></li>
+                <li><a href="#numpy">NumPy</a></li>
+                <li><a href="#pandas">Pandas</a></li>
+                <li><a href="#visualization">Visualization</a></li>
+                <li><a href="#ml">Machine Learning</a></li>
+                <li><a href="#advanced">Advanced Topics</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <!-- Main Content -->
+    <main>
+        <!-- Introduction Section -->
+        <section id="intro">
+            <h2>Introduction to Data Science with Python</h2>
+            <p>Python has become the leading language for data science due to its simplicity, versatility, and powerful ecosystem of libraries. This comprehensive guide covers everything from basic data manipulation to advanced machine learning techniques.</p>
+            
+            <div class="visualization">
+                <img src="https://miro.medium.com/v2/resize:fit:1400/1*8OgTAvkWa3v3wR7wIYNlFw.png" alt="Data Science Process">
+                <div class="visualization-caption">The Data Science Process</div>
+            </div>
+            
+            <h3>Why Python for Data Science?</h3>
+            <ul>
+                <li>Simple, readable syntax that's easy to learn</li>
+                <li>Extensive ecosystem of specialized libraries (NumPy, Pandas, Matplotlib, Scikit-learn)</li>
+                <li>Excellent community support and documentation</li>
+                <li>Integration with other technologies and platforms</li>
+                <li>Used by major companies and research institutions worldwide</li>
+            </ul>
+            
+            <h3>Essential Python Libraries</h3>
+            <div class="code-block">
+                <pre><span class="comment"># Typical data science imports</span>
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np               <span class="comment"># Numerical computing</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd             <span class="comment"># Data manipulation</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt <span class="comment"># Data visualization</span>
+<span class="keyword">import</span> seaborn <span class="keyword">as</span> sns           <span class="comment"># Advanced visualization</span>
+<span class="keyword">from</span> sklearn <span class="keyword">import</span> *         <span class="comment"># Machine learning</span></pre>
+            </div>
+        </section>
+        
+        <!-- NumPy Section -->
+        <section id="numpy">
+            <h2>NumPy Fundamentals</h2>
+            <p>NumPy is the foundation of numerical computing in Python, providing support for large, multi-dimensional arrays and matrices.</p>
+            
+            <div class="visualization">
+                <img src="https://numpy.org/doc/stable/_images/numpy_array.png" alt="NumPy Array">
+                <div class="visualization-caption">NumPy Array Structure</div>
+            </div>
+            
+            <h3>Creating Arrays</h3>
+            <div class="code-block">
+                <pre><span class="comment"># Creating arrays</span>
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># From Python lists</span>
+arr1 = np.array([1, 2, 3, 4, 5])          <span class="comment"># 1D array</span>
+arr2 = np.array([[1, 2, 3], [4, 5, 6]])    <span class="comment"># 2D array</span>
+
+<span class="comment"># Special arrays</span>
+zeros = np.zeros((3, 4))                   <span class="comment"># 3x4 array of zeros</span>
+ones = np.ones((2, 2))                     <span class="comment"># 2x2 array of ones</span>
+identity = np.eye(3)                       <span class="comment"># 3x3 identity matrix</span>
+range_arr = np.arange(0, 10, 2)            <span class="comment"># Array from 0 to 10 (step 2)</span>
+linspace = np.linspace(0, 1, 5)            <span class="comment"># 5 evenly spaced numbers between 0 and 1</span>
+random = np.random.rand(3, 3)               <span class="comment"># 3x3 random array (uniform distribution)</span></pre>
+            </div>
+            
+            <h3>Array Operations</h3>
+            <div class="code-block">
+                <pre><span class="comment"># Basic operations</span>
+a = np.array([1, 2, 3])
+b = np.array([4, 5, 6])
+
+<span class="comment"># Element-wise operations</span>
+print(a + b)   <span class="comment"># [5 7 9]</span>
+print(a * b)   <span class="comment"># [4 10 18]</span>
+print(a ** 2)  <span class="comment"># [1 4 9]</span>
+
+<span class="comment"># Matrix multiplication</span>
+mat1 = np.array([[1, 2], [3, 4]])
+mat2 = np.array([[5, 6], [7, 8]])
+print(np.dot(mat1, mat2))  <span class="comment"># [[19 22] [43 50]]</span>
+
+<span class="comment"># Aggregation functions</span>
+print(np.sum(a))      <span class="comment"># 6</span>
+print(np.mean(a))     <span class="comment"># 2.0</span>
+print(np.max(a))      <span class="comment"># 3</span>
+print(np.std(a))      <span class="comment"># Standard deviation</span></pre>
+            </div>
+            
+            <h3>Indexing and Slicing</h3>
+            <div class="code-block">
+                <pre><span class="comment"># Indexing and slicing</span>
+arr = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+
+<span class="comment"># Access elements</span>
+print(arr[0, 1])     <span class="comment"># 2 (row 0, column 1)</span>
+print(arr[:, 1])     <span class="comment"># [2 5 8] (all rows, column 1)</span>
+print(arr[1:3, :2])  <span class="comment"># [[4 5] [7 8]] (rows 1-2, first 2 columns)</span>
+
+<span class="comment"># Boolean indexing</span>
+print(arr[arr > 5])  <span class="comment"># [6 7 8 9]</span></pre>
+            </div>
+        </section>
+        
+        <!-- Pandas Section -->
+        <section id="pandas">
+            <h2>Pandas for Data Analysis</h2>
+            <p>Pandas provides high-performance, easy-to-use data structures and data analysis tools.</p>
+            
+            <div class="visualization">
+                <img src="https://pandas.pydata.org/docs/_images/01_table_dataframe.svg" alt="Pandas DataFrame">
+                <div class="visualization-caption">Pandas DataFrame Structure</div>
+            </div>
+            
+            <h3>DataFrame Basics</h3>
+            <div class="code-block">
+                <pre><span class="comment"># Creating DataFrames</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># From dictionary</span>
+data = {
+    'Name': ['Alice', 'Bob', 'Charlie', 'David'],
+    'Age': [25, 30, 35, 40],
+    'City': ['New York', 'London', 'Paris', 'Tokyo']
+}
+df = pd.DataFrame(data)
+
+<span class="comment"># From CSV</span>
+<span class="comment"># df = pd.read_csv('data.csv')</span>
+
+<span class="comment"># Basic operations</span>
+print(df.head())       <span class="comment"># First 5 rows</span>
+print(df.info())       <span class="comment"># DataFrame info</span>
+print(df.describe())   <span class="comment"># Statistical summary</span></pre>
+            </div>
+            
+            <h3>Data Selection and Filtering</h3>
+            <div class="code-block">
+                <pre><span class="comment"># Selecting data</span>
+print(df['Name'])          <span class="comment"># Single column</span>
+print(df[['Name', 'Age']]) <span class="comment"># Multiple columns</span>
+print(df.iloc[1])          <span class="comment"># Row by position</span>
+print(df.loc[0:2])         <span class="comment"># Rows by label</span>
+
+<span class="comment"># Filtering</span>
+print(df[df['Age'] > 30])              <span class="comment"># Age > 30</span>
+print(df[(df['Age'] > 25) & (df['City'] == 'London')])  <span class="comment"># Multiple conditions</span></pre>
+            </div>
+            
+            <h3>Data Manipulation</h3>
+            <div class="code-block">
+                <pre><span class="comment"># Adding columns</span>
+df['Senior'] = df['Age'] > 35
+
+<span class="comment"># Applying functions</span>
+df['Name_Length'] = df['Name'].apply(len)
+
+<span class="comment"># Grouping and aggregation</span>
+print(df.groupby('City')['Age'].mean())  <span class="comment"># Average age by city</span>
+
+<span class="comment"># Handling missing data</span>
+df = df.dropna()       <span class="comment"># Drop rows with missing values</span>
+df = df.fillna(0)      <span class="comment"># Fill missing values with 0</span></pre>
+            </div>
+        </section>
+        
+        <!-- Visualization Section -->
+        <section id="visualization">
+            <h2>Data Visualization</h2>
+            <p>Python offers powerful libraries for creating informative and attractive visualizations.</p>
+            
+            <div class="visualization">
+                <img src="https://matplotlib.org/stable/_images/sphx_glr_anatomy_001.png" alt="Matplotlib Anatomy">
+                <div class="visualization-caption">Anatomy of a Matplotlib Figure</div>
+            </div>
+            
+            <h3>Matplotlib Basics</h3>
+            <div class="code-block">
+                <pre><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># Line plot</span>
+x = [1, 2, 3, 4, 5]
+y = [1, 4, 9, 16, 25]
+plt.plot(x, y)
+plt.title('Line Plot Example')
+plt.xlabel('X-axis')
+plt.ylabel('Y-axis')
+plt.show()</pre>
+            </div>
+            
+            <h3>Seaborn for Statistical Visualization</h3>
+            <div class="code-block">
+                <pre><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns
+
+<span class="comment"># Load sample dataset</span>
+tips = sns.load_dataset('tips')
+
+<span class="comment"># Create a boxplot</span>
+sns.boxplot(x='day', y='total_bill', data=tips)
+plt.title('Daily Total Bill Distribution')
+plt.show()
+
+<span class="comment"># Create a correlation heatmap</span>
+corr = tips.corr()
+sns.heatmap(corr, annot=True)
+plt.title('Correlation Heatmap')
+plt.show()</pre>
+            </div>
+            
+            <h3>Advanced Visualization Types</h3>
+            <div class="example-container">
+                <div class="example-tabs">
+                    <button class="example-tab active" onclick="openExample(event, 'histogram')">Histogram</button>
+                    <button class="example-tab" onclick="openExample(event, 'scatter')">Scatter Plot</button>
+                    <button class="example-tab" onclick="openExample(event, 'bar')">Bar Chart</button>
+                </div>
+                
+                <div id="histogram" class="example-content active">
+                    <div class="code-block">
+                        <pre><span class="comment"># Histogram</span>
+plt.hist(tips['total_bill'], bins=20, edgecolor='black')
+plt.title('Distribution of Total Bill')
+plt.xlabel('Total Bill ($)')
+plt.ylabel('Frequency')
+plt.show()</pre>
+                    </div>
+                </div>
+                
+                <div id="scatter" class="example-content">
+                    <div class="code-block">
+                        <pre><span class="comment"># Scatter plot with regression line</span>
+sns.regplot(x='total_bill', y='tip', data=tips)
+plt.title('Total Bill vs Tip')
+plt.xlabel('Total Bill ($)')
+plt.ylabel('Tip ($)')
+plt.show()</pre>
+                    </div>
+                </div>
+                
+                <div id="bar" class="example-content">
+                    <div class="code-block">
+                        <pre><span class="comment"># Bar plot</span>
+sns.barplot(x='day', y='total_bill', data=tips, ci=None)
+plt.title('Average Total Bill by Day')
+plt.xlabel('Day of Week')
+plt.ylabel('Average Total Bill ($)')
+plt.show()</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Machine Learning Section -->
+        <section id="ml">
+            <h2>Machine Learning with Scikit-learn</h2>
+            <p>Scikit-learn provides simple and efficient tools for predictive data analysis.</p>
+            
+            <div class="visualization">
+                <img src="https://scikit-learn.org/stable/_static/ml_map.png" alt="Scikit-learn Algorithm Cheat Sheet">
+                <div class="visualization-caption">Scikit-learn Algorithm Cheat Sheet</div>
+            </div>
+            
+            <h3>Supervised Learning Example</h3>
+            <div class="code-block">
+                <pre><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score
+
+<span class="comment"># Load dataset</span>
+iris = load_iris()
+X = iris.data
+y = iris.target
+
+<span class="comment"># Split data</span>
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+<span class="comment"># Create and train model</span>
+model = RandomForestClassifier(n_estimators=100)
+model.fit(X_train, y_train)
+
+<span class="comment"># Make predictions</span>
+predictions = model.predict(X_test)
+
+<span class="comment"># Evaluate model</span>
+print(f'Accuracy: {accuracy_score(y_test, predictions):.2f}')</pre>
+            </div>
+            
+            <h3>Unsupervised Learning Example</h3>
+            <div class="code-block">
+                <pre><span class="keyword">from</span> sklearn.cluster <span class="keyword">import</span> KMeans
+<span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> make_blobs
+
+<span class="comment"># Create synthetic data</span>
+X, _ = make_blobs(n_samples=300, centers=4, cluster_std=0.60, random_state=0)
+
+<span class="comment"># Apply K-means clustering</span>
+kmeans = KMeans(n_clusters=4)
+kmeans.fit(X)
+y_kmeans = kmeans.predict(X)
+
+<span class="comment"># Visualize clusters</span>
+plt.scatter(X[:, 0], X[:, 1], c=y_kmeans, s=50, cmap='viridis')
+centers = kmeans.cluster_centers_
+plt.scatter(centers[:, 0], centers[:, 1], c='red', s=200, alpha=0.75)
+plt.title('K-means Clustering')
+plt.show()</pre>
+            </div>
+            
+            <h3>Model Evaluation</h3>
+            <div class="code-block">
+                <pre><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> classification_report, confusion_matrix
+
+<span class="comment"># Classification report</span>
+print(classification_report(y_test, predictions))
+
+<span class="comment"># Confusion matrix</span>
+cm = confusion_matrix(y_test, predictions)
+sns.heatmap(cm, annot=True, fmt='d')
+plt.title('Confusion Matrix')
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.show()</pre>
+            </div>
+        </section>
+        
+        <!-- Advanced Topics Section -->
+        <section id="advanced">
+            <h2>Advanced Data Science Topics</h2>
+            <p>Explore more sophisticated techniques and tools in the Python data science ecosystem.</p>
+            
+            <h3>Feature Engineering</h3>
+            <div class="code-block">
+                <pre><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler, OneHotEncoder
+<span class="keyword">from</span> sklearn.compose <span class="keyword">import</span> ColumnTransformer
+<span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline
+
+<span class="comment"># Sample data</span>
+data = {
+    'age': [25, 30, 35, 40],
+    'income': [50000, 60000, 70000, 80000],
+    'gender': ['M', 'F', 'F', 'M'],
+    'purchased': [1, 0, 1, 0]
+}
+df = pd.DataFrame(data)
+
+<span class="comment"># Define preprocessing</span>
+numeric_features = ['age', 'income']
+numeric_transformer = Pipeline(steps=[
+    ('scaler', StandardScaler())
+])
+
+categorical_features = ['gender']
+categorical_transformer = Pipeline(steps=[
+    ('onehot', OneHotEncoder())
+])
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', numeric_transformer, numeric_features),
+        ('cat', categorical_transformer, categorical_features)
+    ])
+
+<span class="comment"># Apply preprocessing</span>
+X = df.drop('purchased', axis=1)
+y = df['purchased']
+X_transformed = preprocessor.fit_transform(X)</pre>
+            </div>
+            
+            <h3>Time Series Analysis</h3>
+            <div class="code-block">
+                <pre><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># Create time series data</span>
+dates = pd.date_range('2023-01-01', periods=100)
+ts = pd.Series(np.random.randn(100), index=dates)
+
+<span class="comment"># Rolling mean</span>
+rolling_mean = ts.rolling(window=7).mean()
+
+<span class="comment"># Plot</span>
+plt.plot(ts, label='Original')
+plt.plot(rolling_mean, label='7-day Rolling Mean')
+plt.legend()
+plt.title('Time Series with Rolling Mean')
+plt.show()</pre>
+            </div>
+            
+            <h3>Natural Language Processing</h3>
+            <div class="code-block">
+                <pre><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfVectorizer
+<span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> MultinomialNB
+
+<span class="comment"># Sample text data</span>
+texts = ['This is great', 'I hate this', 'Awesome product', 'Terrible experience']
+labels = [1, 0, 1, 0]  <span class="comment"># 1=positive, 0=negative</span>
+
+<span class="comment"># Convert text to features</span>
+vectorizer = TfidfVectorizer()
+X = vectorizer.fit_transform(texts)
+
+<span class="comment"># Train classifier</span>
+clf = MultinomialNB()
+clf.fit(X, labels)
+
+<span class="comment"># Predict new text</span>
+new_text = ['I love this']
+X_new = vectorizer.transform(new_text)
+print(clf.predict(X_new))  <span class="comment"># [1] (positive)</span></pre>
+            </div>
+        </section>
+        
+        <!-- Conclusion Section -->
+        <section id="conclusion">
+            <h2>Continuing Your Data Science Journey</h2>
+            <p>You've now explored the fundamentals of data science with Python. Here are resources to continue learning:</p>
+            
+            <h3>Recommended Resources</h3>
+            <ul>
+                <li><strong>Books:</strong> "Python for Data Analysis" by Wes McKinney, "Hands-On Machine Learning" by Aurélien Géron</li>
+                <li><strong>Courses:</strong> Coursera's "Applied Data Science with Python", Udemy's "Python for Data Science and Machine Learning Bootcamp"</li>
+                <li><strong>Communities:</strong> Kaggle, Towards Data Science, Stack Overflow</li>
+                <li><strong>Practice:</strong> Work on real-world projects, participate in Kaggle competitions</li>
+            </ul>
+            
+            <h3>Essential Libraries to Explore</h3>
+            <div class="code-block">
+                <pre><span class="comment"># Advanced data science libraries</span>
+<span class="keyword">import</span> statsmodels          <span class="comment"># Statistical modeling</span>
+<span class="keyword">import</span> xgboost             <span class="comment"># Gradient boosting</span>
+<span class="keyword">import</span> lightgbm            <span class="comment"># Light gradient boosting</span>
+<span class="keyword">import</span> tensorflow          <span class="comment"># Deep learning</span>
+<span class="keyword">import</span> pytorch             <span class="comment"># Deep learning</span>
+<span class="keyword">import</span> nltk                <span class="comment"># Natural language processing</span>
+<span class="keyword">import</span> spacy               <span class="comment"># NLP</span>
+<span class="keyword">import</span> dask                <span class="comment"># Parallel computing</span>
+<span class="keyword">import</span> streamlit           <span class="comment"># Data apps</span></pre>
+            </div>
+            
+            <div class="code-block">
+                <pre><span class="keyword">print</span>(<span class="string">"Happy data science coding with Python!"</span>)</pre>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <p>Data Science with Python - Comprehensive Guide</p>
+        <p>© 2023 All Rights Reserved</p>
+        <div class="social-links">
+            <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+    </footer>
+    
+    <!-- Back to Top Button -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
+    <!-- Three.js for 3D background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script>
+        // Tab functionality
+        function openExample(evt, exampleName) {
+            const tabContents = document.getElementsByClassName("example-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            const tabButtons = document.getElementsByClassName("example-tab");
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+            
+            document.getElementById(exampleName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        // Scroll indicator
+        window.onscroll = function() {
+            updateScrollIndicator();
+            toggleBackToTop();
+        };
+        
+        function updateScrollIndicator() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("scrollIndicator").style.width = scrolled + "%";
+        }
+        
+        // Back to top button
+        function toggleBackToTop() {
+            const backToTop = document.getElementById("backToTop");
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                backToTop.classList.add("visible");
+            } else {
+                backToTop.classList.remove("visible");
+            }
+        }
+        
+        document.getElementById("backToTop").addEventListener("click", function() {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+        
+        // 3D Background Animation with Three.js
+        const canvasContainer = document.getElementById('canvas-container');
+        
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        canvasContainer.appendChild(renderer.domElement);
+        
+        // Create particles with data science colors
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particleCount = 2000;
+        
+        const posArray = new Float32Array(particleCount * 3);
+        const colorArray = new Float32Array(particleCount * 3);
+        
+        const colors = [
+            [0.121, 0.466, 0.705],  // Blue
+            [1.0, 0.498, 0.054],     // Orange
+            [0.172, 0.627, 0.172],   // Green
+            [0.839, 0.152, 0.156]    // Red
+        ];
+        
+        for(let i = 0; i < particleCount * 3; i += 3) {
+            // Position
+            posArray[i] = (Math.random() - 0.5) * 10;
+            posArray[i+1] = (Math.random() - 0.5) * 10;
+            posArray[i+2] = (Math.random() - 0.5) * 10;
+            
+            // Color
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            colorArray[i] = color[0];
+            colorArray[i+1] = color[1];
+            colorArray[i+2] = color[2];
+        }
+        
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+        
+        // Particle material
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.05,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        
+        // Create particle system
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+        
+        // Camera position
+        camera.position.z = 5;
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            particlesMesh.rotation.x += 0.0002;
+            particlesMesh.rotation.y += 0.0003;
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Start animation
+        animate();
+        
+        // Syntax highlighting helper
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeBlocks = document.querySelectorAll('.code-block pre');
+            
+            codeBlocks.forEach(block => {
+                const code = block.innerHTML;
+                // Simple keyword highlighting (in a real app, use a proper library)
+                const highlighted = code
+                    .replace(/\b(def|class|return|if|elif|else|for|while|try|except|finally|with|import|from|as|and|or|not|in|is|None|True|False|yield|async|await|match|case)\b/g, '<span class="keyword">$1</span>')
+                    .replace(/\b([A-Za-z_][A-Za-z0-9_]*)\s*\(/g, '<span class="function">$1</span>(')
+                    .replace(/"([^"]*)"|\'([^\']*)\'/g, '<span class="string">$&</span>')
+                    .replace(/#([^\n]*)/g, '<span class="comment">$&</span>')
+                    .replace(/\b([0-9]+(\.[0-9]+)?)\b/g, '<span class="number">$1</span>')
+                    .replace(/(\+|\-|\*|\/|\%|\=|\=\=|\!\=|\>|\<|\>\=|\<\=|\&|\||\^|\~)/g, '<span class="operator">$1</span>');
+                
+                block.innerHTML = highlighted;
+            });
+        });
+    </script>
+</body>
+</html>

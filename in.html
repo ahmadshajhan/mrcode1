@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Installation Guide - Windows, macOS, Linux</title>
+    <style>
+        /* Base Styles */
+        :root {
+            --py-blue: #3776AB;
+            --py-yellow: #FFD43B;
+            --py-green: #4B8BBE;
+            --py-light: #f8f9fa;
+            --py-dark: #0d1117;
+            --win-blue: #0078D7;
+            --mac-gray: #333333;
+            --linux-orange: #E95420;
+            --code-green: #7CFC00;
+            --code-purple: #9370DB;
+            --code-orange: #FFA500;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        
+        body {
+            background-color: var(--py-dark);
+            color: var(--py-light);
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* 3D Animation Background */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.2;
+        }
+        
+        /* Header Styles */
+        header {
+            background: rgba(13, 17, 23, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--py-blue);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+        
+        .logo h1 {
+            color: var(--py-yellow);
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--py-yellow), var(--py-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        
+        nav a {
+            color: var(--py-light);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        
+        nav a:hover {
+            color: var(--py-yellow);
+            background: rgba(55, 118, 171, 0.2);
+        }
+        
+        /* Main Content Styles */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        section {
+            margin-bottom: 3rem;
+            background: rgba(13, 17, 23, 0.8);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+        
+        section:hover {
+            transform: translateY(-5px);
+        }
+        
+        h2 {
+            color: var(--py-yellow);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--py-yellow), var(--py-blue));
+            border-radius: 3px;
+        }
+        
+        h3 {
+            color: var(--py-blue);
+            margin: 1.5rem 0 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .os-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .os-header img {
+            height: 40px;
+        }
+        
+        .windows { border-left: 4px solid var(--win-blue); }
+        .macos { border-left: 4px solid var(--mac-gray); }
+        .linux { border-left: 4px solid var(--linux-orange); }
+        
+        p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Installation Step Styles */
+        .step {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--py-green);
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: var(--py-blue);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 1rem;
+            font-weight: bold;
+        }
+        
+        .step-title {
+            font-size: 1.2rem;
+            color: var(--py-yellow);
+            display: inline-block;
+        }
+        
+        /* Code Block Styles */
+        .code-block {
+            background: #1e1e1e;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--py-yellow);
+        }
+        
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: 'Consolas', 'Courier New', monospace;
+            line-height: 1.5;
+        }
+        
+        .keyword {
+            color: var(--code-purple);
+            font-weight: bold;
+        }
+        
+        .function {
+            color: var(--code-green);
+        }
+        
+        .string {
+            color: var(--code-orange);
+        }
+        
+        .comment {
+            color: #6A9955;
+            font-style: italic;
+        }
+        
+        .number {
+            color: #B5CEA8;
+        }
+        
+        /* Screenshot Styles */
+        .screenshot {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .screenshot img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+        }
+        
+        .screenshot-caption {
+            text-align: center;
+            margin-top: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Verification Section */
+        .verification {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--py-green);
+        }
+        
+        /* Footer Styles */
+        footer {
+            background: rgba(13, 17, 23, 0.9);
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--py-blue);
+            margin-top: 3rem;
+        }
+        
+        footer p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            color: var(--py-light);
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--py-yellow);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+            
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+            
+            nav ul {
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+            
+            main {
+                padding: 1rem;
+            }
+            
+            section {
+                padding: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            h3 {
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            nav ul {
+                gap: 0.5rem;
+            }
+            
+            section {
+                padding: 1rem;
+            }
+            
+            .code-block {
+                padding: 1rem;
+            }
+        }
+        
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--py-yellow), var(--py-blue));
+            z-index: 1000;
+            transition: width 0.1s;
+        }
+        
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--py-blue);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 99;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background: var(--py-yellow);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Animation Background -->
+    <div id="canvas-container"></div>
+    
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+    
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python Logo">
+            <h1>Python Installation Guide</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#windows">Windows</a></li>
+                <li><a href="#macos">macOS</a></li>
+                <li><a href="#linux">Linux</a></li>
+                <li><a href="#verification">Verification</a></li>
+                <li><a href="#troubleshooting">Troubleshooting</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <!-- Main Content -->
+    <main>
+        <!-- Introduction Section -->
+        <section id="intro">
+            <h2>Python Installation Guide</h2>
+            <p>This comprehensive guide will walk you through installing Python on Windows, macOS, and Linux systems. Follow the instructions for your operating system to get Python up and running.</p>
+            
+            <div class="screenshot">
+                <img src="https://www.python.org/static/img/python-logo.png" alt="Python Logo">
+                <div class="screenshot-caption">Python Programming Language</div>
+            </div>
+            
+            <h3>Before You Begin</h3>
+            <ul>
+                <li>Check if Python is already installed by opening a terminal/command prompt and typing <code>python --version</code></li>
+                <li>Determine whether you need 32-bit or 64-bit Python (most modern systems use 64-bit)</li>
+                <li>Administrator/sudo privileges may be required for some installation methods</li>
+            </ul>
+        </section>
+        
+        <!-- Windows Installation Section -->
+        <section id="windows" class="windows">
+            <div class="os-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Windows_logo_-_2012.svg" alt="Windows Logo">
+                <h2>Windows Installation</h2>
+            </div>
+            
+            <p>Installing Python on Windows is straightforward using the official installer from python.org.</p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Download Python</span>
+                <ol>
+                    <li>Visit the official Python website: <a href="https://www.python.org/downloads/windows/" target="_blank">https://www.python.org/downloads/windows/</a></li>
+                    <li>Under "Stable Releases," select the latest Python 3.x version</li>
+                    <li>Choose either the 32-bit (x86) or 64-bit (x86-64) installer based on your system</li>
+                </ol>
+                
+                <div class="screenshot">
+                    <img src="https://www.python.org/static/img/download-windows-logo.png" alt="Python Windows Download">
+                    <div class="screenshot-caption">Python Windows Download Page</div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-title">Run the Installer</span>
+                <ol>
+                    <li>Double-click the downloaded .exe file</li>
+                    <li>Check the box <strong>"Add Python to PATH"</strong> at the bottom</li>
+                    <li>Click "Install Now" (recommended for most users)</li>
+                    <li>Wait for the installation to complete</li>
+                </ol>
+                
+                <div class="screenshot">
+                    <img src="https://docs.python.org/3/_images/win_installer.png" alt="Python Windows Installer">
+                    <div class="screenshot-caption">Python Windows Installer Screen</div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">3</span>
+                <span class="step-title">Verify Installation</span>
+                <ol>
+                    <li>Open Command Prompt (Win+R, type <code>cmd</code>, press Enter)</li>
+                    <li>Type <code>python --version</code> and press Enter</li>
+                    <li>You should see the installed Python version</li>
+                </ol>
+                
+                <div class="code-block">
+                    <pre>C:\Users\YourName> python --version
+Python 3.9.7</pre>
+                </div>
+            </div>
+            
+            <h3>Alternative: Microsoft Store</h3>
+            <p>Windows 10/11 users can also install Python from the Microsoft Store:</p>
+            <ol>
+                <li>Open Microsoft Store</li>
+                <li>Search for "Python"</li>
+                <li>Select the latest Python 3.x version</li>
+                <li>Click "Get" to install</li>
+            </ol>
+        </section>
+        
+        <!-- macOS Installation Section -->
+        <section id="macos" class="macos">
+            <div class="os-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="macOS Logo" style="height: 40px; width: 40px;">
+                <h2>macOS Installation</h2>
+            </div>
+            
+            <p>There are several ways to install Python on macOS. Choose the method that best suits your needs.</p>
+            
+            <h3>Method 1: Official Installer</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Download Python</span>
+                <ol>
+                    <li>Visit the official Python website: <a href="https://www.python.org/downloads/macos/" target="_blank">https://www.python.org/downloads/macos/</a></li>
+                    <li>Download the latest macOS 64-bit installer</li>
+                </ol>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-title">Run the Installer</span>
+                <ol>
+                    <li>Open the downloaded .pkg file</li>
+                    <li>Follow the installation wizard</li>
+                    <li>When complete, Python will be installed in /Applications</li>
+                </ol>
+                
+                <div class="screenshot">
+                    <img src="https://www.python.org/static/img/macpython.png" alt="Python macOS Installer">
+                    <div class="screenshot-caption">Python macOS Installer</div>
+                </div>
+            </div>
+            
+            <h3>Method 2: Homebrew (Recommended for Developers)</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Install Homebrew</span>
+                <ol>
+                    <li>Open Terminal (Applications > Utilities > Terminal)</li>
+                    <li>Run the Homebrew installation command:</li>
+                </ol>
+                
+                <div class="code-block">
+                    <pre>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</pre>
+                </div>
+                
+                <p>Follow the on-screen instructions to complete the installation.</p>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-title">Install Python with Homebrew</span>
+                <div class="code-block">
+                    <pre>brew install python</pre>
+                </div>
+                
+                <p>This will install the latest Python version and pip (Python package manager).</p>
+            </div>
+            
+            <div class="verification">
+                <h3>Verification on macOS</h3>
+                <p>To verify your Python installation:</p>
+                
+                <div class="code-block">
+                    <pre>python3 --version
+pip3 --version</pre>
+                </div>
+                
+                <p>Note: macOS comes with Python 2.7 pre-installed. Always use <code>python3</code> and <code>pip3</code> to ensure you're using Python 3.</p>
+            </div>
+        </section>
+        
+        <!-- Linux Installation Section -->
+        <section id="linux" class="linux">
+            <div class="os-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg" alt="Linux Logo">
+                <h2>Linux Installation</h2>
+            </div>
+            
+            <p>Most Linux distributions come with Python pre-installed, but you may need to install a specific version.</p>
+            
+            <h3>Debian/Ubuntu (APT)</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Update Package List</span>
+                <div class="code-block">
+                    <pre>sudo apt update</pre>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-title">Install Python</span>
+                <div class="code-block">
+                    <pre>sudo apt install python3 python3-pip python3-venv</pre>
+                </div>
+            </div>
+            
+            <h3>Fedora (DNF)</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Install Python</span>
+                <div class="code-block">
+                    <pre>sudo dnf install python3 python3-pip</pre>
+                </div>
+            </div>
+            
+            <h3>Arch Linux (Pacman)</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Install Python</span>
+                <div class="code-block">
+                    <pre>sudo pacman -S python python-pip</pre>
+                </div>
+            </div>
+            
+            <h3>Installing Specific Versions</h3>
+            <p>To install a specific Python version (e.g., Python 3.8):</p>
+            
+            <div class="code-block">
+                <pre><span class="comment"># Ubuntu/Debian</span>
+sudo apt install python3.8
+
+<span class="comment"># Fedora</span>
+sudo dnf install python3.8
+
+<span class="comment"># Arch Linux (via AUR)</span>
+yay -S python38</pre>
+            </div>
+            
+            <h3>Compiling from Source</h3>
+            <p>For complete control over the installation:</p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Install Dependencies</span>
+                <div class="code-block">
+                    <pre><span class="comment"># Ubuntu/Debian</span>
+sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev
+
+<span class="comment"># Fedora</span>
+sudo dnf install gcc openssl-devel bzip2-devel libffi-devel zlib-devel</pre>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-title">Download and Compile</span>
+                <div class="code-block">
+                    <pre>wget https://www.python.org/ftp/python/3.9.7/Python-3.9.7.tgz
+tar -xf Python-3.9.7.tgz
+cd Python-3.9.7
+./configure --enable-optimizations
+make -j 8
+sudo make altinstall</pre>
+                </div>
+                
+                <p>Replace "3.9.7" with your desired version. Use <code>make altinstall</code> to avoid overwriting the system Python.</p>
+            </div>
+        </section>
+        
+        <!-- Verification Section -->
+        <section id="verification">
+            <h2>Verifying Your Installation</h2>
+            <p>After installation, verify that Python is working correctly on your system.</p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Check Python Version</span>
+                <div class="code-block">
+                    <pre><span class="comment"># Windows Command Prompt</span>
+python --version
+
+<span class="comment"># macOS/Linux Terminal</span>
+python3 --version</pre>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-title">Run Python Interpreter</span>
+                <div class="code-block">
+                    <pre><span class="comment"># Windows</span>
+python
+
+<span class="comment"># macOS/Linux</span>
+python3</pre>
+                </div>
+                
+                <p>You should see the Python REPL with version information and the <code>>>></code> prompt.</p>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">3</span>
+                <span class="step-title">Run a Simple Script</span>
+                <p>Create a file called <code>hello.py</code> with the following content:</p>
+                
+                <div class="code-block">
+                    <pre>print("Hello, Python!")</pre>
+                </div>
+                
+                <p>Run it with:</p>
+                <div class="code-block">
+                    <pre><span class="comment"># Windows</span>
+python hello.py
+
+<span class="comment"># macOS/Linux</span>
+python3 hello.py</pre>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Troubleshooting Section -->
+        <section id="troubleshooting">
+            <h2>Troubleshooting Common Issues</h2>
+            
+            <h3>"Python is not recognized" (Windows)</h3>
+            <p>If you get this error, Python is not in your PATH:</p>
+            <ol>
+                <li>Reinstall Python and check "Add Python to PATH"</li>
+                <li>Or manually add Python to PATH:
+                    <ol>
+                        <li>Search for "Environment Variables"</li>
+                        <li>Click "Environment Variables"</li>
+                        <li>Under "System variables", find "Path" and click "Edit"</li>
+                        <li>Add Python's installation directory (e.g., <code>C:\Python39</code>)</li>
+                        <li>Add the Scripts directory (e.g., <code>C:\Python39\Scripts</code>)</li>
+                    </ol>
+                </li>
+            </ol>
+            
+            <h3>Multiple Python Versions</h3>
+            <p>To manage multiple Python versions:</p>
+            <ul>
+                <li><strong>Windows:</strong> Use the Python Launcher (<code>py</code> command)
+                    <div class="code-block">
+                        <pre>py -3.8  <span class="comment"># Runs Python 3.8</span>
+py -3.9  <span class="comment"># Runs Python 3.9</span></pre>
+                    </div>
+                </li>
+                <li><strong>macOS/Linux:</strong> Use <code>update-alternatives</code> or virtual environments</li>
+            </ul>
+            
+            <h3>Permission Denied Errors (Linux/macOS)</h3>
+            <p>If you get permission errors when installing packages:</p>
+            <div class="code-block">
+                <pre><span class="comment"># Avoid using sudo with pip</span>
+pip install --user package_name
+
+<span class="comment"># Or better, use virtual environments</span>
+python3 -m venv myenv
+source myenv/bin/activate  <span class="comment"># Linux/macOS</span>
+pip install package_name</pre>
+            </div>
+        </section>
+        
+        <!-- Next Steps Section -->
+        <section id="next-steps">
+            <h2>Next Steps After Installation</h2>
+            
+            <h3>Install Essential Tools</h3>
+            <div class="code-block">
+                <pre><span class="comment"># Install pip (if not already installed)</span>
+python -m ensurepip --upgrade
+
+<span class="comment"># Upgrade pip</span>
+python -m pip install --upgrade pip
+
+<span class="comment"># Install virtualenv</span>
+pip install virtualenv</pre>
+            </div>
+            
+            <h3>Recommended Packages</h3>
+            <div class="code-block">
+                <pre><span class="comment"># Data science stack</span>
+pip install numpy pandas matplotlib jupyter
+
+<span class="comment"># Web development</span>
+pip install flask django
+
+<span class="comment"># Code formatting and linting</span>
+pip install black flake8</pre>
+            </div>
+            
+            <h3>Learning Resources</h3>
+            <ul>
+                <li>Official Python Tutorial: <a href="https://docs.python.org/3/tutorial/" target="_blank">https://docs.python.org/3/tutorial/</a></li>
+                <li>Python for Beginners: <a href="https://www.python.org/about/gettingstarted/" target="_blank">https://www.python.org/about/gettingstarted/</a></li>
+                <li>Real Python Tutorials: <a href="https://realpython.com/" target="_blank">https://realpython.com/</a></li>
+            </ul>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <p>Python Installation Guide - Windows, macOS, Linux</p>
+        <p>© 2023 All Rights Reserved</p>
+        <div class="social-links">
+            <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+    </footer>
+    
+    <!-- Back to Top Button -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
+    <!-- Three.js for 3D background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script>
+        // Tab functionality
+        function openExample(evt, exampleName) {
+            const tabContents = document.getElementsByClassName("example-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            const tabButtons = document.getElementsByClassName("example-tab");
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+            
+            document.getElementById(exampleName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        // Scroll indicator
+        window.onscroll = function() {
+            updateScrollIndicator();
+            toggleBackToTop();
+        };
+        
+        function updateScrollIndicator() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("scrollIndicator").style.width = scrolled + "%";
+        }
+        
+        // Back to top button
+        function toggleBackToTop() {
+            const backToTop = document.getElementById("backToTop");
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                backToTop.classList.add("visible");
+            } else {
+                backToTop.classList.remove("visible");
+            }
+        }
+        
+        document.getElementById("backToTop").addEventListener("click", function() {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+        
+        // 3D Background Animation with Three.js
+        const canvasContainer = document.getElementById('canvas-container');
+        
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        canvasContainer.appendChild(renderer.domElement);
+        
+        // Create particles with OS-themed colors
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particleCount = 2000;
+        
+        const posArray = new Float32Array(particleCount * 3);
+        const colorArray = new Float32Array(particleCount * 3);
+        
+        const colors = [
+            [0.0, 0.47, 0.84],   // Windows blue
+            [0.2, 0.2, 0.2],     // macOS gray
+            [0.91, 0.33, 0.13]    // Linux orange
+        ];
+        
+        for(let i = 0; i < particleCount * 3; i += 3) {
+            // Position
+            posArray[i] = (Math.random() - 0.5) * 10;
+            posArray[i+1] = (Math.random() - 0.5) * 10;
+            posArray[i+2] = (Math.random() - 0.5) * 10;
+            
+            // Color
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            colorArray[i] = color[0];
+            colorArray[i+1] = color[1];
+            colorArray[i+2] = color[2];
+        }
+        
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+        
+        // Particle material
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.05,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        
+        // Create particle system
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+        
+        // Camera position
+        camera.position.z = 5;
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            particlesMesh.rotation.x += 0.0002;
+            particlesMesh.rotation.y += 0.0003;
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Start animation
+        animate();
+    </script>
+</body>
+</html>

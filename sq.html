@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Fundamentals - Ultimate Guide</title>
+    <style>
+        :root {
+            --primary: #00ffaa;
+            --secondary: #ff00aa;
+            --accent: #aa00ff;
+            --dark: #111111;
+            --darker: #080808;
+            --light: #f0f0f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 2px solid var(--primary);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(0, 255, 170, 0.3);
+            animation: gradientShift 8s ease infinite;
+            background-size: 300% 300%;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .description {
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: #aaa;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: rgba(20, 20, 20, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 170, 0.1);
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            font-size: 0.9rem;
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .tab-btn:hover, .tab-btn.active {
+            background: var(--primary);
+            color: var(--dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 255, 170, 0.4);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+            background: rgba(20, 20, 20, 0.85);
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 255, 170, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-size: 2.2rem;
+            border-bottom: 1px solid var(--primary);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        h2::before {
+            content: ">>> ";
+            color: var(--secondary);
+            margin-right: 10px;
+        }
+        
+        h3 {
+            color: var(--secondary);
+            margin: 25px 0 15px;
+            font-size: 1.6rem;
+        }
+        
+        h4 {
+            color: var(--accent);
+            margin: 20px 0 10px;
+            font-size: 1.3rem;
+        }
+        
+        p {
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+        
+        ul, ol {
+            margin-bottom: 20px;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        a:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+        
+        pre {
+            background: rgba(10, 10, 10, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border-left: 4px solid var(--primary);
+            position: relative;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            tab-size: 4;
+        }
+        
+        code {
+            font-family: 'Courier New', monospace;
+            color: var(--primary);
+            background: rgba(0, 0, 0, 0.4);
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-size: 0.9rem;
+        }
+        
+        .code-block {
+            position: relative;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 255, 170, 0.2);
+            color: var(--primary);
+            border: 1px solid rgba(0, 255, 170, 0.3);
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(0, 255, 170, 0.4);
+        }
+        
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .example-card {
+            background: rgba(30, 30, 30, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 170, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: rgba(0, 255, 170, 0.3);
+        }
+        
+        .example-card h4 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+        
+        .note {
+            background: rgba(0, 170, 255, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .note-title {
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .warning {
+            background: rgba(255, 100, 0, 0.1);
+            border-left: 4px solid #ff6400;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .warning-title {
+            color: #ff6400;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .image-container {
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .library-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 170, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .library-logo {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 50px;
+            border-top: 1px solid var(--primary);
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        
+        .back-to-top {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(0, 255, 170, 0.1);
+            color: var(--primary);
+            border-radius: 30px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-to-top:hover {
+            background: rgba(0, 255, 170, 0.3);
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tab-btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .tab-content {
+                padding: 20px;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            h3 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas-bg"></canvas>
+    
+    <div class="container">
+        <header>
+            <h1>Python Fundamentals</h1>
+            <p class="subtitle">From Basic to Advanced - The Ultimate Guide</p>
+            <p class="description">Comprehensive reference covering Python basics, Scikit-learn, Flask, SQLAlchemy, Scrapy, NumPy, Pandas, Django, Pygame, Pymunk and advanced concepts</p>
+        </header>
+        
+        <div class="nav-tabs">
+            <button class="tab-btn active" data-tab="basics">Python Basics</button>
+            <button class="tab-btn" data-tab="scikit">Scikit-learn</button>
+            <button class="tab-btn" data-tab="flask">Flask</button>
+            <button class="tab-btn" data-tab="sqlalchemy">SQLAlchemy</button>
+            <button class="tab-btn" data-tab="scrapy">Scrapy</button>
+            <button class="tab-btn" data-tab="numpy">NumPy</button>
+            <button class="tab-btn" data-tab="pandas">Pandas</button>
+            <button class="tab-btn" data-tab="django">Django</button>
+            <button class="tab-btn" data-tab="advanced">Advanced</button>
+        </div>
+        
+        <!-- Python Basics -->
+        <div id="basics" class="tab-content active">
+            <h2>Python Basics</h2>
+            
+            <div class="image-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png" alt="Python Logo" class="library-image" style="max-height: 200px;">
+            </div>
+            
+            <h3>Variables and Data Types</h3>
+            <p>Python is dynamically typed, meaning you don't need to declare variable types.</p>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Basic data types
+integer_var = 42
+float_var = 3.14159
+string_var = "Hello, Python!"
+boolean_var = True
+none_var = None
+
+# Collections
+list_var = [1, 2, 3, "four", 5.0]  # Mutable sequence
+tuple_var = (1, 2, 3)  # Immutable sequence
+dict_var = {"name": "Alice", "age": 25}  # Key-value pairs
+set_var = {1, 2, 3, 3, 2}  # Unique elements: {1, 2, 3}
+
+# Type conversion
+str(42)  # "42"
+int("42")  # 42
+float("3.14")  # 3.14
+list("hello")  # ['h', 'e', 'l', 'l', 'o']</code></pre>
+            </div>
+            
+            <h3>Control Flow</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># If-elif-else statements
+temperature = 25
+if temperature < 0:
+    print("Freezing")
+elif 0 <= temperature < 20:
+    print("Cold")
+elif 20 <= temperature < 30:
+    print("Comfortable")
+else:
+    print("Hot")
+
+# For loops
+for i in range(5):  # 0 to 4
+    print(i)
+
+# While loop
+count = 0
+while count < 5:
+    print(count)
+    count += 1
+
+# List comprehension
+squares = [x**2 for x in range(10)]  # [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]</code></pre>
+            </div>
+            
+            <h3>Functions</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Basic function
+def greet(name):
+    """Return a greeting message"""
+    return f"Hello, {name}!"
+
+# Function with default arguments
+def power(base, exponent=2):
+    """Raise base to the power of exponent (default 2)"""
+    return base ** exponent
+
+# Variable number of arguments
+def sum_all(*args):
+    """Sum all arguments"""
+    return sum(args)
+
+# Lambda function
+square = lambda x: x * x
+
+# Function annotations
+def add(a: int, b: int) -> int:
+    """Add two integers and return the result"""
+    return a + b</code></pre>
+            </div>
+            
+            <h3>Object-Oriented Programming</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>class Animal:
+    # Class attribute
+    kingdom = "Animalia"
+    
+    # Initializer
+    def __init__(self, name, species):
+        self.name = name
+        self.species = species
+    
+    # Instance method
+    def description(self):
+        return f"{self.name} is a {self.species}"
+    
+    # Another instance method
+    def speak(self, sound):
+        return f"{self.name} says {sound}"
+
+# Inheritance
+class Dog(Animal):
+    def __init__(self, name, breed):
+        super().__init__(name, "Canis familiaris")
+        self.breed = breed
+    
+    # Override method
+    def speak(self, sound="Woof"):
+        return super().speak(sound)
+
+# Create instances
+dog = Dog("Buddy", "Golden Retriever")
+print(dog.description())  # Buddy is a Canis familiaris
+print(dog.speak())  # Buddy says Woof</code></pre>
+            </div>
+            
+            <h3>File Handling</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Writing to a file
+with open('example.txt', 'w') as file:
+    file.write("Hello, World!\n")
+    file.write("This is a second line.\n")
+
+# Reading from a file
+with open('example.txt', 'r') as file:
+    content = file.read()
+    print(content)
+
+# Reading line by line
+with open('example.txt', 'r') as file:
+    for line in file:
+        print(line.strip())  # strip() removes newline characters
+
+# Working with JSON
+import json
+
+data = {'name': 'Alice', 'age': 25, 'city': 'New York'}
+
+# Write JSON
+with open('data.json', 'w') as file:
+    json.dump(data, file)
+
+# Read JSON
+with open('data.json', 'r') as file:
+    loaded_data = json.load(file)
+    print(loaded_data)</code></pre>
+            </div>
+        </div>
+        
+        <!-- Scikit-learn -->
+        <div id="scikit" class="tab-content">
+            <h2>Scikit-learn - Machine Learning</h2>
+            
+            <div class="image-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg" alt="Scikit-learn Logo" class="library-image" style="max-height: 100px; background: white; padding: 10px;">
+            </div>
+            
+            <h3>Basic Workflow</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
+# Load dataset
+iris = load_iris()
+X, y = iris.data, iris.target
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Feature scaling
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Train model
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+# Predict and evaluate
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy:.2f}")</code></pre>
+            </div>
+            
+            <h3>Classification</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>from sklearn.svm import SVC
+from sklearn.metrics import classification_report, confusion_matrix
+
+# Support Vector Classifier
+svc = SVC(kernel='rbf', C=1.0, gamma='scale')
+svc.fit(X_train, y_train)
+
+# Predictions
+y_pred = svc.predict(X_test)
+
+# Evaluation
+print(classification_report(y_test, y_pred))
+print(confusion_matrix(y_test, y_pred))
+
+# Cross-validation
+from sklearn.model_selection import cross_val_score
+scores = cross_val_score(svc, X, y, cv=5)
+print(f"Cross-validation scores: {scores}")
+print(f"Mean accuracy: {scores.mean():.2f}")</code></pre>
+            </div>
+            
+            <h3>Regression</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>from sklearn.datasets import load_diabetes
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Load dataset
+diabetes = load_diabetes()
+X, y = diabetes.data, diabetes.target
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Predict and evaluate
+y_pred = model.predict(X_test)
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f"Mean Squared Error: {mse:.2f}")
+print(f"R-squared: {r2:.2f}")</code></pre>
+            </div>
+            
+            <h3>Clustering</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>from sklearn.cluster import KMeans
+from sklearn.datasets import make_blobs
+import matplotlib.pyplot as plt
+
+# Generate sample data
+X, y = make_blobs(n_samples=300, centers=4, cluster_std=0.60, random_state=0)
+
+# K-means clustering
+kmeans = KMeans(n_clusters=4)
+kmeans.fit(X)
+y_kmeans = kmeans.predict(X)
+
+# Plot clusters
+plt.scatter(X[:, 0], X[:, 1], c=y_kmeans, s=50, cmap='viridis')
+centers = kmeans.cluster_centers_
+plt.scatter(centers[:, 0], centers[:, 1], c='red', s=200, alpha=0.75)
+plt.title("K-means Clustering")
+plt.show()</code></pre>
+            </div>
+            
+            <h3>Pipeline</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>from sklearn.pipeline import Pipeline
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import PolynomialFeatures
+
+# Create pipeline
+pipe = Pipeline([
+    ('scaler', StandardScaler()),
+    ('pca', PCA(n_components=2)),
+    ('poly', PolynomialFeatures(degree=2)),
+    ('classifier', RandomForestClassifier())
+])
+
+# Fit pipeline
+pipe.fit(X_train, y_train)
+
+# Evaluate
+accuracy = pipe.score(X_test, y_test)
+print(f"Pipeline accuracy: {accuracy:.2f}")</code></pre>
+            </div>
+        </div>
+        
+        <!-- Flask -->
+        <div id="flask" class="tab-content">
+            <h2>Flask - Web Framework</h2>
+            
+            <div class="image-container">
+                <img src="https://flask.palletsprojects.com/en/2.3.x/_images/flask-logo.png" alt="Flask Logo" class="library-image" style="max-height: 100px; background: white; padding: 10px;">
+            </div>
+            
+            <h3>Basic Application</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>from flask import Flask, render_template, request, redirect, url_for
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Hello, Flask!"
+
+@app.route('/greet/&lt;name&gt;')
+def greet(name):
+    return f"Hello, {name}!"
+
+@app.route('/form', methods=['GET', 'POST'])
+def form():
+    if request.method == 'POST':
+        username = request.form['username']
+        return redirect(url_for('greet', name=username))
+    return '''
+        &lt;form method="POST"&gt;
+            Username: &lt;input type="text" name="username"&gt;
+            &lt;input type="submit" value="Submit"&gt;
+        &lt;/form&gt;
+    '''
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre>
+            </div>
+            
+            <h3>Templates</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>&lt;!-- templates/base.html --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;{% block title %}{% endblock %}&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;nav&gt;
+        &lt;a href="{{ url_for('home') }}"&gt;Home&lt;/a&gt;
+    &lt;/nav&gt;
+    &lt;div class="content"&gt;
+        {% block content %}{% endblock %}
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+&lt;!-- templates/index.html --&gt;
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    &lt;h1&gt;Welcome!&lt;/h1&gt;
+    &lt;p&gt;Current time: {{ current_time }}&lt;/p&gt;
+{% endblock %}</code></pre>
+            </div>
+            
+            <h3>REST API</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+tasks = [
+    {'id': 1, 'title': 'Learn Flask', 'done': False},
+    {'id': 2, 'title': 'Build API', 'done': False}
+]
+
+@app.route('/api/tasks', methods=['GET'])
+def get_tasks():
+    return jsonify({'tasks': tasks})
+
+@app.route('/api/tasks', methods=['POST'])
+def create_task():
+    if not request.json or not 'title' in request.json:
+        return jsonify({'error': 'Bad request'}), 400
+    
+    task = {
+        'id': tasks[-1]['id'] + 1,
+        'title': request.json['title'],
+        'done': False
+    }
+    tasks.append(task)
+    return jsonify({'task': task}), 201
+
+@app.route('/api/tasks/&lt;int:task_id&gt;', methods=['PUT'])
+def update_task(task_id):
+    task = next((t for t in tasks if t['id'] == task_id), None)
+    if not task:
+        return jsonify({'error': 'Not found'}), 404
+    
+    task['title'] = request.json.get('title', task['title'])
+    task['done'] = request.json.get('done', task['done'])
+    return jsonify({'task': task})
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre>
+            </div>
+            
+            <h3>Database Integration</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+db = SQLAlchemy(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}')"
+
+# Create tables
+with app.app_context():
+    db.create_all()
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        user = User(username=username, email=email)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('home'))
+    return render_template('register.html')</code></pre>
+            </div>
+            
+            <h3>Authentication</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your-secret-key'
+login_manager = LoginManager(app)
+
+class User(UserMixin, db.Model):
+    # ... previous fields ...
+    password = db.Column(db.String(60), nullable=False)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        user = User.query.filter_by(email=request.form['email']).first()
+        if user and check_password_hash(user.password, request.form['password']):
+            login_user(user)
+            return redirect(url_for('dashboard'))
+    return render_template('login.html')
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))</code></pre>
+            </div>
+        </div>
+        
+        <!-- SQLAlchemy -->
+        <div id="sqlalchemy" class="tab-content">
+            <h2>SQLAlchemy - ORM</h2>
+            
+            <div class="image-container">
+                <img src="https://www.sqlalchemy.org/img/sqla_logo.png" alt="SQLAlchemy Logo" class="library-image" style="max-height: 100px; background: white; padding: 10px;">
+            </div>
+            
+            <h3>Basic ORM</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+# Database setup
+engine = create_engine('sqlite:///example.db')
+Base = declarative_base()
+
+# Define model
+class User(Base):
+    __tablename__ = 'users'
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    email = Column(String)
+    
+    def __repr__(self):
+        return f"&lt;User(name='{self.name}', email='{self.email}')&gt;"
+
+# Create tables
+Base.metadata.create_all(engine)
+
+# Create session
+Session = sessionmaker(bind=engine)
+session = Session()
+
+# Add new user
+new_user = User(name='Alice', email='alice@example.com')
+session.add(new_user)
+session.commit()
+
+# Query users
+users = session.query(User).all()
+for user in users:
+    print(user.name, user.email)</code></pre>
+            </div>
+            
+            <h3>Relationships</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
+
+class Post(Base):
+    __tablename__ = 'posts'
+    
+    id = Column(Integer, primary_key=True)
+    title = Column(String)
+    content = Column(String)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    
+    author = relationship("User", back_populates="posts")
+
+User.posts = relationship("Post", order_by=Post.id, back_populates="author")
+
+# Create a user with posts
+user = User(name='Bob', email='bob@example.com')
+user.posts = [
+    Post(title='First Post', content='Hello World!'),
+    Post(title='Second Post', content='SQLAlchemy is awesome!')
+]
+session.add(user)
+session.commit()
+
+# Query with relationships
+user = session.query(User).filter_by(name='Bob').first()
+for post in user.posts:
+    print(post.title, post.content)</code></pre>
+            </div>
+            
+            <h3>Queries</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Basic queries
+users = session.query(User).all()  # All users
+user = session.query(User).filter_by(name='Alice').first()  # First user named Alice
+
+# Filtering
+from sqlalchemy import or_
+users = session.query(User).filter(
+    or_(User.name == 'Alice', User.email.like('%example%'))
+).all()
+
+# Ordering
+users = session.query(User).order_by(User.name).all()
+
+# Aggregation
+from sqlalchemy import func
+count = session.query(func.count(User.id)).scalar()
+print(f"Total users: {count}")
+
+# Pagination
+page = 1
+per_page = 10
+users = session.query(User).order_by(User.id).offset((page-1)*per_page).limit(per_page).all()</code></pre>
+            </div>
+            
+            <h3>Migrations with Alembic</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Install Alembic
+# pip install alembic
+
+# Initialize Alembic
+# alembic init alembic
+
+# Configure alembic.ini
+# sqlalchemy.url = sqlite:///example.db
+
+# Create migration
+# alembic revision --autogenerate -m "Add phone number to User"
+
+# The generated migration file will look like:
+'''
+def upgrade():
+    op.add_column('users', sa.Column('phone', sa.String(), nullable=True))
+
+def downgrade():
+    op.drop_column('users', 'phone')
+'''
+
+# Apply migration
+# alembic upgrade head</code></pre>
+            </div>
+            
+            <h3>Advanced Features</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Hybrid properties
+from sqlalchemy.ext.hybrid import hybrid_property
+
+class User(Base):
+    # ... other columns ...
+    first_name = Column(String)
+    last_name = Column(String)
+    
+    @hybrid_property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+    
+    @full_name.expression
+    def full_name(cls):
+        return cls.first_name + ' ' + cls.last_name
+
+# Events
+from sqlalchemy import event
+
+@event.listens_for(User, 'before_insert')
+def before_insert_listener(mapper, connection, target):
+    print(f"About to insert user: {target.name}")
+
+# Composite types
+from sqlalchemy import Composite
+from sqlalchemy.ext.declarative import composite
+
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+    
+    def __composite_values__(self):
+        return self.x, self.y
+
+class Vertex(Base):
+    __tablename__ = 'vertices'
+    
+    id = Column(Integer, primary_key=True)
+    x = Column(Integer)
+    y = Column(Integer)
+    
+    point = composite(Point, x, y)</code></pre>
+            </div>
+        </div>
+        
+        <!-- Scrapy -->
+        <div id="scrapy" class="tab-content">
+            <h2>Scrapy - Web Scraping</h2>
+            
+            <div class="image-container">
+                <img src="https://scrapy.org/img/scrapylogo.png" alt="Scrapy Logo" class="library-image" style="max-height: 100px; background: white; padding: 10px;">
+            </div>
+            
+            <h3>Basic Spider</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>import scrapy
+
+class QuotesSpider(scrapy.Spider):
+    name = "quotes"
+    start_urls = [
+        'https://quotes.toscrape.com/page/1/',
+    ]
+
+    def parse(self, response):
+        for quote in response.css('div.quote'):
+            yield {
+                'text': quote.css('span.text::text').get(),
+                'author': quote.css('small.author::text').get(),
+                'tags': quote.css('div.tags a.tag::text').getall(),
+            }
+
+        next_page = response.css('li.next a::attr(href)').get()
+        if next_page is not None:
+            yield response.follow(next_page, self.parse)
+
+# Run spider from script
+from scrapy.crawler import CrawlerProcess
+
+process = CrawlerProcess(settings={
+    'FEED_FORMAT': 'json',
+    'FEED_URI': 'quotes.json'
+})
+process.crawl(QuotesSpider)
+process.start()</code></pre>
+            </div>
+            
+            <h3>Item Pipeline</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Define items
+import scrapy
+
+class QuoteItem(scrapy.Item):
+    text = scrapy.Field()
+    author = scrapy.Field()
+    tags = scrapy.Field()
+
+# In spider
+class QuotesSpider(scrapy.Spider):
+    # ... previous code ...
+    def parse(self, response):
+        for quote in response.css('div.quote'):
+            item = QuoteItem()
+            item['text'] = quote.css('span.text::text').get()
+            item['author'] = quote.css('small.author::text').get()
+            item['tags'] = quote.css('div.tags a.tag::text').getall()
+            yield item
+
+# Pipeline for processing items
+class CleanQuotePipeline:
+    def process_item(self, item, spider):
+        item['text'] = item['text'].strip('“”')
+        return item
+
+# Enable pipeline in settings.py
+# ITEM_PIPELINES = {
+#    'myproject.pipelines.CleanQuotePipeline': 300,
+# }</code></pre>
+            </div>
+            
+            <h3>Middleware</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Random user agent middleware
+from scrapy import signals
+from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
+import random
+
+class RandomUserAgentMiddleware(UserAgentMiddleware):
+    def __init__(self, user_agent):
+        super().__init__()
+        self.user_agents = user_agent
+    
+    @classmethod
+    def from_crawler(cls, crawler):
+        o = cls(crawler.settings.get('USER_AGENT_LIST'))
+        crawler.signals.connect(o.spider_opened, signal=signals.spider_opened)
+        return o
+    
+    def process_request(self, request, spider):
+        request.headers['User-Agent'] = random.choice(self.user_agents)
+
+# Enable in settings.py
+# DOWNLOADER_MIDDLEWARES = {
+#     'myproject.middlewares.RandomUserAgentMiddleware': 400,
+# }
+# USER_AGENT_LIST = [
+#     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ...',
+#     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ...',
+#     # more user agents
+# ]</code></pre>
+            </div>
+            
+            <h3>Exporting Data</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Export to different formats
+# Run spider with output options
+# scrapy crawl quotes -O quotes.json
+# scrapy crawl quotes -O quotes.csv
+# scrapy crawl quotes -O quotes.xml
+
+# Custom exporter
+from scrapy.exporters import JsonItemExporter
+
+class CustomJsonExporter(JsonItemExporter):
+    def serialize_field(self, field, name, value):
+        if name == 'text':
+            return value.strip('“”')
+        return super().serialize_field(field, name, value)
+
+# In settings.py
+# FEED_EXPORTERS = {
+#     'json': 'myproject.exporters.CustomJsonExporter',
+# }</code></pre>
+            </div>
+            
+            <h3>Splash Integration</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Splash for JavaScript rendering
+import scrapy
+from scrapy_splash import SplashRequest
+
+class JSSpider(scrapy.Spider):
+    name = 'js'
+    
+    def start_requests(self):
+        yield SplashRequest(
+            url='https://example.com',
+            callback=self.parse,
+            args={'wait': 2}  # Wait for JavaScript to execute
+        )
+    
+    def parse(self, response):
+        yield {
+            'title': response.css('title::text').get(),
+            'content': response.css('div.content::text').get()
+        }
+
+# Required settings
+# SPLASH_URL = 'http://localhost:8050'
+# DOWNLOADER_MIDDLEWARES = {
+#     'scrapy_splash.SplashCookiesMiddleware': 723,
+#     'scrapy_splash.SplashMiddleware': 725,
+#     'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
+# }
+# SPIDER_MIDDLEWARES = {
+#     'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
+# }
+# DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'</code></pre>
+            </div>
+        </div>
+        
+        <!-- NumPy -->
+        <div id="numpy" class="tab-content">
+            <h2>NumPy - Numerical Computing</h2>
+            
+            <div class="image-container">
+                <img src="https://numpy.org/images/logo.svg" alt="NumPy Logo" class="library-image" style="max-height: 100px; background: white; padding: 10px;">
+            </div>
+            
+            <h3>Array Creation</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>import numpy as np
+
+# Create arrays
+arr1 = np.array([1, 2, 3, 4, 5])  # 1D array
+arr2 = np.array([[1, 2, 3], [4, 5, 6]])  # 2D array
+zeros = np.zeros((3, 4))  # 3x4 array of zeros
+ones = np.ones((2, 2, 2))  # 2x2x2 array of ones
+identity = np.eye(3)  # 3x3 identity matrix
+random_arr = np.random.rand(3, 3)  # 3x3 random array (0-1)
+range_arr = np.arange(0, 10, 2)  # array([0, 2, 4, 6, 8])
+linspace = np.linspace(0, 1, 5)  # 5 numbers from 0 to 1: [0., 0.25, 0.5, 0.75, 1.]
+
+# Special arrays
+empty = np.empty((2, 3))  # Uninitialized array
+full = np.full((2, 2), 7)  # 2x2 array filled with 7</code></pre>
+            </div>
+            
+            <h3>Array Operations</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Basic operations
+a = np.array([1, 2, 3])
+b = np.array([4, 5, 6])
+
+print(a + b)  # [5 7 9]
+print(a * b)  # [4 10 18] (element-wise)
+print(np.dot(a, b))  # Dot product: 32
+
+# Matrix operations
+matrix = np.array([[1, 2], [3, 4]])
+print(matrix.T)  # Transpose
+print(np.linalg.inv(matrix))  # Inverse matrix
+print(np.linalg.det(matrix))  # Determinant
+
+# Universal functions
+print(np.sqrt(a))  # Square root
+print(np.exp(a))  # Exponential
+print(np.sin(a))  # Sine
+print(np.log(a))  # Natural logarithm</code></pre>
+            </div>
+            
+            <h3>Indexing and Slicing</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>arr = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+
+# Basic indexing
+print(arr[0, 1])  # 2 (first row, second column)
+print(arr[:, 1])  # [2 5 8] (all rows, second column)
+print(arr[1:3, 0:2])  # [[4 5] [7 8]] (subarray)
+
+# Boolean indexing
+mask = arr > 5
+print(mask)  # [[False False False] [False False True] [True True True]]
+print(arr[mask])  # [6 7 8 9]
+
+# Fancy indexing
+print(arr[[0, 2], :])  # First and third rows
+print(arr[:, [1, 2]])  # Second and third columns</code></pre>
+            </div>
+            
+            <h3>Broadcasting</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Operations between arrays of different shapes
+a = np.array([1, 2, 3])
+b = 2
+print(a * b)  # [2 4 6]
+
+matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+row = np.array([10, 20, 30])
+print(matrix + row)  # Adds row to each row of matrix
+
+# More broadcasting
+a = np.array([[1], [2], [3]])
+b = np.array([10, 20, 30])
+print(a + b)  # [[11 21 31], [12 22 32], [13 23 33]]</code></pre>
+            </div>
+            
+            <h3>Linear Algebra</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Solving linear equations
+A = np.array([[3, 1], [1, 2]])
+b = np.array([9, 8])
+x = np.linalg.solve(A, b)  # [2., 3.]
+
+# Eigenvalues and eigenvectors
+eigenvalues, eigenvectors = np.linalg.eig(A)
+
+# Matrix decomposition
+Q, R = np.linalg.qr(A)  # QR decomposition
+U, S, V = np.linalg.svd(A)  # Singular value decomposition
+
+# Statistics
+data = np.random.randn(100, 3)  # 100 samples, 3 features
+print(np.mean(data, axis=0))  # Mean of each feature
+print(np.std(data, axis=0))  # Standard deviation
+print(np.corrcoef(data.T))  # Correlation matrix</code></pre>
+            </div>
+        </div>
+        
+        <!-- Pandas -->
+        <div id="pandas" class="tab-content">
+            <h2>Pandas - Data Analysis</h2>
+            
+            <div class="image-container">
+                <img src="https://pandas.pydata.org/static/img/pandas.svg" alt="Pandas Logo" class="library-image" style="max-height: 100px; background: white; padding: 10px;">
+            </div>
+            
+            <h3>Data Structures</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>import pandas as pd
+import numpy as np
+
+# Series (1D)
+s = pd.Series([1, 3, 5, np.nan, 6, 8], name='Numbers')
+
+# DataFrame (2D)
+data = {
+    'Name': ['Alice', 'Bob', 'Charlie', 'David'],
+    'Age': [25, 30, 35, 40],
+    'City': ['NY', 'Paris', 'London', 'Tokyo']
+}
+df = pd.DataFrame(data)
+
+# Display
+print(df.head())  # First 5 rows
+print(df.tail(2))  # Last 2 rows
+print(df.describe())  # Statistics
+print(df.info())  # Summary</code></pre>
+            </div>
+            
+            <h3>Data Selection</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Column selection
+print(df['Name'])  # Single column
+print(df[['Name', 'Age']])  # Multiple columns
+
+# Row selection
+print(df.iloc[0])  # First row by index
+print(df.loc[0:2])  # Rows 0 to 2
+print(df[df['Age'] > 30])  # Filter rows
+
+# Setting values
+df.loc[0, 'Age'] = 26  # Change specific value
+df['Salary'] = [50000, 60000, 70000, 80000]  # Add column</code></pre>
+            </div>
+            
+            <h3>Data Cleaning</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Handling missing data
+df.loc[1, 'Age'] = None  # Introduce missing value
+print(df.isnull())  # Check for missing values
+df_clean = df.dropna()  # Drop rows with missing values
+df_filled = df.fillna({'Age': df['Age'].mean()})  # Fill with mean
+
+# Removing duplicates
+df = pd.DataFrame({'A': [1, 1, 2, 2], 'B': ['a', 'b', 'a', 'b']})
+df_no_dup = df.drop_duplicates()
+
+# String operations
+df['Name'] = df['Name'].str.upper()
+df['Name'] = df['Name'].str.replace('A', 'X')</code></pre>
+            </div>
+            
+            <h3>Grouping and Aggregation</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Group by and aggregate
+df = pd.DataFrame({
+    'Department': ['Sales', 'Sales', 'IT', 'IT', 'HR'],
+    'Employee': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'],
+    'Salary': [60000, 50000, 80000, 75000, 55000]
+})
+
+grouped = df.groupby('Department')
+print(grouped.mean())  # Average salary by department
+print(grouped.agg({'Salary': ['mean', 'min', 'max', 'count']}))  # Multiple stats
+
+# Pivot tables
+pivot = df.pivot_table(values='Salary', index='Department', aggfunc=['mean', 'count'])</code></pre>
+            </div>
+            
+            <h3>Time Series</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Date range
+dates = pd.date_range('20230101', periods=6)
+df = pd.DataFrame(np.random.randn(6, 4), index=dates, columns=list('ABCD'))
+
+# Time-based operations
+df['Month'] = df.index.month
+df['DayOfWeek'] = df.index.dayofweek
+
+# Resampling
+df.resample('M').mean()  # Monthly means
+df.rolling(window=3).mean()  # Rolling 3-day average
+
+# Timezone handling
+df = df.tz_localize('UTC')
+df = df.tz_convert('US/Eastern')</code></pre>
+            </div>
+        </div>
+        
+        <!-- Django -->
+        <div id="django" class="tab-content">
+            <h2>Django - Web Framework</h2>
+            
+            <div class="image-container">
+                <img src="https://www.djangoproject.com/m/img/logos/django-logo-positive.png" alt="Django Logo" class="library-image" style="max-height: 100px; background: white; padding: 10px;">
+            </div>
+            
+            <h3>Project Setup</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Install Django
+# pip install django
+
+# Create project
+# django-admin startproject mysite
+
+# Project structure:
+# mysite/
+# ├── manage.py
+# └── mysite/
+#     ├── __init__.py
+#     ├── settings.py
+#     ├── urls.py
+#     └── wsgi.py
+
+# Create app
+# python manage.py startapp blog
+
+# Run development server
+# python manage.py runserver</code></pre>
+            </div>
+            
+            <h3>Models</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># blog/models.py
+from django.db import models
+from django.contrib.auth.models import User
+
+class Post(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    date_posted = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.title
+
+# Register model in admin
+# blog/admin.py
+from django.contrib import admin
+from .models import Post
+
+admin.site.register(Post)
+
+# After creating models:
+# python manage.py makemigrations
+# python manage.py migrate</code></pre>
+            </div>
+            
+            <h3>Views</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Function-based view
+from django.shortcuts import render
+from .models import Post
+
+def home(request):
+    context = {
+        'posts': Post.objects.all()
+    }
+    return render(request, 'blog/home.html', context)
+
+# Class-based view
+from django.views.generic import ListView, DetailView
+
+class PostListView(ListView):
+    model = Post
+    template_name = 'blog/home.html'
+    context_object_name = 'posts'
+    ordering = ['-date_posted']
+
+class PostDetailView(DetailView):
+    model = Post</code></pre>
+            </div>
+            
+            <h3>URLs and Templates</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># mysite/urls.py
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('blog/', include('blog.urls')),
+]
+
+# blog/urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.PostListView.as_view(), name='blog-home'),
+    path('post/&lt;int:pk&gt;/', views.PostDetailView.as_view(), name='post-detail'),
+]
+
+# blog/templates/blog/home.html
+{% extends "blog/base.html" %}
+
+{% block content %}
+    {% for post in posts %}
+        &lt;article&gt;
+            &lt;h2&gt;&lt;a href="{% url 'post-detail' post.id %}"&gt;{{ post.title }}&lt;/a&gt;&lt;/h2&gt;
+            &lt;p&gt;By {{ post.author }} on {{ post.date_posted|date:"F d, Y" }}&lt;/p&gt;
+            &lt;p&gt;{{ post.content }}&lt;/p&gt;
+        &lt;/article&gt;
+    {% endfor %}
+{% endblock %}</code></pre>
+            </div>
+            
+            <h3>Forms and Authentication</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># blog/forms.py
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+
+class UserRegisterForm(UserCreationForm):
+    email = forms.EmailField()
+    
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
+
+# blog/views.py
+from django.contrib.auth.decorators import login_required
+from .forms import UserRegisterForm
+
+def register(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = UserRegisterForm()
+    return render(request, 'blog/register.html', {'form': form})
+
+@login_required
+def profile(request):
+    return render(request, 'blog/profile.html')</code></pre>
+            </div>
+        </div>
+        
+        <!-- Advanced Python -->
+        <div id="advanced" class="tab-content">
+            <h2>Advanced Python Concepts</h2>
+            
+            <h3>Decorators</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Simple decorator
+def my_decorator(func):
+    def wrapper():
+        print("Before function is called")
+        func()
+        print("After function is called")
+    return wrapper
+
+@my_decorator
+def say_hello():
+    print("Hello!")
+
+# say_hello() will print:
+# Before function is called
+# Hello!
+# After function is called
+
+# Decorator with arguments
+def repeat(num_times):
+    def decorator_repeat(func):
+        def wrapper(*args, **kwargs):
+            for _ in range(num_times):
+                result = func(*args, **kwargs)
+            return result
+        return wrapper
+    return decorator_repeat
+
+@repeat(num_times=3)
+def greet(name):
+    print(f"Hello {name}")
+
+# Class decorator
+class CountCalls:
+    def __init__(self, func):
+        self.func = func
+        self.num_calls = 0
+    
+    def __call__(self, *args, **kwargs):
+        self.num_calls += 1
+        print(f"Call {self.num_calls} of {self.func.__name__}")
+        return self.func(*args, **kwargs)
+
+@CountCalls
+def say_hello():
+    print("Hello!")</code></pre>
+            </div>
+            
+            <h3>Generators</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Simple generator
+def count_up_to(max):
+    count = 1
+    while count <= max:
+        yield count
+        count += 1
+
+counter = count_up_to(5)
+for num in counter:
+    print(num)  # Prints 1, 2, 3, 4, 5
+
+# Generator expression
+squares = (x*x for x in range(10))
+for square in squares:
+    print(square)
+
+# Sending values to generator
+def accumulator():
+    total = 0
+    while True:
+        value = yield total
+        if value is None:
+            break
+        total += value
+
+acc = accumulator()
+next(acc)  # Start generator
+print(acc.send(10))  # 10
+print(acc.send(20))  # 30
+print(acc.send(5))  # 35</code></pre>
+            </div>
+            
+            <h3>Context Managers</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Using context manager (with statement)
+with open('file.txt', 'r') as file:
+    content = file.read()
+# File automatically closed here
+
+# Class-based context manager
+class ManagedFile:
+    def __init__(self, filename, mode):
+        self.filename = filename
+        self.mode = mode
+    
+    def __enter__(self):
+        self.file = open(self.filename, self.mode)
+        return self.file
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.file:
+            self.file.close()
+
+with ManagedFile('hello.txt', 'w') as f:
+    f.write('Hello, world!')
+
+# Function-based context manager
+from contextlib import contextmanager
+
+@contextmanager
+def managed_file(name, mode):
+    try:
+        f = open(name, mode)
+        yield f
+    finally:
+        f.close()
+
+with managed_file('hello.txt', 'w') as f:
+    f.write('Hello again!')</code></pre>
+            </div>
+            
+            <h3>Metaclasses</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Simple metaclass example
+class Meta(type):
+    def __new__(cls, name, bases, dct):
+        # Add a class attribute
+        dct['created_by'] = 'Meta'
+        
+        # Ensure all methods are uppercase
+        uppercase_attr = {}
+        for name, val in dct.items():
+            if not name.startswith('__'):
+                uppercase_attr[name.upper()] = val
+            else:
+                uppercase_attr[name] = val
+        
+        return super().__new__(cls, name, bases, uppercase_attr)
+
+class MyClass(metaclass=Meta):
+    def my_method(self):
+        print("This is my method")
+
+obj = MyClass()
+obj.MY_METHOD()  # Note the uppercase method name
+print(MyClass.created_by)  # 'Meta'
+
+# Singleton pattern with metaclass
+class SingletonMeta(type):
+    _instances = {}
+    
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super().__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+class Singleton(metaclass=SingletonMeta):
+    pass
+
+a = Singleton()
+b = Singleton()
+print(a is b)  # True</code></pre>
+            </div>
+            
+            <h3>Async/Await</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>import asyncio
+
+# Coroutine
+async def say_after(delay, what):
+    await asyncio.sleep(delay)
+    print(what)
+
+async def main():
+    print("Started")
+    
+    # Run coroutines sequentially
+    await say_after(1, 'Hello')
+    await say_after(2, 'World')
+    
+    # Run coroutines concurrently
+    task1 = asyncio.create_task(say_after(1, 'Hello'))
+    task2 = asyncio.create_task(say_after(2, 'World'))
+    await task1
+    await task2
+    
+    print("Finished")
+
+# Run event loop
+asyncio.run(main())
+
+# Async HTTP requests
+import aiohttp
+
+async def fetch_url(url):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            return await response.text()
+
+async def main():
+    urls = [
+        'https://python.org',
+        'https://github.com',
+        'https://example.com'
+    ]
+    
+    tasks = [fetch_url(url) for url in urls]
+    pages = await asyncio.gather(*tasks)
+    
+    for url, content in zip(urls, pages):
+        print(f"{url}: {len(content)} bytes")
+
+asyncio.run(main())</code></pre>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Python Fundamentals - Ultimate Guide | &copy; 2023</p>
+            <p>All concepts from basic to advanced in one place</p>
+            <a href="#" class="back-to-top">Back to Top</a>
+        </footer>
+    </div>
+    
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons and content
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                // Show corresponding content
+                const tabId = button.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Copy button functionality
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const codeBlock = button.parentElement.querySelector('code');
+                navigator.clipboard.writeText(codeBlock.textContent)
+                    .then(() => {
+                        button.textContent = 'Copied!';
+                        setTimeout(() => {
+                            button.textContent = 'Copy';
+                        }, 2000);
+                    });
+            });
+        });
+        
+        // Back to top button
+        document.querySelector('.back-to-top').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // 3D Background Animation
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        
+        // Particles array
+        const particles = [];
+        const particleCount = Math.floor(window.innerWidth / 10);
+        
+        // Particle class
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 2 - 1;
+                this.color = `hsl(${Math.random() * 60 + 180}, 100%, 50%)`;
+                this.opacity = Math.random() * 0.5 + 0.1;
+            }
+            
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                // Bounce off edges
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                
+                // Fade in and out
+                this.opacity += (Math.random() - 0.5) * 0.01;
+                this.opacity = Math.max(0.1, Math.min(0.6, this.opacity));
+            }
+            
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        }
+        
+        // Create particles
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+        
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Update and draw particles
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                
+                // Connect particles that are close
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 100) {
+                        ctx.strokeStyle = `rgba(0, 255, 170, ${1 - distance / 100})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+        });
+    </script>
+</body>
+</html>

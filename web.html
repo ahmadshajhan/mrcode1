@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mrcode Python Mastery - From Basics to Advanced</title>
+    <style>
+        /* Base Styles */
+        :root {
+            --python-blue: #3776AB;
+            --python-yellow: #FFD43B;
+            --python-light: #f0f8ff;
+            --python-dark: #0d1117;
+            --code-green: #7CFC00;
+            --code-purple: #9370DB;
+            --code-orange: #FFA500;
+            --code-red: #FF4500;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        
+        body {
+            background-color: var(--python-dark);
+            color: var(--python-light);
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* 3D Animation Background */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        /* Header Styles */
+        header {
+            background: rgba(13, 17, 23, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--python-blue);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo img {
+            height: 40px;
+        }
+        
+        .logo h1 {
+            color: var(--python-yellow);
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--python-yellow), var(--python-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        
+        nav a {
+            color: var(--python-light);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        
+        nav a:hover {
+            color: var(--python-yellow);
+            background: rgba(55, 118, 171, 0.2);
+        }
+        
+        /* Main Content Styles */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        section {
+            margin-bottom: 3rem;
+            background: rgba(13, 17, 23, 0.7);
+            padding: 2rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--python-blue);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+        
+        section:hover {
+            transform: translateY(-5px);
+        }
+        
+        h2 {
+            color: var(--python-yellow);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--python-yellow), var(--python-blue));
+            border-radius: 3px;
+        }
+        
+        h3 {
+            color: var(--python-blue);
+            margin: 1.5rem 0 1rem;
+            font-size: 1.5rem;
+        }
+        
+        p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Code Block Styles */
+        .code-block {
+            background: #1e1e1e;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--python-yellow);
+            position: relative;
+        }
+        
+        .code-block::before {
+            content: 'Python';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--python-blue);
+            color: white;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.8rem;
+            border-radius: 0 0 0 6px;
+        }
+        
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: 'Consolas', 'Courier New', monospace;
+            line-height: 1.5;
+        }
+        
+        .keyword {
+            color: var(--code-purple);
+            font-weight: bold;
+        }
+        
+        .function {
+            color: var(--code-green);
+        }
+        
+        .string {
+            color: var(--code-orange);
+        }
+        
+        .comment {
+            color: #6A9955;
+            font-style: italic;
+        }
+        
+        .number {
+            color: #B5CEA8;
+        }
+        
+        .operator {
+            color: #D4D4D4;
+        }
+        
+        /* Interactive Elements */
+        .example-container {
+            margin: 2rem 0;
+        }
+        
+        .example-tabs {
+            display: flex;
+            border-bottom: 1px solid #444;
+            margin-bottom: 1rem;
+        }
+        
+        .example-tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            background: #333;
+            border: none;
+            color: #ccc;
+            font-weight: bold;
+            border-radius: 6px 6px 0 0;
+            margin-right: 0.5rem;
+        }
+        
+        .example-tab.active {
+            background: var(--python-blue);
+            color: white;
+        }
+        
+        .example-content {
+            display: none;
+        }
+        
+        .example-content.active {
+            display: block;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background: rgba(13, 17, 23, 0.9);
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--python-blue);
+            margin-top: 3rem;
+        }
+        
+        footer p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            color: var(--python-light);
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--python-yellow);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+            
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+            
+            nav ul {
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+            
+            main {
+                padding: 1rem;
+            }
+            
+            section {
+                padding: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            h3 {
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            nav ul {
+                gap: 0.5rem;
+            }
+            
+            section {
+                padding: 1rem;
+            }
+            
+            .code-block {
+                padding: 1rem;
+            }
+        }
+        
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--python-yellow), var(--python-blue));
+            z-index: 1000;
+            transition: width 0.1s;
+        }
+        
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--python-blue);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 99;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background: var(--python-yellow);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Animation Background -->
+    <div id="canvas-container"></div>
+    
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+    
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python Logo">
+            <h1>Mrcode Python Mastery</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#basics">Python Basics</a></li>
+                <li><a href="#intermediate">Intermediate Python</a></li>
+                <li><a href="#advanced">Advanced Concepts</a></li>
+                <li><a href="#web-dev">Web Development</a></li>
+                <li><a href="#data-science">Data Science</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <!-- Main Content -->
+    <main>
+        <!-- Introduction Section -->
+        <section id="intro">
+            <h2>Welcome to Python Programming</h2>
+            <p>Python is a powerful, versatile programming language used for web development, data analysis, artificial intelligence, automation, and more. This comprehensive guide will take you from Python basics to advanced concepts, all in one place.</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">print</span>(<span class="string">"Hello, World!"</span>)  <span class="comment"># Your first Python program</span></pre>
+            </div>
+            
+            <h3>Why Learn Python?</h3>
+            <ul>
+                <li>Easy to learn with simple, readable syntax</li>
+                <li>Extensive standard library and third-party packages</li>
+                <li>Cross-platform compatibility</li>
+                <li>Strong community support</li>
+                <li>High demand in the job market</li>
+            </ul>
+        </section>
+        
+        <!-- Python Basics Section -->
+        <section id="basics">
+            <h2>Python Basics</h2>
+            <p>Let's start with the fundamental building blocks of Python programming.</p>
+            
+            <h3>Variables and Data Types</h3>
+            <p>Python is dynamically typed, meaning you don't need to declare variable types.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment"># Basic data types</span>
+<span class="keyword">name</span> = <span class="string">"Alice"</span>          <span class="comment"># String</span>
+<span class="keyword">age</span> = <span class="number">30</span>               <span class="comment"># Integer</span>
+<span class="keyword">price</span> = <span class="number">19.99</span>           <span class="comment"># Float</span>
+<span class="keyword">is_student</span> = <span class="keyword">True</span>       <span class="comment"># Boolean</span>
+<span class="keyword">fruits</span> = [<span class="string">"apple"</span>, <span class="string">"banana"</span>, <span class="string">"cherry"</span>]  <span class="comment"># List</span></pre>
+            </div>
+            
+            <h3>Control Flow</h3>
+            <p>Python uses indentation to define code blocks (typically 4 spaces).</p>
+            
+            <div class="example-container">
+                <div class="example-tabs">
+                    <button class="example-tab active" onclick="openExample(event, 'if-else')">If-Else</button>
+                    <button class="example-tab" onclick="openExample(event, 'loops')">Loops</button>
+                    <button class="example-tab" onclick="openExample(event, 'match')">Match (3.10+)</button>
+                </div>
+                
+                <div id="if-else" class="example-content active">
+                    <div class="code-block">
+                        <pre><span class="keyword">if</span> age < <span class="number">18</span>:
+    <span class="keyword">print</span>(<span class="string">"You're a minor"</span>)
+<span class="keyword">elif</span> age >= <span class="number">18</span> <span class="keyword">and</span> age < <span class="number">65</span>:
+    <span class="keyword">print</span>(<span class="string">"You're an adult"</span>)
+<span class="keyword">else</span>:
+    <span class="keyword">print</span>(<span class="string">"You're a senior"</span>)</pre>
+                    </div>
+                </div>
+                
+                <div id="loops" class="example-content">
+                    <div class="code-block">
+                        <pre><span class="comment"># For loop</span>
+<span class="keyword">for</span> fruit <span class="keyword">in</span> fruits:
+    <span class="keyword">print</span>(fruit)
+    
+<span class="comment"># While loop</span>
+<span class="keyword">count</span> = <span class="number">0</span>
+<span class="keyword">while</span> count < <span class="number">5</span>:
+    <span class="keyword">print</span>(count)
+    count += <span class="number">1</span></pre>
+                    </div>
+                </div>
+                
+                <div id="match" class="example-content">
+                    <div class="code-block">
+                        <pre><span class="comment"># Match case (Python 3.10+)</span>
+<span class="keyword">match</span> status_code:
+    <span class="keyword">case</span> <span class="number">200</span>:
+        <span class="keyword">print</span>(<span class="string">"Success"</span>)
+    <span class="keyword">case</span> <span class="number">404</span>:
+        <span class="keyword">print</span>(<span class="string">"Not found"</span>)
+    <span class="keyword">case</span> <span class="number">500</span>:
+        <span class="keyword">print</span>(<span class="string">"Server error"</span>)
+    <span class="keyword">case</span> _:
+        <span class="keyword">print</span>(<span class="string">"Unknown status"</span>)</pre>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Functions</h3>
+            <p>Functions are defined using the <code>def</code> keyword.</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">def</span> <span class="function">greet</span>(name):
+    <span class="keyword">return</span> <span class="string">f"Hello, {name}!"</span>
+
+<span class="comment"># Call the function</span>
+message = <span class="function">greet</span>(<span class="string">"Bob"</span>)
+<span class="keyword">print</span>(message)  <span class="comment"># Output: Hello, Bob!</span></pre>
+            </div>
+        </section>
+        
+        <!-- Intermediate Python Section -->
+        <section id="intermediate">
+            <h2>Intermediate Python</h2>
+            <p>Now that you know the basics, let's explore more powerful Python features.</p>
+            
+            <h3>Lists, Tuples, Dictionaries, and Sets</h3>
+            
+            <div class="code-block">
+                <pre><span class="comment"># List (mutable, ordered)</span>
+numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]
+numbers.append(<span class="number">4</span>)  <span class="comment"># [1, 2, 3, 4]</span>
+
+<span class="comment"># Tuple (immutable, ordered)</span>
+coordinates = (<span class="number">10.0</span>, <span class="number">20.0</span>)
+
+<span class="comment"># Dictionary (mutable, key-value pairs)</span>
+person = {<span class="string">"name"</span>: <span class="string">"Alice"</span>, <span class="string">"age"</span>: <span class="number">30</span>}
+
+<span class="comment"># Set (mutable, unordered, unique elements)</span>
+unique_numbers = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>}  <span class="comment"># {1, 2, 3}</span></pre>
+            </div>
+            
+            <h3>List Comprehensions</h3>
+            <p>A concise way to create lists.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment"># Traditional approach</span>
+squares = []
+<span class="keyword">for</span> x <span class="keyword">in</span> <span class="function">range</span>(<span class="number">10</span>):
+    squares.append(x**<span class="number">2</span>)
+
+<span class="comment"># With list comprehension</span>
+squares = [x**<span class="number">2</span> <span class="keyword">for</span> x <span class="keyword">in</span> <span class="function">range</span>(<span class="number">10</span>)]</pre>
+            </div>
+            
+            <h3>Error Handling</h3>
+            <p>Use try-except blocks to handle exceptions gracefully.</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">try</span>:
+    result = <span class="number">10</span> / <span class="number">0</span>
+<span class="keyword">except</span> ZeroDivisionError:
+    <span class="keyword">print</span>(<span class="string">"Cannot divide by zero!"</span>)
+<span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+    <span class="keyword">print</span>(<span class="string">f"An error occurred: {e}"</span>)
+<span class="keyword">finally</span>:
+    <span class="keyword">print</span>(<span class="string">"This always executes"</span>)</pre>
+            </div>
+        </section>
+        
+        <!-- Advanced Python Section -->
+        <section id="advanced">
+            <h2>Advanced Python Concepts</h2>
+            <p>These features make Python powerful and flexible for complex applications.</p>
+            
+            <h3>Object-Oriented Programming</h3>
+            
+            <div class="code-block">
+                <pre><span class="keyword">class</span> <span class="function">Person</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, name, age):
+        <span class="keyword">self</span>.name = name
+        <span class="keyword">self</span>.age = age
+    
+    <span class="keyword">def</span> <span class="function">greet</span>(<span class="keyword">self</span>):
+        <span class="keyword">return</span> <span class="string">f"Hi, I'm {self.name} and I'm {self.age} years old."</span>
+
+<span class="comment"># Create an instance</span>
+alice = <span class="function">Person</span>(<span class="string">"Alice"</span>, <span class="number">30</span>)
+<span class="keyword">print</span>(alice.<span class="function">greet</span>())</pre>
+            </div>
+            
+            <h3>Decorators</h3>
+            <p>Functions that modify the behavior of other functions.</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">def</span> <span class="function">timer_decorator</span>(func):
+    <span class="keyword">import</span> time
+    
+    <span class="keyword">def</span> <span class="function">wrapper</span>(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        <span class="keyword">print</span>(<span class="string">f"Function {func.__name__} took {end_time - start_time:.4f} seconds"</span>)
+        <span class="keyword">return</span> result
+    
+    <span class="keyword">return</span> wrapper
+
+<span class="keyword">@timer_decorator</span>
+<span class="keyword">def</span> <span class="function">slow_function</span>():
+    <span class="keyword">import</span> time
+    time.sleep(<span class="number">2</span>)
+
+<span class="function">slow_function</span>()</pre>
+            </div>
+            
+            <h3>Generators</h3>
+            <p>Efficient way to handle large datasets by yielding items one at a time.</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">def</span> <span class="function">fibonacci</span>(limit):
+    a, b = <span class="number">0</span>, <span class="number">1</span>
+    <span class="keyword">while</span> a < limit:
+        <span class="keyword">yield</span> a
+        a, b = b, a + b
+
+<span class="comment"># Usage</span>
+<span class="keyword">for</span> num <span class="keyword">in</span> <span class="function">fibonacci</span>(<span class="number">100</span>):
+    <span class="keyword">print</span>(num)</pre>
+            </div>
+        </section>
+        
+        <!-- Web Development Section -->
+        <section id="web-dev">
+            <h2>Python for Web Development</h2>
+            <p>Python is widely used for building web applications with frameworks like Django and Flask.</p>
+            
+            <h3>Flask Example</h3>
+            
+            <div class="code-block">
+                <pre><span class="comment"># Install Flask first: pip install flask</span>
+<span class="keyword">from</span> flask <span class="keyword">import</span> Flask
+
+app = <span class="function">Flask</span>(__name__)
+
+<span class="keyword">@app</span>.route(<span class="string">'/'</span>)
+<span class="keyword">def</span> <span class="function">home</span>():
+    <span class="keyword">return</span> <span class="string">"Welcome to my Flask app!"</span>
+
+<span class="keyword">@app</span>.route(<span class="string">'/hello/&lt;name&gt;'</span>)
+<span class="keyword">def</span> <span class="function">hello</span>(name):
+    <span class="keyword">return</span> <span class="string">f"Hello, {name}!"</span>
+
+<span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:
+    app.<span class="function">run</span>(debug=<span class="keyword">True</span>)</pre>
+            </div>
+            
+            <h3>Django Example</h3>
+            <p>Django is a more batteries-included framework.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment"># Install Django: pip install django</span>
+<span class="comment"># Create project: django-admin startproject myproject</span>
+<span class="comment"># Create app: python manage.py startapp myapp</span>
+
+<span class="comment"># myapp/views.py</span>
+<span class="keyword">from</span> django.http <span class="keyword">import</span> HttpResponse
+
+<span class="keyword">def</span> <span class="function">index</span>(request):
+    <span class="keyword">return</span> <span class="function">HttpResponse</span>(<span class="string">"Hello, Django!"</span>)
+
+<span class="comment"># myproject/urls.py</span>
+<span class="keyword">from</span> django.urls <span class="keyword">import</span> path
+<span class="keyword">from</span> myapp <span class="keyword">import</span> views
+
+urlpatterns = [
+    path(<span class="string">''</span>, views.index, name=<span class="string">'index'</span>),
+]</pre>
+            </div>
+            
+            <h3>FastAPI Example</h3>
+            <p>Modern, fast (high-performance) web framework for building APIs.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment"># Install FastAPI: pip install fastapi uvicorn</span>
+<span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI
+
+app = <span class="function">FastAPI</span>()
+
+<span class="keyword">@app</span>.get(<span class="string">"/"</span>)
+<span class="keyword">def</span> <span class="function">read_root</span>():
+    <span class="keyword">return</span> {<span class="string">"message"</span>: <span class="string">"Welcome to FastAPI"</span>}
+
+<span class="keyword">@app</span>.get(<span class="string">"/items/{item_id}"</span>)
+<span class="keyword">def</span> <span class="function">read_item</span>(item_id: int, q: str = <span class="keyword">None</span>):
+    <span class="keyword">return</span> {<span class="string">"item_id"</span>: item_id, <span class="string">"q"</span>: q}</pre>
+            </div>
+        </section>
+        
+        <!-- Data Science Section -->
+        <section id="data-science">
+            <h2>Python for Data Science</h2>
+            <p>Python is the leading language for data analysis and machine learning.</p>
+            
+            <h3>NumPy Basics</h3>
+            <p>Fundamental package for numerical computing.</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># Create arrays</span>
+arr = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>])
+matrix = np.array([[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">4</span>]])
+
+<span class="comment"># Basic operations</span>
+<span class="keyword">print</span>(arr * <span class="number">2</span>)      <span class="comment"># [2, 4, 6, 8, 10]</span>
+<span class="keyword">print</span>(matrix.T)    <span class="comment"># Transpose</span>
+<span class="keyword">print</span>(np.dot(matrix, matrix))  <span class="comment"># Matrix multiplication</span></pre>
+            </div>
+            
+            <h3>Pandas Basics</h3>
+            <p>Powerful data manipulation and analysis library.</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># Create DataFrame</span>
+data = {
+    <span class="string">'Name'</span>: [<span class="string">'Alice'</span>, <span class="string">'Bob'</span>, <span class="string">'Charlie'</span>],
+    <span class="string">'Age'</span>: [<span class="number">25</span>, <span class="number">30</span>, <span class="number">35</span>],
+    <span class="string">'City'</span>: [<span class="string">'New York'</span>, <span class="string">'London'</span>, <span class="string">'Paris'</span>]
+}
+df = pd.DataFrame(data)
+
+<span class="comment"># Basic operations</span>
+<span class="keyword">print</span>(df.head())       <span class="comment"># First 5 rows</span>
+<span class="keyword">print</span>(df.describe())   <span class="comment"># Statistics</span>
+<span class="keyword">print</span>(df[df[<span class="string">'Age'</span>] > <span class="number">28</span>])  <span class="comment"># Filtering</span></pre>
+            </div>
+            
+            <h3>Matplotlib Basics</h3>
+            <p>Comprehensive library for creating static, animated, and interactive visualizations.</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># Simple plot</span>
+x = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]
+y = [<span class="number">1</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">16</span>, <span class="number">25</span>]
+
+plt.plot(x, y)
+plt.xlabel(<span class="string">'X-axis'</span>)
+plt.ylabel(<span class="string">'Y-axis'</span>)
+plt.title(<span class="string">'Simple Plot'</span>)
+plt.show()</pre>
+            </div>
+        </section>
+        
+        <!-- Conclusion Section -->
+        <section id="conclusion">
+            <h2>Where to Go From Here</h2>
+            <p>You've now seen Python from basics to advanced topics. Here's how to continue your journey:</p>
+            
+            <h3>Next Steps</h3>
+            <ul>
+                <li>Build projects to apply what you've learned</li>
+                <li>Explore Python's standard library</li>
+                <li>Learn about virtual environments and package management</li>
+                <li>Contribute to open-source Python projects</li>
+                <li>Explore specialized areas like machine learning, web scraping, or automation</li>
+            </ul>
+            
+            <h3>Resources</h3>
+            <ul>
+                <li>Official Python Documentation: <a href="https://docs.python.org/3/" target="_blank">https://docs.python.org/3/</a></li>
+                <li>Real Python Tutorials: <a href="https://realpython.com/" target="_blank">https://realpython.com/</a></li>
+                <li>Python Package Index (PyPI): <a href="https://pypi.org/" target="_blank">https://pypi.org/</a></li>
+                <li>Awesome Python: <a href="https://awesome-python.com/" target="_blank">https://awesome-python.com/</a></li>
+            </ul>
+            
+            <div class="code-block">
+                <pre><span class="keyword">print</span>(<span class="string">"Happy coding with Python!"</span>)</pre>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <p>Mrcode Python Mastery - Comprehensive Python Guide</p>
+        <p>© 2023 All Rights Reserved</p>
+        <div class="social-links">
+            <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+    </footer>
+    
+    <!-- Back to Top Button -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
+    <!-- Three.js for 3D background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script>
+        // Tab functionality
+        function openExample(evt, exampleName) {
+            const tabContents = document.getElementsByClassName("example-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            const tabButtons = document.getElementsByClassName("example-tab");
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+            
+            document.getElementById(exampleName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        // Scroll indicator
+        window.onscroll = function() {
+            updateScrollIndicator();
+            toggleBackToTop();
+        };
+        
+        function updateScrollIndicator() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("scrollIndicator").style.width = scrolled + "%";
+        }
+        
+        // Back to top button
+        function toggleBackToTop() {
+            const backToTop = document.getElementById("backToTop");
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                backToTop.classList.add("visible");
+            } else {
+                backToTop.classList.remove("visible");
+            }
+        }
+        
+        document.getElementById("backToTop").addEventListener("click", function() {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+        
+        // 3D Background Animation with Three.js
+        const canvasContainer = document.getElementById('canvas-container');
+        
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        canvasContainer.appendChild(renderer.domElement);
+        
+        // Create particles
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particleCount = 1500;
+        
+        const posArray = new Float32Array(particleCount * 3);
+        
+        for(let i = 0; i < particleCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 10;
+        }
+        
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        
+        // Particle material
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.02,
+            color: 0x3776AB,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        
+        // Create particle system
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+        
+        // Camera position
+        camera.position.z = 3;
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            particlesMesh.rotation.x += 0.0005;
+            particlesMesh.rotation.y += 0.0005;
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Start animation
+        animate();
+        
+        // Syntax highlighting helper
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeBlocks = document.querySelectorAll('.code-block pre');
+            
+            codeBlocks.forEach(block => {
+                const code = block.innerHTML;
+                // Simple keyword highlighting (in a real app, use a proper library)
+                const highlighted = code
+                    .replace(/\b(def|class|return|if|elif|else|for|while|try|except|finally|with|import|from|as|and|or|not|in|is|None|True|False|yield|async|await|match|case)\b/g, '<span class="keyword">$1</span>')
+                    .replace(/\b([A-Za-z_][A-Za-z0-9_]*)\s*\(/g, '<span class="function">$1</span>(')
+                    .replace(/"([^"]*)"|\'([^\']*)\'/g, '<span class="string">$&</span>')
+                    .replace(/#([^\n]*)/g, '<span class="comment">$&</span>')
+                    .replace(/\b([0-9]+(\.[0-9]+)?)\b/g, '<span class="number">$1</span>')
+                    .replace(/(\+|\-|\*|\/|\%|\=|\=\=|\!\=|\>|\<|\>\=|\<\=|\&|\||\^|\~)/g, '<span class="operator">$1</span>');
+                
+                block.innerHTML = highlighted;
+            });
+        });
+    </script>
+</body>
+</html>

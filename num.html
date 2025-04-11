@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Fundamentals - Complete Guide</title>
+    <style>
+        :root {
+            --primary: #00ffaa;
+            --secondary: #ff00aa;
+            --dark: #111111;
+            --light: #f0f0f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 2px solid var(--primary);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .tab-btn:hover, .tab-btn.active {
+            background: var(--primary);
+            color: var(--dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 255, 170, 0.3);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+            background: rgba(20, 20, 20, 0.8);
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 255, 170, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 2rem;
+            border-bottom: 1px solid var(--primary);
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: var(--secondary);
+            margin: 20px 0 10px;
+            font-size: 1.5rem;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        pre {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 3px solid var(--primary);
+        }
+        
+        code {
+            font-family: 'Courier New', monospace;
+            color: var(--primary);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .code-block {
+            position: relative;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0, 255, 170, 0.2);
+            color: var(--primary);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(0, 255, 170, 0.4);
+        }
+        
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .example-card {
+            background: rgba(30, 30, 30, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 170, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(0, 255, 170, 0.3);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tab-content {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas-bg"></canvas>
+    
+    <div class="container">
+        <header>
+            <h1>Python Fundamentals</h1>
+            <p class="subtitle">From Basic to Advanced - All in One Place</p>
+            <p>Comprehensive guide covering Python basics, NumPy, Pandas, Django, Pygame, Pymunk and more</p>
+        </header>
+        
+        <div class="nav-tabs">
+            <button class="tab-btn active" data-tab="basics">Python Basics</button>
+            <button class="tab-btn" data-tab="numpy">NumPy</button>
+            <button class="tab-btn" data-tab="pandas">Pandas</button>
+            <button class="tab-btn" data-tab="django">Django</button>
+            <button class="tab-btn" data-tab="pygame">Pygame</button>
+            <button class="tab-btn" data-tab="pymunk">Pymunk</button>
+            <button class="tab-btn" data-tab="advanced">Advanced Python</button>
+        </div>
+        
+        <!-- Python Basics -->
+        <div id="basics" class="tab-content active">
+            <h2>Python Basics</h2>
+            
+            <h3>Variables and Data Types</h3>
+            <p>Python is dynamically typed, meaning you don't need to declare variable types.</p>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Basic data types
+integer_var = 42
+float_var = 3.14159
+string_var = "Hello, Python!"
+boolean_var = True
+none_var = None
+
+# Collections
+list_var = [1, 2, 3, "four", 5.0]
+tuple_var = (1, 2, 3)  # Immutable
+dict_var = {"name": "Alice", "age": 25}
+set_var = {1, 2, 3, 3, 2}  # Duplicates removed: {1, 2, 3}</code></pre>
+            </div>
+            
+            <h3>Control Flow</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># If-elif-else
+age = 18
+if age < 13:
+    print("Child")
+elif age < 20:
+    print("Teenager")
+else:
+    print("Adult")
+
+# Loops
+for i in range(5):  # 0 to 4
+    print(i)
+
+# While loop
+count = 0
+while count < 5:
+    print(count)
+    count += 1</code></pre>
+            </div>
+            
+            <h3>Functions</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Basic function
+def greet(name):
+    return f"Hello, {name}!"
+
+# Function with default arguments
+def power(base, exponent=2):
+    return base ** exponent
+
+# Lambda function
+square = lambda x: x * x</code></pre>
+            </div>
+            
+            <h3>Object-Oriented Programming</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>class Dog:
+    # Class attribute
+    species = "Canis familiaris"
+    
+    # Initializer
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+    
+    # Instance method
+    def description(self):
+        return f"{self.name} is {self.age} years old"
+    
+    # Another instance method
+    def speak(self, sound):
+        return f"{self.name} says {sound}"
+
+# Inheritance
+class Bulldog(Dog):
+    def speak(self, sound="Woof"):
+        return super().speak(sound)</code></pre>
+            </div>
+        </div>
+        
+        <!-- NumPy -->
+        <div id="numpy" class="tab-content">
+            <h2>NumPy - Numerical Python</h2>
+            
+            <h3>Creating Arrays</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>import numpy as np
+
+# Create arrays
+arr1 = np.array([1, 2, 3, 4, 5])  # 1D array
+arr2 = np.array([[1, 2, 3], [4, 5, 6]])  # 2D array
+zeros = np.zeros((3, 4))  # 3x4 array of zeros
+ones = np.ones((2, 2))  # 2x2 array of ones
+range_arr = np.arange(0, 10, 2)  # array([0, 2, 4, 6, 8])
+random_arr = np.random.rand(3, 3)  # 3x3 random array</code></pre>
+            </div>
+            
+            <h3>Array Operations</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Basic operations
+a = np.array([1, 2, 3])
+b = np.array([4, 5, 6])
+
+print(a + b)  # [5 7 9]
+print(a * b)  # [4 10 18]
+print(np.dot(a, b))  # Dot product: 32
+
+# Matrix operations
+matrix = np.array([[1, 2], [3, 4]])
+print(matrix.T)  # Transpose
+print(np.linalg.inv(matrix))  # Inverse matrix</code></pre>
+            </div>
+            
+            <h3>Array Indexing and Slicing</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>arr = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+
+print(arr[0, 1])  # 2 (first row, second column)
+print(arr[:, 1])  # [2 5 8] (all rows, second column)
+print(arr[1:3, 0:2])  # [[4 5] [7 8]] (subarray)</code></pre>
+            </div>
+            
+            <h3>Broadcasting</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Broadcasting allows operations between arrays of different shapes
+a = np.array([1, 2, 3])
+b = 2
+print(a * b)  # [2 4 6]
+
+matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+row = np.array([10, 20, 30])
+print(matrix + row)  # Adds row to each row of matrix</code></pre>
+            </div>
+        </div>
+        
+        <!-- Pandas -->
+        <div id="pandas" class="tab-content">
+            <h2>Pandas - Data Analysis</h2>
+            
+            <h3>DataFrames and Series</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>import pandas as pd
+
+# Create DataFrame from dictionary
+data = {
+    'Name': ['Alice', 'Bob', 'Charlie'],
+    'Age': [25, 30, 35],
+    'City': ['New York', 'Paris', 'London']
+}
+df = pd.DataFrame(data)
+
+# Create Series
+ages = pd.Series([25, 30, 35], name="Age")
+
+# Basic operations
+print(df.head())  # First 5 rows
+print(df.describe())  # Statistics
+print(df['Age'].mean())  # Average age</code></pre>
+            </div>
+            
+            <h3>Data Selection</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Selecting columns
+print(df['Name'])  # Single column
+print(df[['Name', 'Age']])  # Multiple columns
+
+# Selecting rows
+print(df.iloc[0])  # First row by index
+print(df.loc[df['Age'] > 30])  # Rows where Age > 30</code></pre>
+            </div>
+            
+            <h3>Data Cleaning</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Handling missing data
+df['Salary'] = [50000, None, 70000]  # Add column with missing value
+print(df.isnull())  # Check for missing values
+df_clean = df.dropna()  # Drop rows with missing values
+df_filled = df.fillna(60000)  # Fill missing values
+
+# Removing duplicates
+df = pd.DataFrame({'A': [1, 1, 2, 2], 'B': ['a', 'b', 'a', 'b']})
+df_no_dup = df.drop_duplicates()</code></pre>
+            </div>
+            
+            <h3>Grouping and Aggregation</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Group by and aggregate
+df = pd.DataFrame({
+    'Department': ['Sales', 'Sales', 'IT', 'IT', 'HR'],
+    'Employee': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'],
+    'Salary': [60000, 50000, 80000, 75000, 55000]
+})
+
+grouped = df.groupby('Department')
+print(grouped.mean())  # Average salary by department
+print(grouped.agg({'Salary': ['mean', 'min', 'max', 'count']}))  # Multiple stats</code></pre>
+            </div>
+        </div>
+        
+        <!-- Django -->
+        <div id="django" class="tab-content">
+            <h2>Django - Web Framework</h2>
+            
+            <h3>Setting Up a Project</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Install Django
+# pip install django
+
+# Create a new project
+# django-admin startproject myproject
+
+# Create a new app
+# python manage.py startapp myapp
+
+# Project structure:
+# myproject/
+# ├── manage.py
+# ├── myproject/
+# │   ├── __init__.py
+# │   ├── settings.py
+# │   ├── urls.py
+# │   └── wsgi.py
+# └── myapp/
+#     ├── migrations/
+#     ├── __init__.py
+#     ├── admin.py
+#     ├── apps.py
+#     ├── models.py
+#     ├── tests.py
+#     └── views.py</code></pre>
+            </div>
+            
+            <h3>Models</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># myapp/models.py
+from django.db import models
+
+class BlogPost(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    published_date = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.title
+
+# After creating models:
+# python manage.py makemigrations
+# python manage.py migrate</code></pre>
+            </div>
+            
+            <h3>Views and URLs</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># myapp/views.py
+from django.shortcuts import render
+from .models import BlogPost
+
+def post_list(request):
+    posts = BlogPost.objects.all().order_by('-published_date')
+    return render(request, 'blog/post_list.html', {'posts': posts})
+
+# myproject/urls.py
+from django.contrib import admin
+from django.urls import path
+from myapp import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('posts/', views.post_list, name='post_list'),
+]</code></pre>
+            </div>
+            
+            <h3>Templates</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>&lt;!-- myapp/templates/blog/post_list.html --&gt;
+{% extends 'base.html' %}
+
+{% block content %}
+  &lt;h1&gt;Blog Posts&lt;/h1&gt;
+  {% for post in posts %}
+    &lt;div class="post"&gt;
+      &lt;h2&gt;&lt;a href="{% url 'post_detail' pk=post.pk %}"&gt;{{ post.title }}&lt;/a&gt;&lt;/h2&gt;
+      &lt;p&gt;Published: {{ post.published_date }} by {{ post.author }}&lt;/p&gt;
+      &lt;p&gt;{{ post.content|linebreaksbr }}&lt;/p&gt;
+    &lt;/div&gt;
+  {% endfor %}
+{% endblock %}</code></pre>
+            </div>
+        </div>
+        
+        <!-- Pygame -->
+        <div id="pygame" class="tab-content">
+            <h2>Pygame - Game Development</h2>
+            
+            <h3>Basic Setup</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>import pygame
+import sys
+
+# Initialize pygame
+pygame.init()
+
+# Set up the display
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("My Pygame")
+
+# Colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+
+# Game loop
+clock = pygame.time.Clock()
+running = True
+
+while running:
+    # Handle events
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+    
+    # Update game state
+    
+    # Draw everything
+    screen.fill(BLACK)
+    pygame.draw.rect(screen, RED, (100, 100, 50, 50))
+    
+    # Update the display
+    pygame.display.flip()
+    
+    # Cap the frame rate
+    clock.tick(60)
+
+pygame.quit()
+sys.exit()</code></pre>
+            </div>
+            
+            <h3>Sprite Example</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.Surface((50, 50))
+        self.image.fill(RED)
+        self.rect = self.image.get_rect()
+        self.rect.center = (screen_width // 2, screen_height // 2)
+        self.speed = 5
+    
+    def update(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            self.rect.x -= self.speed
+        if keys[pygame.K_RIGHT]:
+            self.rect.x += self.speed
+        if keys[pygame.K_UP]:
+            self.rect.y -= self.speed
+        if keys[pygame.K_DOWN]:
+            self.rect.y += self.speed
+        
+        # Keep player on screen
+        self.rect.clamp_ip(screen.get_rect())
+
+# Create sprite group
+all_sprites = pygame.sprite.Group()
+player = Player()
+all_sprites.add(player)
+
+# In game loop:
+# all_sprites.update()
+# all_sprites.draw(screen)</code></pre>
+            </div>
+            
+            <h3>Collision Detection</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>class Enemy(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.Surface((30, 30))
+        self.image.fill(WHITE)
+        self.rect = self.image.get_rect()
+        self.rect.x = random.randrange(screen_width - self.rect.width)
+        self.rect.y = random.randrange(screen_height - self.rect.height)
+        self.speedy = random.randrange(1, 4)
+    
+    def update(self):
+        self.rect.y += self.speedy
+        if self.rect.top > screen_height:
+            self.rect.x = random.randrange(screen_width - self.rect.width)
+            self.rect.y = random.randrange(-100, -40)
+            self.speedy = random.randrange(1, 4)
+
+# Create enemy group
+enemies = pygame.sprite.Group()
+for i in range(8):
+    e = Enemy()
+    all_sprites.add(e)
+    enemies.add(e)
+
+# Check for collisions
+hits = pygame.sprite.spritecollide(player, enemies, False)
+if hits:
+    # Handle collision
+    print("Player hit an enemy!")</code></pre>
+            </div>
+        </div>
+        
+        <!-- Pymunk -->
+        <div id="pymunk" class="tab-content">
+            <h2>Pymunk - Physics Engine</h2>
+            
+            <h3>Basic Physics Setup</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code>import pymunk
+import pymunk.pygame_util
+
+# Initialize space
+space = pymunk.Space()
+space.gravity = (0, 900)  # Gravity pointing down
+
+# Create a static floor
+floor = pymunk.Segment(space.static_body, (0, 500), (800, 500), 5)
+floor.elasticity = 0.8
+space.add(floor)
+
+# Create a dynamic ball
+ball_mass = 1
+ball_radius = 30
+ball_moment = pymunk.moment_for_circle(ball_mass, 0, ball_radius)
+ball_body = pymunk.Body(ball_mass, ball_moment)
+ball_body.position = (400, 100)
+ball_shape = pymunk.Circle(ball_body, ball_radius)
+ball_shape.elasticity = 0.9
+ball_shape.friction = 0.5
+space.add(ball_body, ball_shape)
+
+# In game loop:
+# space.step(1/60.0)  # Update physics
+# draw_options = pymunk.pygame_util.DrawOptions(screen)
+# space.debug_draw(draw_options)</code></pre>
+            </div>
+            
+            <h3>Interactive Physics</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Mouse interaction
+def create_ball(x, y):
+    ball_mass = 1
+    ball_radius = 15
+    ball_moment = pymunk.moment_for_circle(ball_mass, 0, ball_radius)
+    ball_body = pymunk.Body(ball_mass, ball_moment)
+    ball_body.position = (x, y)
+    ball_shape = pymunk.Circle(ball_body, ball_radius)
+    ball_shape.elasticity = 0.8
+    ball_shape.friction = 0.5
+    space.add(ball_body, ball_shape)
+    return ball_shape
+
+# In event loop:
+# if event.type == pygame.MOUSEBUTTONDOWN:
+#     if event.button == 1:  # Left click
+#         create_ball(event.pos[0], event.pos[1])</code></pre>
+            </div>
+            
+            <h3>Joints and Constraints</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Create two bodies connected with a joint
+body1 = pymunk.Body(1, pymunk.moment_for_box(1, (50, 50)))
+body1.position = (300, 200)
+box1 = pymunk.Poly.create_box(body1, (50, 50))
+box1.friction = 0.7
+space.add(body1, box1)
+
+body2 = pymunk.Body(1, pymunk.moment_for_box(1, (50, 50)))
+body2.position = (400, 200)
+box2 = pymunk.Poly.create_box(body2, (50, 50))
+box2.friction = 0.7
+space.add(body2, box2)
+
+# Create a pin joint between them
+joint = pymunk.PinJoint(body1, body2, (25, 25), (-25, 25))
+space.add(joint)</code></pre>
+            </div>
+        </div>
+        
+        <!-- Advanced Python -->
+        <div id="advanced" class="tab-content">
+            <h2>Advanced Python Concepts</h2>
+            
+            <h3>Decorators</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Simple decorator
+def my_decorator(func):
+    def wrapper():
+        print("Something is happening before the function is called.")
+        func()
+        print("Something is happening after the function is called.")
+    return wrapper
+
+@my_decorator
+def say_hello():
+    print("Hello!")
+
+# say_hello() will now include the decorator's behavior
+
+# Decorator with arguments
+def repeat(num_times):
+    def decorator_repeat(func):
+        def wrapper(*args, **kwargs):
+            for _ in range(num_times):
+                result = func(*args, **kwargs)
+            return result
+        return wrapper
+    return decorator_repeat
+
+@repeat(num_times=3)
+def greet(name):
+    print(f"Hello {name}")</code></pre>
+            </div>
+            
+            <h3>Generators</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Simple generator
+def count_up_to(max):
+    count = 1
+    while count <= max:
+        yield count
+        count += 1
+
+counter = count_up_to(5)
+for num in counter:
+    print(num)  # Prints 1, 2, 3, 4, 5
+
+# Generator expression
+squares = (x*x for x in range(10))
+for square in squares:
+    print(square)</code></pre>
+            </div>
+            
+            <h3>Context Managers</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Using context manager (with statement)
+with open('file.txt', 'r') as file:
+    content = file.read()
+# File automatically closed here
+
+# Creating a custom context manager
+from contextlib import contextmanager
+
+@contextmanager
+def managed_file(name):
+    try:
+        f = open(name, 'w')
+        yield f
+    finally:
+        f.close()
+
+with managed_file('hello.txt') as f:
+    f.write('Hello, world!')
+    f.write('Bye now')</code></pre>
+            </div>
+            
+            <h3>Metaclasses</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <pre><code># Simple metaclass example
+class Meta(type):
+    def __new__(cls, name, bases, dct):
+        # Add a class attribute
+        dct['created_by'] = 'Meta'
+        
+        # Ensure all methods are uppercase
+        uppercase_attr = {}
+        for name, val in dct.items():
+            if not name.startswith('__'):
+                uppercase_attr[name.upper()] = val
+            else:
+                uppercase_attr[name] = val
+        
+        return super().__new__(cls, name, bases, uppercase_attr)
+
+class MyClass(metaclass=Meta):
+    def my_method(self):
+        print("This is my method")
+
+obj = MyClass()
+obj.MY_METHOD()  # Note the uppercase method name
+print(MyClass.created_by)  # 'Meta'</code></pre>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Python Fundamentals - Complete Guide | &copy; 2023</p>
+            <p>All concepts from basic to advanced in one place</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons and content
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                // Show corresponding content
+                const tabId = button.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Copy button functionality
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const codeBlock = button.parentElement.querySelector('code');
+                navigator.clipboard.writeText(codeBlock.textContent)
+                    .then(() => {
+                        button.textContent = 'Copied!';
+                        setTimeout(() => {
+                            button.textContent = 'Copy';
+                        }, 2000);
+                    });
+            });
+        });
+        
+        // 3D Background Animation
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Particles array
+        const particles = [];
+        const particleCount = 150;
+        
+        // Particle class
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 3 - 1.5;
+                this.color = `hsl(${Math.random() * 60 + 180}, 100%, 50%)`;
+            }
+            
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                // Bounce off edges
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+            }
+            
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        // Create particles
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+        
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Update and draw particles
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                
+                // Connect particles that are close
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 100) {
+                        ctx.strokeStyle = `rgba(0, 255, 170, ${1 - distance / 100})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

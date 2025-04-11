@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MRCode - Learn Python from Basic to Advanced</title>
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* 3D Animation Effects */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+        }
+        
+        .card-3d:hover {
+            transform: rotateY(10deg) rotateX(10deg) translateY(-10px);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            margin-top: 60px;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInDown 1s ease;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.5s both;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            animation: fadeIn 1s ease 1s both;
+        }
+        
+        .btn:hover {
+            background: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* About Section */
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: var(--secondary-color);
+            margin: 1rem auto;
+        }
+        
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+        }
+        
+        .about-image img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Courses Section */
+        .courses {
+            background-color: var(--light-color);
+        }
+        
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .course-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .course-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .course-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .course-card:hover .course-image img {
+            transform: scale(1.1);
+        }
+        
+        .course-content {
+            padding: 1.5rem;
+        }
+        
+        .course-content h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .course-content p {
+            margin-bottom: 1.5rem;
+            color: #666;
+        }
+        
+        /* Compiler Section */
+        .compiler {
+            background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
+            color: white;
+        }
+        
+        .compiler-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .compiler-header {
+            background: var(--secondary-color);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .compiler-header h3 {
+            color: white;
+        }
+        
+        .compiler-controls button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 0.5rem;
+            transition: background 0.3s;
+        }
+        
+        .compiler-controls button:hover {
+            background: #c0392b;
+        }
+        
+        .code-editor {
+            width: 100%;
+            min-height: 300px;
+            padding: 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            border: none;
+            resize: vertical;
+            background: #1e1e1e;
+            color: #f8f8f2;
+        }
+        
+        .output {
+            width: 100%;
+            min-height: 150px;
+            padding: 1rem;
+            background: #1e1e1e;
+            color: #f8f8f2;
+            border-top: 1px solid #444;
+            font-family: 'Courier New', Courier, monospace;
+            overflow-y: auto;
+        }
+        
+        /* Modules Section */
+        .modules {
+            background-color: var(--light-color);
+        }
+        
+        .module-accordion {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .accordion-item {
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .accordion-header {
+            background: var(--secondary-color);
+            color: white;
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+        
+        .accordion-header:hover {
+            background: #2980b9;
+        }
+        
+        .accordion-content {
+            background: white;
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .accordion-content.show {
+            padding: 1rem;
+            max-height: 1000px;
+        }
+        
+        .module-list {
+            list-style: none;
+        }
+        
+        .module-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .module-list li:last-child {
+            border-bottom: none;
+        }
+        
+        /* Error Challenge Section */
+        .error-challenge {
+            text-align: center;
+        }
+        
+        .challenge-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .challenge-code {
+            background: #1e1e1e;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 5px;
+            text-align: left;
+            margin: 1rem 0;
+            font-family: 'Courier New', Courier, monospace;
+            position: relative;
+        }
+        
+        .challenge-code .error-line {
+            background: rgba(231, 76, 60, 0.2);
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .option-btn {
+            padding: 1rem;
+            background: var(--light-color);
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option-btn:hover {
+            border-color: var(--secondary-color);
+        }
+        
+        .option-btn.correct {
+            background: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+        
+        .option-btn.incorrect {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        
+        .feedback {
+            margin: 1rem 0;
+            font-weight: bold;
+            min-height: 24px;
+        }
+        
+        /* Contact Section */
+        .contact {
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            color: white;
+        }
+        
+        .contact-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .contact-info h3 {
+            margin-bottom: 1rem;
+        }
+        
+        .contact-info p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .contact-form {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 60px);
+                background: var(--primary-color);
+                flex-direction: column;
+                align-items: center;
+                padding: 2rem 0;
+                transition: left 0.3s;
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .nav-links li {
+                margin: 1rem 0;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar">
+            <a href="#" class="logo">MR<span>Code</span></a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#courses">Courses</a></li>
+                <li><a href="#compiler">Compiler</a></li>
+                <li><a href="#modules">Modules</a></li>
+                <li><a href="#challenge">Challenge</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Learn Python from Basic to Advanced</h1>
+            <p>Master Python programming with our comprehensive tutorials, interactive compiler, and challenging exercises designed for all skill levels.</p>
+            <a href="#courses" class="btn">Start Learning</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <h2 class="section-title">About MRCode</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Your Complete Python Learning Platform</h3>
+                <p>MRCode is dedicated to providing high-quality Python education for beginners and advanced programmers alike. Our mission is to make Python programming accessible to everyone through clear explanations, practical examples, and interactive learning tools.</p>
+                <p>Whether you're just starting your programming journey or looking to enhance your skills, MRCode offers a structured path from basic concepts to advanced topics, including web development, data science, and automation.</p>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Python Code">
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses Section -->
+    <section id="courses" class="section courses">
+        <h2 class="section-title">Our Python Courses</h2>
+        <div class="courses-grid">
+            <div class="course-card card-3d">
+                <div class="course-image">
+                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Python Basics">
+                </div>
+                <div class="course-content">
+                    <h3>Python Fundamentals</h3>
+                    <p>Learn the core concepts of Python programming, including variables, data types, loops, and functions.</p>
+                    <a href="fund.html" class="btn">Start Course</a>
+                </div>
+            </div>
+            
+            <div class="course-card card-3d">
+                <div class="course-image">
+                    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Web Development">
+                </div>
+                <div class="course-content">
+                    <h3>Web Development with Python</h3>
+                    <p>Build web applications using Flask and Django frameworks. Learn routing, templates, and database integration.</p>
+                    <a href="web.html" class="btn">Start Course</a>
+                </div>
+            </div>
+            
+            <div class="course-card card-3d">
+                <div class="course-image">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Data Science">
+                </div>
+                <div class="course-content">
+                    <h3>Data Science with Python</h3>
+                    <p>Master NumPy, Pandas, and Matplotlib for data analysis and visualization. Explore machine learning basics.</p>
+                    <a href="dat.html" class="btn">Start Course</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Compiler Section -->
+    <section id="compiler" class="section compiler">
+        <h2 class="section-title">Online Python Compiler</h2>
+        <div class="compiler-container">
+            <div class="compiler-header">
+                <h3>Python 3 Compiler</h3>
+                <div class="compiler-controls">
+                    <button id="run-btn">Run</button>
+                    <button id="clear-btn">Clear</button>
+                </div>
+            </div>
+            <textarea id="code-editor" class="code-editor" placeholder="Write your Python code here..."># Welcome to MRCode Python Compiler
+# Try writing some Python code and click Run
+
+def greet(name):
+    return f"Hello, {name}!"
+
+print(greet("MRCode User"))</textarea>
+            <div id="output" class="output"></div>
+        </div>
+    </section>
+
+    <!-- Modules Section -->
+    <section id="modules" class="section modules">
+        <h2 class="section-title">Python Modules & Installation</h2>
+        <div class="module-accordion">
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h3>Standard Library Modules</h3>
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <ul class="module-list">
+                        <li><strong>os</strong> - Operating system interfaces</li>
+                        <li><strong>sys</strong> - System-specific parameters</li>
+                        <li><strong>math</strong> - Mathematical functions</li>
+                        <li><strong>datetime</strong> - Date and time handling</li>
+                        <li><strong>json</strong> - JSON encoder and decoder</li>
+                        <li><strong>re</strong> - Regular expressions</li>
+                        <li><strong>random</strong> - Generate random numbers</li>
+                        <li><strong>urllib</strong> - URL handling modules</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h3>Popular Third-Party Modules</h3>
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <ul class="module-list">
+                        <li><strong>NumPy</strong> - Numerical computing</li>
+                        <li><strong>Pandas</strong> - Data analysis</li>
+                        <li><strong>Matplotlib</strong> - Data visualization</li>
+                        <li><strong>Flask</strong> - Web framework</li>
+                        <li><strong>Django</strong> - Full-featured web framework</li>
+                        <li><strong>Requests</strong> - HTTP requests</li>
+                        <li><strong>BeautifulSoup</strong> - Web scraping</li>
+                        <li><strong>PyGame</strong> - Game development</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h3>Installation Guide</h3>
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <h4>Installing Python</h4>
+                    <p>Download the latest version of Python from the official website: <a href="https://www.python.org/downloads/" target="_blank">python.org/downloads</a></p>
+                    
+                    <h4>Installing Modules</h4>
+                    <p>Use pip, Python's package installer. Open your command line or terminal and run:</p>
+                    <div class="challenge-code">
+                        pip install module-name
+                    </div>
+                    <p>For example, to install NumPy:</p>
+                    <div class="challenge-code">
+                        pip install numpy
+                    </div>
+                    
+                    <h4>Virtual Environments</h4>
+                    <p>Create isolated Python environments to manage dependencies:</p>
+                    <div class="challenge-code">
+                        python -m venv myenv<br>
+                        source myenv/bin/activate  # On Unix/MacOS<br>
+                        myenv\Scripts\activate    # On Windows
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Error Challenge Section -->
+    <section id="challenge" class="section error-challenge">
+        <h2 class="section-title">Error Finding Challenge</h2>
+        <div class="challenge-card card-3d">
+            <h3>Find the Error in This Code</h3>
+            <p>Identify what's wrong with the following Python code snippet:</p>
+            <div class="challenge-code">
+                def calculate_average(numbers):<br>
+                    total = 0<br>
+                    for num in numbers:<br>
+                        total += num<br>
+                    average = total / len(numbers)<br>
+                    return average<br>
+                <br>
+                nums = [10, 20, 30, 40, '50']<br>
+                print(calculate_average(nums))
+            </div>
+            <div class="options">
+                <div class="option-btn" data-correct="false">Missing colon after function definition</div>
+                <div class="option-btn" data-correct="false">Incorrect indentation</div>
+                <div class="option-btn" data-correct="true">TypeError from mixing string and numbers</div>
+                <div class="option-btn" data-correct="false">Missing import statement</div>
+            </div>
+            <div class="feedback"></div>
+            <button id="next-challenge" class="btn">Next Challenge</button>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section contact">
+        <h2 class="section-title">Contact Us</h2>
+        <div class="contact-container">
+            <div class="contact-info">
+                <h3>Get in Touch</h3>
+                <p>Have questions about our courses or need help with your Python journey? Reach out to our team of experts.</p>
+                <p><strong>Email:</strong>mrcode8089@gmail.com</p>
+                <p><strong>Phone:</strong> +91 8089021973</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div class="contact-form">
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 MRCode. All rights reserved.</p>
+        <p>Learn Python from Basic to Advanced with our comprehensive tutorials and interactive tools.</p>
+    </footer>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
+    <!-- JavaScript -->
+    <script>
+        // Mobile Menu Toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                hamburger.classList.remove('active');
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                window.scrollTo({
+                    top: targetElement.offsetTop - 60,
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Accordion functionality
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
+        
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                const icon = header.querySelector('span');
+                
+                if (content.classList.contains('show')) {
+                    content.classList.remove('show');
+                    icon.textContent = '+';
+                } else {
+                    content.classList.add('show');
+                    icon.textContent = '-';
+                }
+            });
+        });
+        
+        // Online Python Compiler
+        const runBtn = document.getElementById('run-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const codeEditor = document.getElementById('code-editor');
+        const outputDiv = document.getElementById('output');
+        
+        runBtn.addEventListener('click', () => {
+            const code = codeEditor.value;
+            
+            try {
+                // Capture console.log output
+                const originalConsoleLog = console.log;
+                let output = '';
+                
+                console.log = function(message) {
+                    output += message + '\n';
+                    originalConsoleLog.apply(console, arguments);
+                };
+                
+                // Execute the code
+                const result = new Function(code)();
+                
+                // If the code returns something (not just console.log)
+                if (result !== undefined) {
+                    output += result;
+                }
+                
+                outputDiv.textContent = output;
+            } catch (error) {
+                outputDiv.textContent = `Error: ${error.message}`;
+            }
+        });
+        
+        clearBtn.addEventListener('click', () => {
+            outputDiv.textContent = '';
+        });
+        
+        // Error Challenge
+        const optionBtns = document.querySelectorAll('.option-btn');
+        const feedbackDiv = document.querySelector('.feedback');
+        const nextChallengeBtn = document.getElementById('next-challenge');
+        
+        optionBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const isCorrect = btn.getAttribute('data-correct') === 'true';
+                
+                if (isCorrect) {
+                    btn.classList.add('correct');
+                    feedbackDiv.textContent = 'Correct! Well done!';
+                    feedbackDiv.style.color = 'var(--success-color)';
+                } else {
+                    btn.classList.add('incorrect');
+                    feedbackDiv.textContent = 'Incorrect. Try again!';
+                    feedbackDiv.style.color = 'var(--accent-color)';
+                }
+                
+                // Disable all buttons after selection
+                optionBtns.forEach(b => {
+                    b.style.pointerEvents = 'none';
+                });
+            });
+        });
+        
+        nextChallengeBtn.addEventListener('click', () => {
+            // In a real app, this would load a new challenge
+            // For demo, we'll just reset the current one
+            optionBtns.forEach(btn => {
+                btn.classList.remove('correct', 'incorrect');
+                btn.style.pointerEvents = 'auto';
+            });
+            feedbackDiv.textContent = '';
+            
+            // Example of changing the challenge (simplified)
+            const challengeCode = document.querySelector('.challenge-code');
+            challengeCode.innerHTML = `def factorial(n):<br>
+    if n == 0:<br>
+        return 1<br>
+    else:<br>
+        return n * factorial(n)<br>
+<br>
+print(factorial(5))`;
+            
+            // Update options (simplified)
+            const options = document.querySelectorAll('.option-btn');
+            options[0].setAttribute('data-correct', 'false');
+            options[0].textContent = "Missing base case in recursion";
+            options[1].setAttribute('data-correct', 'false');
+            options[1].textContent = "Incorrect indentation";
+            options[2].setAttribute('data-correct', 'true');
+            options[2].textContent = "Infinite recursion (missing n-1)";
+            options[3].setAttribute('data-correct', 'false');
+            options[3].textContent = "Missing colon after if statement";
+        });
+        
+        // Contact Form
+        const contactForm = document.getElementById('contact-form');
+        
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            // In a real app, you would send this data to a server
+            alert(`Thank you, ${name}! Your message has been received. We'll contact you at ${email} soon.`);
+            
+            // Reset form
+            contactForm.reset();
+        });
+        
+        // Animation on scroll
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.section, .course-card, .challenge-card');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.2;
+                
+                if (elementPosition < screenPosition) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        };
+        
+        // Set initial state for animation
+        document.querySelectorAll('.section, .course-card, .challenge-card').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        });
+        
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('load', animateOnScroll);
+    </script>
+</body>
+</html>
