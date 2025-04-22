@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexDev 3D Presentation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00f0ff;
+            --secondary: #ff00e4;
+            --dark: #0a0a0a;
+            --light: #f0f0f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 0.5rem;
+            font-size: 2.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 3rem;
+        }
+        
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--light);
+        }
+        
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            max-width: 600px;
+            z-index: 10;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 240, 255, 0.4);
+        }
+        
+        .hero-image {
+            position: absolute;
+            right: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 500px;
+            height: 500px;
+            background: url('https://images.unsplash.com/photo-1626785774573-4b799315345d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80') no-repeat center center;
+            background-size: cover;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            z-index: 5;
+        }
+        
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        section {
+            padding: 8rem 10%;
+            position: relative;
+        }
+        
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            text-align: center;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .problem-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .problem-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .problem-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 240, 255, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .problem-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .problem-card p {
+            line-height: 1.6;
+        }
+        
+        .solution-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+        
+        .solution-card {
+            width: 300px;
+            height: 400px;
+            perspective: 1000px;
+        }
+        
+        .solution-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        
+        .solution-card:hover .solution-card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .solution-card-front, .solution-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .solution-card-front {
+            background: linear-gradient(45deg, rgba(0, 240, 255, 0.1), rgba(255, 0, 228, 0.1));
+        }
+        
+        .solution-card-back {
+            background: linear-gradient(45deg, rgba(0, 240, 255, 0.2), rgba(255, 0, 228, 0.2));
+            transform: rotateY(180deg);
+        }
+        
+        .solution-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .solution-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .solution-card p {
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        .market-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 240, 255, 0.1);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+            color: var(--light);
+        }
+        
+        .model-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+        
+        .model-card {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .model-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            text-align: center;
+        }
+        
+        .model-card ul {
+            list-style: none;
+        }
+        
+        .model-card li {
+            margin-bottom: 1rem;
+            position: relative;
+            padding-left: 2rem;
+            line-height: 1.6;
+        }
+        
+        .model-card li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .outcomes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .outcome-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .outcome-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 240, 255, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .outcome-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .outcome-card p {
+            line-height: 1.6;
+        }
+        
+        .challenges-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .challenge-item {
+            margin-bottom: 3rem;
+            position: relative;
+            padding-left: 3rem;
+        }
+        
+        .challenge-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+        }
+        
+        .challenge-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .challenge-item p {
+            line-height: 1.6;
+        }
+        
+        .plans-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .plan-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 240, 255, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .plan-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .plan-card p {
+            line-height: 1.6;
+        }
+        
+        .conclusion-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .conclusion-content p {
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+        
+        footer {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 3rem 10%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links li {
+            margin: 0 1rem;
+        }
+        
+        .footer-links a {
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .social-links li {
+            margin: 0 1rem;
+        }
+        
+        .social-links a {
+            color: var(--light);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero-image {
+                width: 400px;
+                height: 400px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .menu-btn {
+                display: block;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: rgba(10, 10, 10, 0.95);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.5s ease;
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .nav-links li {
+                margin: 1.5rem 0;
+            }
+            
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 120px;
+                padding-bottom: 50px;
+            }
+            
+            .hero-content {
+                margin-bottom: 3rem;
+            }
+            
+            .hero-image {
+                position: relative;
+                right: auto;
+                top: auto;
+                transform: none;
+                width: 100%;
+                max-width: 400px;
+                height: 300px;
+                margin: 0 auto;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                padding: 0.6rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Background Canvas -->
+    <div id="canvas-container"></div>
+    
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">
+            <i class="fas fa-code"></i>
+            <span>ApexDev</span>
+        </a>
+        <div class="menu-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#problem">Problem</a></li>
+            <li><a href="#solution">Solution</a></li>
+            <li><a href="#market">Market</a></li>
+            <li><a href="#model">Model</a></li>
+            <li><a href="#outcomes">Outcomes</a></li>
+            <li><a href="#challenges">Challenges</a></li>
+            <li><a href="#plans">Plans</a></li>
+            <li><a href="#conclusion">Conclusion</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Transforming Ideas Into Digital Reality</h1>
+            <p>ApexDev delivers cutting-edge web solutions that drive business growth through innovative design, robust functionality, and measurable results.</p>
+            <a href="#solution" class="btn">Explore Solutions</a>
+        </div>
+        <div class="hero-image"></div>
+        <div class="particles" id="particles"></div>
+    </section>
+
+        <!-- Problem Statement Section -->
+        <section id="problem">
+            <h2 class="section-title">The Problem We Solve</h2>
+            <div class="problem-container">
+                <div class="problem-card">
+                    <h3>Outdated Websites</h3>
+                    <p>Businesses struggle with obsolete web platforms that fail to engage modern users, resulting in lost opportunities and revenue.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>Poor User Experience</h3>
+                    <p>Non-intuitive interfaces and slow load times drive customers away, damaging brand reputation and conversion rates.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>Security Vulnerabilities</h3>
+                    <p>Legacy systems with inadequate protection expose businesses to cyber threats and data breaches.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>Lack of Mobile Optimization</h3>
+                    <p>With over 60% of web traffic coming from mobile devices, non-responsive designs alienate a growing user base.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>SEO Challenges</h3>
+                    <p>Poorly optimized websites suffer from low search rankings, reducing visibility and organic traffic.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>Technical Debt</h3>
+                    <p>Short-term solutions lead to long-term maintenance nightmares and scalability issues.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Solution Overview Section -->
+        <section id="solution">
+            <h2 class="section-title">Our Innovative Solutions</h2>
+            <div class="solution-container">
+                <div class="solution-card">
+                    <div class="solution-card-inner">
+                        <div class="solution-card-front">
+                            <div class="solution-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3>Context-Aware Security</h3>
+                        </div>
+                        <div class="solution-card-back">
+                            <p>Our intelligent framework dynamically adjusts authentication protocols based on user behavior patterns and access locations, implementing geofencing and multi-factor authentication when anomalies are detected.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="solution-card">
+                    <div class="solution-card-inner">
+                        <div class="solution-card-front">
+                            <div class="solution-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <h3>Smart Personalization</h3>
+                        </div>
+                        <div class="solution-card-back">
+                            <p>AI-driven engine analyzes user data to deliver hyper-relevant content, automatically adjusting layouts, promotions and language preferences based on geographic location and browsing history.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="solution-card">
+                    <div class="solution-card-inner">
+                        <div class="solution-card-front">
+                            <div class="solution-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            <h3>Performance Architecture</h3>
+                        </div>
+                        <div class="solution-card-back">
+                            <p>Proprietary framework implements intelligent resource loading based on device capabilities and network conditions, delivering optimized experiences for all users regardless of connection quality.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="solution-card">
+                    <div class="solution-card-inner">
+                        <div class="solution-card-front">
+                            <div class="solution-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <h3>Sentiment-Driven Design</h3>
+                        </div>
+                        <div class="solution-card-back">
+                            <p>Real-time emotion detection analyzes micro-interactions to continuously optimize UI elements and content presentation, creating websites that self-improve for maximum engagement.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="solution-card">
+                    <div class="solution-card-inner">
+                        <div class="solution-card-front">
+                            <div class="solution-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <h3>Cloud Geofencing</h3>
+                        </div>
+                        <div class="solution-card-back">
+                            <p>Edge computing network enables sophisticated location-based experiences without client-side overhead, processing region-specific content and compliance features server-side for seamless delivery.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Market Analysis Section -->
+        <section id="market">
+            <h2 class="section-title">Market Opportunity</h2>
+            <div class="market-stats">
+                <div class="stat-card">
+                    <div class="stat-number">$89B</div>
+                    <div class="stat-label">Market by 2027</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">38%</div>
+                    <div class="stat-label">North America Share</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">11.3%</div>
+                    <div class="stat-label">E-commerce Growth</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">14.7%</div>
+                    <div class="stat-label">Mobile Growth</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">27%</div>
+                    <div class="stat-label">PWA Growth</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">13.2%</div>
+                    <div class="stat-label">SME Demand</div>
+                </div>
+            </div>
+            
+            <div class="problem-container">
+                <div class="problem-card">
+                    <h3>Industry Overview</h3>
+                    <p>The web development industry is experiencing rapid growth, fueled by digital transformation across all business sectors. Current trends show increasing demand for mobile-first designs, with 60% of web traffic now coming from smartphones. The e-commerce segment dominates market share, projected to grow at 15% annually through 2025.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>Target Audience</h3>
+                    <p>We primarily serve small-to-midsize businesses (SMBs) with 10-500 employees seeking professional web solutions at competitive prices. Our core clients include brick-and-mortar retailers transitioning to e-commerce, service-based businesses needing appointment systems, and startups requiring MVP development.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>Competitive Landscape</h3>
+                    <p>The market features intense competition, with freelance developers dominating the low-cost segment and full-service digital agencies controlling the premium market. Our differentiation lies in combining agency-grade quality with SMB-friendly pricing, while offering strategic consulting that DIY tools lack.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Business Model Section -->
+        <section id="model">
+            <h2 class="section-title">Business Model</h2>
+            <div class="model-container">
+                <div class="model-card">
+                    <h3>Revenue Streams</h3>
+                    <ul>
+                        <li>Custom Web Development ($5K–$100K/project)</li>
+                        <li>Retainer Maintenance Plans ($150–$2K/month)</li>
+                        <li>Premium Hosting & DevOps (300% markup)</li>
+                        <li>E-Commerce Solutions (Revenue share 2–5%)</li>
+                        <li>SaaS Licensing ($99–$499/month)</li>
+                        <li>White-Label Services ($75–$150/hour)</li>
+                        <li>Template Marketplace ($199–$999/license)</li>
+                    </ul>
+                </div>
+                <div class="model-card">
+                    <h3>Cost Structure</h3>
+                    <ul>
+                        <li>Salaried tech talent (60% of expenses)</li>
+                        <li>Cloud infrastructure (8-12% of revenue)</li>
+                        <li>Freelance specialists (15-20% variable)</li>
+                        <li>Continuous training (7-10% of revenue)</li>
+                        <li>Sales & marketing (12-15% of costs)</li>
+                        <li>R&D reinvestment (5-8%)</li>
+                        <li>Legal/compliance (3-5% overhead)</li>
+                    </ul>
+                </div>
+                <div class="model-card">
+                    <h3>Key Partnerships</h3>
+                    <ul>
+                        <li>Cloud providers (AWS, Vercel)</li>
+                        <li>Technology alliances (Adobe, Shopify)</li>
+                        <li>Business associations (lead generation)</li>
+                        <li>Payment processors (Stripe, PayPal)</li>
+                        <li>UI/UX design studios</li>
+                        <li>Offshore development centers</li>
+                        <li>Marketing agencies</li>
+                        <li>Tech incubators</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Key Outcomes Section -->
+        <section id="outcomes">
+            <h2 class="section-title">Key Outcomes</h2>
+            <div class="outcomes-container">
+                <div class="outcome-card">
+                    <h3>SEO-Optimized Websites</h3>
+                    <p>Our technical SEO framework guarantees 90+ Lighthouse scores through optimized code structure, lightning-fast load times (&lt;1.5s), and mobile-responsive designs. We implement schema markup and semantic HTML5 to boost search visibility, resulting in 40-60% more organic traffic within 6 months.</p>
+                </div>
+                <div class="outcome-card">
+                    <h3>Enterprise-Grade Security</h3>
+                    <p>Multi-layered defense system includes Web Application Firewalls (WAF), DDoS protection, and daily malware scanning that blocks 99.9% of attacks. We implement OWASP Top 10 safeguards with automated vulnerability patching and zero-trust architecture for sensitive data.</p>
+                </div>
+                <div class="outcome-card">
+                    <h3>System Requirements</h3>
+                    <p>Node.js 18+ or PHP 8.2+ runtime, 2GB+ RAM per core, Redis 6.2+ for caching. Modern browsers supporting ES2022+, Webpack 5+ or Vite 4+. PostgreSQL 14+ or MongoDB 6.0+ with SSD storage. Docker/Kubernetes for deployments, global CDN, DDoS protection. TLS 1.3 encryption mandatory.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Challenges Section -->
+        <section id="challenges">
+            <h2 class="section-title">Challenges & Lessons</h2>
+            <div class="challenges-container">
+                <div class="challenge-item">
+                    <h3>Client Education</h3>
+                    <p>Discovered that 60% of small business owners couldn't articulate their technical needs, prompting development of our proprietary Digital Needs Assessment Framework.</p>
+                </div>
+                <div class="challenge-item">
+                    <h3>Talent Shortage</h3>
+                    <p>The crisis forced us to create an in-house upskilling program, reducing dependency on the volatile job market while improving team retention by 40%.</p>
+                </div>
+                <div class="challenge-item">
+                    <h3>Scope Creep</h3>
+                    <p>Accounted for 35% of project delays, leading to our ironclad change-order process with automated tracking.</p>
+                </div>
+                <div class="challenge-item">
+                    <h3>Technical Debt</h3>
+                    <p>Early MVP deployments cost 300+ maintenance hours quarterly, teaching us to enforce strict code review protocols.</p>
+                </div>
+                <div class="challenge-item">
+                    <h3>Cloud Vulnerabilities</h3>
+                    <p>The 2023 AWS outage exposed single-cloud vulnerabilities, pushing us to architect multi-cloud failover systems.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Future Plans Section -->
+        <section id="plans">
+            <h2 class="section-title">Future Roadmap</h2>
+            <div class="plans-container">
+                <div class="plan-card">
+                    <h3>AI-Powered Platform</h3>
+                    <p>Launching our proprietary SaaS platform offering AI-powered website generation with industry-specific templates that reduce development time by 70%.</p>
+                </div>
+                <div class="plan-card">
+                    <h3>Blockchain Solutions</h3>
+                    <p>Investing in blockchain-based web solutions, developing decentralized identity verification systems for enhanced security and user control.</p>
+                </div>
+                <div class="plan-card">
+                    <h3>Voice-First Interfaces</h3>
+                    <p>Pioneering voice-first web interfaces, capitalizing on the projected 50% voice search dominance by 2026.</p>
+                </div>
+                <div class="plan-card">
+                    <h3>Global Expansion</h3>
+                    <p>Establishing regional development hubs in Europe and Asia to provide 24/7 project turnaround while optimizing labor costs.</p>
+                </div>
+                <div class="plan-card">
+                    <h3>Performance-Based Models</h3>
+                    <p>Introducing revenue models where clients pay based on measurable business outcomes like conversion lifts.</p>
+                </div>
+                <div class="plan-card">
+                    <h3>Education Programs</h3>
+                    <p>Creating certified developer programs to address the industry talent shortage while generating new income streams.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Conclusion Section -->
+        <section id="conclusion">
+            <h2 class="section-title">Conclusion</h2>
+            <div class="conclusion-content">
+                <p>ApexDev stands at the forefront of web development innovation, uniquely positioned to bridge the gap between cutting-edge technology and practical business solutions. Our comprehensive approach—combining technical excellence, strategic partnerships, and client-centric methodologies—has created a proven framework for digital success.</p>
+                <p>The company's evolution from a traditional development shop to a full-spectrum digital solutions provider reflects our deep understanding of market demands and technological shifts. By addressing critical industry challenges like security vulnerabilities, mobile optimization gaps, and talent shortages, we've developed proprietary systems that deliver superior results.</p>
+                <p>As digital transformation accelerates across industries, ApexDev's adaptive frameworks and future-ready architectures will continue delivering unmatched value to clients worldwide. With 35% annual growth targets and triple-digit ROI for investors, ApexDev represents both a sound business proposition and a transformative force in web technology.</p>
+                <a href="#home" class="btn">Back to Top</a>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer>
+            <a href="#" class="footer-logo">ApexDev</a>
+            <ul class="footer-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#problem">Problem</a></li>
+                <li><a href="#solution">Solution</a></li>
+                <li><a href="#market">Market</a></li>
+                <li><a href="#model">Model</a></li>
+                <li><a href="#outcomes">Outcomes</a></li>
+                <li><a href="#challenges">Challenges</a></li>
+                <li><a href="#plans">Plans</a></li>
+                <li><a href="#conclusion">Conclusion</a></li>
+            </ul>
+            <ul class="social-links">
+                <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fab fa-github"></i></a></li>
+            </ul>
+            <p class="copyright">© 2023 ApexDev. All Rights Reserved.</p>
+        </footer>
+            <!-- JavaScript -->
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.querySelector('.menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuBtn.innerHTML = navLinks.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Close menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Create floating particles
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 50;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Random size between 2px and 6px
+            const size = Math.random() * 4 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Random position
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            // Random animation duration
+            particle.style.animationDuration = `${Math.random() * 20 + 10}s`;
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+            
+            // Random opacity
+            particle.style.opacity = Math.random() * 0.5 + 0.1;
+            
+            particlesContainer.appendChild(particle);
+        }
+        
+        // 3D Background with Three.js
+        const canvasContainer = document.getElementById('canvas-container');
+        
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        canvasContainer.appendChild(renderer.domElement);
+        
+        // Particles
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 5000;
+        
+        const posArray = new Float32Array(particlesCount * 3);
+        
+        for (let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 10;
+        }
+        
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.02,
+            color: 0x00f0ff,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+        
+        camera.position.z = 3;
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            particlesMesh.rotation.x += 0.0005;
+            particlesMesh.rotation.y += 0.0005;
+            
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Animate sections on scroll
+        document.querySelectorAll('section').forEach((section, index) => {
+            gsap.from(section, {
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                delay: index * 0.1
+            });
+        });
+        
+        // Animate cards
+        gsap.utils.toArray('.problem-card, .solution-card, .stat-card, .model-card, .outcome-card, .plan-card').forEach(card => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                },
+                y: 30,
+                opacity: 0,
+                duration: 0.8
+            });
+        });
+    </script>
+</body>
+</html>

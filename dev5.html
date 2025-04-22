@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexDev - Cutting Edge Web Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/gsap.min.js"></script>
+    <style>
+        :root {
+            --primary: #00f7ff;
+            --secondary: #ff00e4;
+            --dark: #0a0a0a;
+            --light: #f0f0f0;
+            --accent: #7700ff;
+            --text: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text);
+            overflow-x: hidden;
+            perspective: 1000px;
+        }
+        
+        #threejs-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        /* Preloader */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .loader {
+            width: 100px;
+            height: 100px;
+            border: 5px solid transparent;
+            border-top-color: var(--primary);
+            border-bottom-color: var(--secondary);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            position: relative;
+        }
+        
+        .loader:before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 5px solid transparent;
+            border-top-color: var(--accent);
+            border-bottom-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite reverse;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: 0.5s;
+        }
+        
+        nav.scrolled {
+            background: rgba(10, 10, 10, 0.9);
+            padding: 15px 50px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            position: relative;
+            transition: 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: 0.3s;
+        }
+        
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+        
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text);
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            max-width: 600px;
+            z-index: 10;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 50px;
+            transition: 0.5s;
+            box-shadow: 0 10px 20px rgba(0, 247, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 247, 255, 0.5);
+        }
+        
+        .hero-image {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50%;
+            height: 80%;
+            background: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80') center/cover;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            z-index: 5;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(-50%) translateX(0); }
+            50% { transform: translateY(-50%) translateX(20px); }
+        }
+        
+        .hero-cube {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            opacity: 0.2;
+            border-radius: 20px;
+            transform: rotate(45deg);
+            z-index: 1;
+            animation: rotate 20s linear infinite;
+        }
+        
+        .hero-cube:nth-child(1) {
+            top: 10%;
+            left: 10%;
+        }
+        
+        .hero-cube:nth-child(2) {
+            bottom: 10%;
+            right: 10%;
+            animation-direction: reverse;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* About Section */
+        .section {
+            padding: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 50px;
+            text-align: center;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .about-content {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-text h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .about-text p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        
+        .about-image {
+            flex: 1;
+            position: relative;
+            height: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+        
+        .about-image:hover {
+            transform: rotateY(10deg) rotateX(5deg) scale(1.02);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .about-image:hover img {
+            transform: scale(1.1);
+        }
+        
+        /* Services Section */
+        .services {
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(0, 0, 20, 0.9));
+            position: relative;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .service-card {
+            background: rgba(20, 20, 30, 0.7);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: 0.5s;
+            transform-style: preserve-3d;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .service-card:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 247, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: 0.5s;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px) rotateY(5deg);
+            box-shadow: 0 20px 40px rgba(0, 247, 255, 0.2);
+            border: 1px solid rgba(0, 247, 255, 0.3);
+        }
+        
+        .service-card:hover:before {
+            left: 100%;
+        }
+        
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .service-card p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        /* Solutions Section */
+        .solutions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+        }
+        
+        .solution-item {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .solution-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        
+        .solution-content {
+            flex: 1;
+        }
+        
+        .solution-content h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .solution-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        
+        .solution-image {
+            flex: 1;
+            height: 400px;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+        
+        .solution-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .solution-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: var(--dark);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            box-shadow: 0 5px 15px rgba(0, 247, 255, 0.5);
+        }
+        
+        /* Market Section */
+        .market-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .stat-card {
+            background: rgba(20, 20, 30, 0.7);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: 0.5s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 247, 255, 0.2);
+            border: 1px solid rgba(0, 247, 255, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .stat-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .stat-description {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Business Model Section */
+        .model-container {
+            display: flex;
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+        
+        .model-image {
+            flex: 1;
+            height: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+        
+        .model-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .model-content {
+            flex: 1;
+        }
+        
+        .model-content h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .model-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        
+        .revenue-streams {
+            margin-top: 50px;
+        }
+        
+        .stream-item {
+            margin-bottom: 30px;
+            padding-left: 20px;
+            border-left: 3px solid var(--primary);
+        }
+        
+        .stream-item h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .stream-item p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        /* Challenges Section */
+        .challenges-container {
+            background: rgba(20, 20, 30, 0.7);
+            border-radius: 20px;
+            padding: 50px;
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .challenges-container:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 247, 255, 0.05), transparent);
+            z-index: -1;
+        }
+        
+        .challenge-item {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .challenge-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .challenge-item h4 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .challenge-item p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        /* Future Plans Section */
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .timeline:after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 10px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .timeline-item:after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -12px;
+            background: var(--primary);
+            border: 4px solid var(--secondary);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .left {
+            left: 0;
+        }
+        
+        .right {
+            left: 50%;
+        }
+        
+        .left:before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            right: 30px;
+            border: medium solid rgba(255, 255, 255, 0.1);
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent rgba(255, 255, 255, 0.1);
+        }
+        
+        .right:before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            left: 30px;
+            border: medium solid rgba(255, 255, 255, 0.1);
+            border-width: 10px 10px 10px 0;
+            border-color: transparent rgba(255, 255, 255, 0.1) transparent transparent;
+        }
+        
+        .right:after {
+            left: -12px;
+        }
+        
+        .timeline-content {
+            padding: 20px 30px;
+            background: rgba(20, 20, 30, 0.7);
+            position: relative;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: 0.5s;
+        }
+        
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 247, 255, 0.2);
+            border: 1px solid rgba(0, 247, 255, 0.3);
+        }
+        
+        .timeline-content h4 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .timeline-content p {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        .timeline-date {
+            color: var(--secondary);
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        /* Conclusion Section */
+        .conclusion {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .conclusion p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+        
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(0, 0, 20, 0.9));
+            padding: 80px 100px 30px;
+            position: relative;
+        }
+        
+        .footer-content {
+            display: flex;
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+        
+        .footer-column {
+            flex: 1;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            color: var(--text);
+            font-size: 1.5rem;
+            transition: 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--primary);
+            transform: translateY(-5px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+        
+        /* 3D Elements */
+        .floating-cube {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            opacity: 0.1;
+            border-radius: 10px;
+            transform: rotate(45deg);
+            z-index: -1;
+            animation: floatCube 15s linear infinite;
+        }
+        
+        @keyframes floatCube {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-50px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .hero {
+                padding: 0 50px;
+            }
+            
+            .section {
+                padding: 80px 50px;
+            }
+            
+            footer {
+                padding: 60px 50px 30px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .about-content, .solution-item, .model-container {
+                flex-direction: column;
+            }
+            
+            .solution-item:nth-child(even) {
+                flex-direction: column;
+            }
+            
+            .timeline:after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item:before {
+                left: 60px;
+                border: medium solid rgba(255, 255, 255, 0.1);
+                border-width: 10px 10px 10px 0;
+                border-color: transparent rgba(255, 255, 255, 0.1) transparent transparent;
+            }
+            
+            .left:after, .right:after {
+                left: 18px;
+            }
+            
+            .right {
+                left: 0%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: rgba(10, 10, 10, 0.95);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 40px;
+                transition: 0.5s;
+                z-index: 999;
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .hero {
+                padding: 0 30px;
+                text-align: center;
+            }
+            
+            .hero-content {
+                margin: 0 auto;
+            }
+            
+            .hero-image {
+                display: none;
+            }
+            
+            .section {
+                padding: 60px 30px;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            footer {
+                padding: 50px 30px 30px;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            nav {
+                padding: 15px 20px;
+            }
+            
+            nav.scrolled {
+                padding: 10px 20px;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .cta-button {
+                padding: 12px 25px;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Three.js Canvas -->
+    <div id="threejs-canvas"></div>
+    
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader"></div>
+    </div>
+    
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">Apex<span>Dev</span></a>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#services">Services</a>
+            <a href="#solutions">Solutions</a>
+            <a href="#market">Market</a>
+            <a href="#model">Business Model</a>
+            <a href="#challenges">Challenges</a>
+            <a href="#future">Future Plans</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Transforming Ideas Into Digital Reality</h1>
+            <p>ApexDev delivers cutting-edge web solutions that drive business growth through innovative design, robust functionality, and measurable results. Our expert team combines technical excellence with creative vision to build high-performance digital experiences.</p>
+            <a href="#contact" class="cta-button">Get Started</a>
+        </div>
+        <div class="hero-image"></div>
+        <div class="hero-cube"></div>
+        <div class="hero-cube"></div>
+    </section>
+    
+    <!-- About Section -->
+    <section id="about" class="section">
+        <h2 class="section-title">Executive Summary</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Who We Are</h3>
+                <p>ApexDev is a premier web development company dedicated to delivering cutting-edge digital solutions tailored to modern business needs. We specialize in creating high-performance websites, responsive web applications, and scalable e-commerce platforms using the latest technologies like React, Node.js, and Python.</p>
+                <p>Our expert team combines innovative design with robust functionality to ensure seamless user experiences across all devices. With a strong focus on speed, security, and SEO optimization, we help businesses enhance their online presence and drive growth.</p>
+                <p>From startups to enterprises, we offer end-to-end development services, including UI/UX design, backend integration, and cloud deployment. Our agile approach ensures efficient project management, timely delivery, and cost-effective solutions without compromising quality.</p>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="ApexDev Team">
+            </div>
+        </div>
+        <div class="floating-cube" style="top: 20%; left: 5%;"></div>
+        <div class="floating-cube" style="bottom: 10%; right: 10%; animation-delay: 2s;"></div>
+    </section>
+    
+    <!-- Problem Statement Section -->
+    <section id="problem" class="section">
+        <h2 class="section-title">Problem Statement</h2>
+        <div class="challenges-container">
+            <div class="challenge-item">
+                <h4>Outdated Websites & Poor UX</h4>
+                <p>Businesses struggle to establish a strong online presence due to outdated websites, poor user experience, and slow load speeds that drive customers away. Many companies rely on generic templates or inefficient development approaches, resulting in non-scalable, insecure, and non-responsive web solutions.</p>
+            </div>
+            <div class="challenge-item">
+                <h4>Lack of Technical Expertise</h4>
+                <p>The lack of technical expertise in-house forces businesses to depend on unreliable freelancers or expensive agencies that fail to deliver customized, future-proof solutions. Startups and SMEs, in particular, face budget constraints while needing high-quality web development to compete with larger enterprises.</p>
+            </div>
+            <div class="challenge-item">
+                <h4>Security Vulnerabilities</h4>
+                <p>Security vulnerabilities in legacy systems expose businesses to cyber threats and data breaches, damaging their reputation. Many web solutions also lack mobile responsiveness, alienating a growing segment of users who browse on smartphones.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Services Section -->
+    <section id="services" class="section services">
+        <h2 class="section-title">Our Services</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3>Custom Web Development</h3>
+                <p>Bespoke websites and web applications tailored to your specific business requirements, built with clean, efficient code and modern frameworks.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Responsive Design</h3>
+                <p>Mobile-first approach ensuring your website looks and performs flawlessly across all devices and screen sizes.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h3>E-Commerce Solutions</h3>
+                <p>Powerful online stores with secure payment gateways, inventory management, and conversion optimization features.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>SEO Optimization</h3>
+                <p>Technical and content SEO strategies to improve your search rankings and drive qualified organic traffic.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Web Security</h3>
+                <p>Comprehensive security measures including SSL, firewalls, and regular vulnerability assessments to protect your digital assets.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <h3>Cloud Deployment</h3>
+                <p>Scalable cloud hosting solutions with load balancing, auto-scaling, and global CDN for optimal performance.</p>
+            </div>
+        </div>
+        <div class="floating-cube" style="top: 30%; right: 15%; animation-delay: 1s;"></div>
+    </section>
+    
+    <!-- Solutions Section -->
+    <section id="solutions" class="section">
+        <h2 class="section-title">Solution Overview</h2>
+        <div class="solutions-container">
+            <div class="solution-item">
+                <div class="solution-content">
+                    <h3>Context-Aware Web Security Framework</h3>
+                    <p>Our intelligent security framework dynamically adjusts authentication protocols based on user behavior and access patterns. Unlike traditional static login systems, our solution employs geofencing technology to detect unusual access locations, triggering multi-factor authentication when users attempt access from unrecognized regions.</p>
+                    <p>The system integrates seamlessly with existing web architectures while providing granular control over security levels for different application modules.</p>
+                </div>
+                <div class="solution-image">
+                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Security Solution">
+                    <div class="solution-badge">Innovation</div>
+                </div>
+            </div>
+            
+            <div class="solution-item">
+                <div class="solution-content">
+                    <h3>Smart Personalization Engine</h3>
+                    <p>Our AI-driven personalization platform analyzes user location data and browsing patterns to deliver hyper-relevant content. The system automatically adjusts website layouts, promotions, and language preferences based on the visitor's geographic location and past interactions.</p>
+                    <p>This goes beyond basic geo-IP detection by incorporating machine learning to predict user intent, resulting in 35% higher conversion rates compared to standard localization approaches.</p>
+                </div>
+                <div class="solution-image">
+                    <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=765&q=80" alt="Personalization Engine">
+                    <div class="solution-badge">AI-Powered</div>
+                </div>
+            </div>
+            
+            <div class="solution-item">
+                <div class="solution-content">
+                    <h3>Performance-Optimized Web Architecture</h3>
+                    <p>Our proprietary web framework implements intelligent resource loading based on device capabilities and network conditions. Our context-aware platform delivers lightweight versions of websites to mobile users in low-bandwidth areas while maintaining full functionality for desktop users.</p>
+                    <p>This adaptive approach reduces bounce rates by 40% and improves Google Core Web Vitals scores by an average of 30 points.</p>
+                </div>
+                <div class="solution-image">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Performance Optimization">
+                    <div class="solution-badge">High Performance</div>
+                </div>
+            </div>
+        </div>
+        <div class="floating-cube" style="bottom: 10%; left: 10%; animation-delay: 3s;"></div>
+    </section>
+    
+    <!-- Market Analysis Section -->
+    <section id="market" class="section">
+        <h2 class="section-title">Market Analysis</h2>
+        <div class="market-stats">
+            <div class="stat-card">
+                <div class="stat-number">$89B</div>
+                <div class="stat-title">Market Size by 2027</div>
+                <div class="stat-description">Projected global web development market value</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">38%</div>
+                <div class="stat-title">North America Share</div>
+                <div class="stat-description">Dominates the global market currently</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">12.4%</div>
+                <div class="stat-title">Asia-Pacific Growth</div>
+                <div class="stat-description">Fastest growing region through 2030</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">60%</div>
+                <div class="stat-title">Mobile Traffic</div>
+                <div class="stat-description">Of all web traffic comes from smartphones</div>
+            </div>
+        </div>
+        
+        <div class="about-content" style="margin-top: 50px;">
+            <div class="about-text">
+                <h3>Industry Overview</h3>
+                <p>The web development industry is experiencing rapid growth, fueled by digital transformation across all business sectors. Current trends show increasing demand for mobile-first designs, with 60% of web traffic now coming from smartphones. The e-commerce segment dominates market share, projected to grow at 15% annually through 2025.</p>
+                <p>Cloud-based solutions are becoming standard, adopted by 75% of enterprises for better scalability. The progressive web app (PWA) market is expanding at 30% CAGR due to superior user engagement. AI integration in web development is accelerating, with 40% of businesses implementing some form of AI-powered features.</p>
+                <p>Cybersecurity concerns drive 20% annual growth in secure web development services. The industry faces a global talent shortage, with 1.4 million unfilled developer jobs projected by 2025. Small businesses represent the fastest-growing client segment, seeking affordable yet professional web solutions.</p>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Market Analysis">
+            </div>
+        </div>
+    </section>
+    
+    <!-- Business Model Section -->
+    <section id="model" class="section">
+        <h2 class="section-title">Business Model</h2>
+        <div class="model-container">
+            <div class="model-content">
+                <h3>Hybrid Revenue Model</h3>
+                <p>ApexDev operates on a hybrid revenue model combining project-based fees with recurring SaaS-style income streams. Our primary revenue comes from custom web development projects, priced at $5,000-$50,000 based on complexity, with a 20-30% gross margin.</p>
+                <p>We offer three-tiered service packages (Starter, Growth, Enterprise) to cater to different budget levels while maintaining profitability. A 15% client retention rate generates ongoing revenue through website maintenance contracts ($150-$500/month) and hosting services with premium markup.</p>
+                <p>Our white-label development for digital agencies contributes 25% of annual revenue, providing steady workflow during seasonal dips. The technology partnership program earns referral fees from recommended SaaS platforms while giving clients discounted tools.</p>
+            </div>
+            <div class="model-image">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Business Model">
+            </div>
+        </div>
+        
+        <div class="revenue-streams">
+            <h3 style="text-align: center; margin-bottom: 30px; font-size: 2rem; color: var(--primary);">Revenue Streams</h3>
+            <div class="services-grid">
+                <div class="stream-item">
+                    <h4>Custom Web Development</h4>
+                    <p>Core revenue from bespoke website builds ($5K–$100K per project)</p>
+                </div>
+                <div class="stream-item">
+                    <h4>Retainer Maintenance Plans</h4>
+                    <p>Monthly contracts (15–30% of client base) for updates, security, and backups ($150–$2K/month)</p>
+                </div>
+                <div class="stream-item">
+                    <h4>Premium Hosting & DevOps</h4>
+                    <p>High-margin managed hosting with 24/7 support (300% markup on infrastructure costs)</p>
+                </div>
+                <div class="stream-item">
+                    <h4>E-Commerce Solutions</h4>
+                    <p>Revenue-sharing models (2–5% of sales) or fixed-fee store setups ($10K–$50K)</p>
+                </div>
+                <div class="stream-item">
+                    <h4>SaaS Licensing</h4>
+                    <p>Recurring income from proprietary tools (e.g., AI theme builder, $99–$499/month)</p>
+                </div>
+                <div class="stream-item">
+                    <h4>White-Label Services</h4>
+                    <p>Bulk development for agencies at discounted rates ($75–$150/hour)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Challenges Section -->
+    <section id="challenges" class="section">
+        <h2 class="section-title">Challenges & Lessons Learned</h2>
+        <div class="challenges-container">
+            <div class="challenge-item">
+                <h4>Client Education Requirements</h4>
+                <p>Initially, we underestimated client education requirements, discovering that 60% of small business owners couldn't articulate their technical needs - prompting us to develop our proprietary Digital Needs Assessment Framework.</p>
+            </div>
+            <div class="challenge-item">
+                <h4>Talent Shortage Crisis</h4>
+                <p>The talent shortage crisis forced us to create an in-house upskilling program, reducing our dependency on the volatile job market while improving team retention by 40%.</p>
+            </div>
+            <div class="challenge-item">
+                <h4>Scope Creep</h4>
+                <p>We learned that scope creep accounted for 35% of project delays, leading to our ironclad change-order process with automated tracking.</p>
+            </div>
+            <div class="challenge-item">
+                <h4>Technical Debt</h4>
+                <p>Early technical debt from rushed MVP deployments cost us 300+ maintenance hours quarterly, teaching us to enforce strict code review protocols.</p>
+            </div>
+            <div class="challenge-item">
+                <h4>Cloud Vulnerabilities</h4>
+                <p>The 2023 AWS outage exposed single-cloud vulnerabilities, pushing us to architect multi-cloud failover systems.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Future Plans Section -->
+    <section id="future" class="section">
+        <h2 class="section-title">Future Plans</h2>
+        <div class="timeline">
+            <div class="timeline-item left">
+                <div class="timeline-content">
+                    <span class="timeline-date">2024 Q1-Q2</span>
+                    <h4>AI-Powered Website Generation</h4>
+                    <p>Launch our proprietary SaaS platform offering AI-powered website generation with industry-specific templates that reduce development time by 70%.</p>
+                </div>
+            </div>
+            <div class="timeline-item right">
+                <div class="timeline-content">
+                    <span class="timeline-date">2024 Q3</span>
+                    <h4>Blockchain-Based Solutions</h4>
+                    <p>Invest heavily in blockchain-based web solutions, developing decentralized identity verification systems for enhanced security and user control.</p>
+                </div>
+            </div>
+            <div class="timeline-item left">
+                <div class="timeline-content">
+                    <span class="timeline-date">2024 Q4</span>
+                    <h4>Voice-First Web Interfaces</h4>
+                    <p>Pioneer voice-first web interfaces, capitalizing on the projected 50% voice search dominance by 2026.</p>
+                </div>
+            </div>
+            <div class="timeline-item right">
+                <div class="timeline-content">
+                    <span class="timeline-date">2025</span>
+                    <h4>Regional Development Hubs</h4>
+                    <p>Establish regional development hubs in Europe and Asia to provide 24/7 project turnaround while optimizing labor costs.</p>
+                </div>
+            </div>
+            <div class="timeline-item left">
+                <div class="timeline-content">
+                    <span class="timeline-date">2026</span>
+                    <h4>Predictive Analytics Modules</h4>
+                    <p>Develop predictive analytics modules that forecast traffic patterns and automatically scale resources.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Conclusion Section -->
+    <section class="section">
+        <div class="conclusion">
+            <h2 class="section-title">Conclusion</h2>
+            <p>ApexDev stands at the forefront of web development innovation, uniquely positioned to bridge the gap between cutting-edge technology and practical business solutions. Our comprehensive approach—combining technical excellence, strategic partnerships, and client-centric methodologies—has created a proven framework for digital success.</p>
+            <p>The company's evolution from a traditional development shop to a full-spectrum digital solutions provider reflects our deep understanding of market demands and technological shifts. By addressing critical industry challenges like security vulnerabilities, mobile optimization gaps, and talent shortages, we've developed proprietary systems that deliver superior results.</p>
+            <p>With 35% annual growth targets and triple-digit ROI for investors, ApexDev represents both a sound business proposition and a transformative force in web technology. The company stands ready to capitalize on emerging opportunities while maintaining the agility to pivot with market demands.</p>
+            <a href="#contact" class="cta-button" style="margin-top: 30px;">Get In Touch</a>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>About ApexDev</h3>
+                <p>Premier web development company delivering cutting-edge digital solutions tailored to modern business needs.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#solutions">Solutions</a></li>
+                    <li><a href="#market">Market Analysis</a></li>
+                    <li><a href="#model">Business Model</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Services</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Web Development</a></li>
+                    <li><a href="#">E-Commerce</a></li>
+                    <li><a href="#">Mobile Apps</a></li>
+                    <li><a href="#">SEO Optimization</a></li>
+                    <li><a href="#">Cloud Solutions</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contact Us</h3>
+                <ul class="footer-links">
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Tech Street, Silicon Valley</li>
+                    <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                    <li><i class="fas fa-envelope"></i> info@apexdev.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 ApexDev. All Rights Reserved. Designed by MrCode</p>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        // Three.js Scene Setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000, 0);
+        document.getElementById('threejs-canvas').appendChild(renderer.domElement);
+        
+        // Particle System
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particleCount = 5000;
+        
+        const posArray = new Float32Array(particleCount * 3);
+        const colorArray = new Float32Array(particleCount * 3);
+        const sizeArray = new Float32Array(particleCount);
+        
+        for(let i = 0; i < particleCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 10;
+            colorArray[i] = Math.random();
+            
+            if(i % 3 === 0) {
+                sizeArray[i/3] = Math.random() * 0.2 + 0.05;
+            }
+        }
+        
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+        particlesGeometry.setAttribute('size', new THREE.BufferAttribute(sizeArray, 1));
+        
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.1,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending,
+            sizeAttenuation: true
+        });
+        
+        const particleMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particleMesh);
+        
+        // Add floating cubes
+        const cubeGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+        const cubeMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0x00aaff,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.2
+        });
+        
+        const cubes = [];
+        for(let i = 0; i < 5; i++) {
+            const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+            cube.position.x = (Math.random() - 0.5) * 10;
+            cube.position.y = (Math.random() - 0.5) * 10;
+            cube.position.z = (Math.random() - 0.5) * 10;
+            cube.rotation.x = Math.random() * Math.PI;
+            cube.rotation.y = Math.random() * Math.PI;
+            cubes.push({
+                mesh: cube,
+                speed: Math.random() * 0.01 + 0.005,
+                rotationSpeed: Math.random() * 0.02 + 0.01
+            });
+            scene.add(cube);
+        }
+        
+        // Camera position
+        camera.position.z = 5;
+        
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Rotate particles
+            particleMesh.rotation.x += 0.0002;
+            particleMesh.rotation.y += 0.0003;
+            
+            // Animate cubes
+            cubes.forEach(cube => {
+                cube.mesh.position.y += cube.speed;
+                cube.mesh.rotation.x += cube.rotationSpeed;
+                cube.mesh.rotation.y += cube.rotationSpeed;
+                
+                if(cube.mesh.position.y > 5) {
+                    cube.mesh.position.y = -5;
+                }
+            });
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Start animation
+        animate();
+        
+        // Preloader
+        window.addEventListener('load', function() {
+            const preloader = document.querySelector('.preloader');
+            gsap.to(preloader, {
+                opacity: 0,
+                duration: 0.5,
+                onComplete: () => {
+                    preloader.style.display = 'none';
+                }
+            });
+        });
+        
+        // Navigation Scroll Effect
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+        
+        // Mobile Menu Toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        menuToggle.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+        
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // 3D Hover Effects
+        const serviceCards = document.querySelectorAll('.service-card');
+        serviceCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+                const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+                card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            });
+            
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'none';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transition = 'transform 0.5s ease';
+                card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+            });
+        });
+        
+        // Animate elements on scroll
+        const animateOnScroll = function() {
+            const elements = document.querySelectorAll('.service-card, .solution-item, .stat-card, .timeline-content');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (elementPosition < screenPosition) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        };
+        
+        // Set initial state for animated elements
+        window.addEventListener('load', function() {
+            document.querySelectorAll('.service-card, .solution-item, .stat-card, .timeline-content').forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(50px)';
+                element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+            
+            setTimeout(() => {
+                animateOnScroll();
+            }, 500);
+        });
+        
+        window.addEventListener('scroll', animateOnScroll);
+        
+        // Video Modal
+        const videoButtons = document.querySelectorAll('.video-button');
+        const videoModal = document.createElement('div');
+        videoModal.className = 'video-modal';
+        videoModal.style.position = 'fixed';
+        videoModal.style.top = '0';
+        videoModal.style.left = '0';
+        videoModal.style.width = '100%';
+        videoModal.style.height = '100%';
+        videoModal.style.backgroundColor = 'rgba(0,0,0,0.9)';
+        videoModal.style.display = 'flex';
+        videoModal.style.justifyContent = 'center';
+        videoModal.style.alignItems = 'center';
+        videoModal.style.zIndex = '1000';
+        videoModal.style.opacity = '0';
+        videoModal.style.visibility = 'hidden';
+        videoModal.style.transition = 'opacity 0.3s, visibility 0.3s';
+        
+        const videoIframe = document.createElement('iframe');
+        videoIframe.style.width = '80%';
+        videoIframe.style.height = '80%';
+        videoIframe.style.border = 'none';
+        videoIframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        videoIframe.allowFullscreen = true;
+        
+        const closeButton = document.createElement('span');
+        closeButton.innerHTML = '&times;';
+        closeButton.style.position = 'absolute';
+        closeButton.style.top = '30px';
+        closeButton.style.right = '30px';
+        closeButton.style.color = 'white';
+        closeButton.style.fontSize = '30px';
+        closeButton.style.cursor = 'pointer';
+        
+        videoModal.appendChild(videoIframe);
+        videoModal.appendChild(closeButton);
+        document.body.appendChild(videoModal);
+        
+        videoButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const videoId = this.getAttribute('data-video');
+                videoIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+                videoModal.style.opacity = '1';
+                videoModal.style.visibility = 'visible';
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        closeButton.addEventListener('click', function() {
+            videoModal.style.opacity = '0';
+            videoModal.style.visibility = 'hidden';
+            videoIframe.src = '';
+            document.body.style.overflow = 'auto';
+        });
+        
+        videoModal.addEventListener('click', function(e) {
+            if (e.target === videoModal) {
+                videoModal.style.opacity = '0';
+                videoModal.style.visibility = 'hidden';
+                videoIframe.src = '';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Add floating 3D models
+        const loader = new THREE.TextureLoader();
+        const texture = loader.load('https://threejs.org/examples/textures/sprites/disc.png');
+        
+        const spriteMaterial = new THREE.SpriteMaterial({ 
+            map: texture, 
+            color: 0x00aaff,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        
+        for(let i = 0; i < 20; i++) {
+            const sprite = new THREE.Sprite(spriteMaterial);
+            sprite.position.x = Math.random() * 10 - 5;
+            sprite.position.y = Math.random() * 10 - 5;
+            sprite.position.z = Math.random() * 10 - 5;
+            sprite.scale.set(0.2, 0.2, 1);
+            scene.add(sprite);
+        }
+        
+        // Add interactive mouse effects
+        const mouse = new THREE.Vector2();
+        const raycaster = new THREE.Raycaster();
+        
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            raycaster.setFromCamera(mouse, camera);
+            
+            const intersects = raycaster.intersectObjects(scene.children);
+            
+            if(intersects.length > 0) {
+                intersects[0].object.material.color.set(0xff0000);
+            }
+        });
+        
+        // Add audio visualization
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        let analyser, dataArray;
+        
+        function setupAudio() {
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 256;
+            const bufferLength = analyser.frequencyBinCount;
+            dataArray = new Uint8Array(bufferLength);
+            
+            // Connect to microphone
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    const source = audioContext.createMediaStreamSource(stream);
+                    source.connect(analyser);
+                    visualize();
+                })
+                .catch(err => {
+                    console.log('Audio error:', err);
+                });
+        }
+        
+        function visualize() {
+            analyser.getByteFrequencyData(dataArray);
+            
+            // Update particle sizes based on audio data
+            const sizeAttribute = particlesGeometry.getAttribute('size');
+            for(let i = 0; i < particleCount; i++) {
+                const frequency = dataArray[i % dataArray.length] / 255;
+                sizeAttribute.array[i] = frequency * 0.5 + 0.05;
+            }
+            sizeAttribute.needsUpdate = true;
+            
+            requestAnimationFrame(visualize);
+        }
+        
+        // Start audio visualization on user interaction
+        document.addEventListener('click', () => {
+            if(audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            setupAudio();
+        }, { once: true });
+    </script>
+</body>
+</html>

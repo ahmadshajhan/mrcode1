@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ApexDev 3D Presentation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body { margin:0; background:#000; }
+        #canvas { position:fixed; top:0; left:0; z-index:-1; }
+        /* All other CSS from original response */
+    </style>
+</head>
+<body>
+    <div id="canvas"></div>
+    
+    <!-- Navigation -->
+    <nav>...</nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">...</section>
+    
+    <!-- All other sections -->
+    <section id="problem">...</section>
+    <section id="solution">...</section>
+    <!-- Continue with all 9 chapters -->
+    
+    <script>
+        // Three.js Scene Setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera();
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas').appendChild(renderer.domElement);
+        
+        // Particle System
+        const particles = new THREE.BufferGeometry();
+        const particleCount = 5000;
+        const posArray = new Float32Array(particleCount * 3);
+        
+        for(let i = 0; i < particleCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 5;
+        }
+        
+        particles.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.02,
+            color: 0x00aaff
+        });
+        const particleMesh = new THREE.Points(particles, particleMaterial);
+        scene.add(particleMesh);
+        
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+            particleMesh.rotation.x += 0.0005;
+            particleMesh.rotation.y += 0.0005;
+            renderer.render(scene, camera);
+        }
+        animate();
+        
+        // Rest of the JavaScript from original
+    </script>
+</body>
+</html>
