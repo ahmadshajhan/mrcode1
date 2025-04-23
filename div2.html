@@ -1,0 +1,3769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexDev - Next-Gen Web Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
+    <style>
+        :root {
+            --primary: #00f7ff;
+            --secondary: #ff00e4;
+            --accent: #7700ff;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --light: #f0f0f0;
+            --text: #ffffff;
+            --text-secondary: rgba(255,255,255,0.7);
+            --glass: rgba(20, 20, 30, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --neon-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary), 0 0 30px var(--primary);
+        }
+        
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 100px;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--dark);
+            color: var(--text);
+            overflow-x: hidden;
+            perspective: 1000px;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(0, 247, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(255, 0, 228, 0.05) 0%, transparent 20%);
+        }
+        
+        /* 3D Scene Container */
+        .scene-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+        
+        h1 { font-size: 4.5rem; }
+        h2 { font-size: 3.5rem; }
+        h3 { font-size: 2.5rem; }
+        h4 { font-size: 2rem; }
+        
+        .gradient-text {
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 300% 300%;
+            animation: gradient 8s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Preloader */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+        
+        .preloader.complete {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loader {
+            width: 120px;
+            height: 120px;
+            border: 5px solid transparent;
+            border-top-color: var(--primary);
+            border-bottom-color: var(--secondary);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            position: relative;
+            box-shadow: var(--neon-shadow);
+        }
+        
+        .loader:before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 5px solid transparent;
+            border-top-color: var(--accent);
+            border-bottom-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite reverse;
+        }
+        
+        .loading-text {
+            margin-top: 30px;
+            font-size: 1.2rem;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+        
+        .loading-progress {
+            width: 200px;
+            height: 3px;
+            background: rgba(255,255,255,0.1);
+            margin-top: 20px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .loading-progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 25px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 10, 0.8);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        nav.scrolled {
+            padding: 15px 50px;
+            background: rgba(10, 10, 10, 0.95);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+            text-shadow: var(--neon-shadow);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            position: relative;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+            text-shadow: 0 0 5px var(--primary);
+        }
+        
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+        
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.8rem;
+            color: var(--text);
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+        
+        .menu-toggle:hover {
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 100px;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(circle at 70% 50%, rgba(0, 247, 255, 0.05) 0%, transparent 50%);
+        }
+        
+        .hero-content {
+            max-width: 600px;
+            z-index: 10;
+            transform-style: preserve-3d;
+            animation: floatContent 6s ease-in-out infinite;
+        }
+        
+        @keyframes floatContent {
+            0%, 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
+            50% { transform: translateY(-20px) rotateX(2deg) rotateY(2deg); }
+        }
+        
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transform: translateZ(50px);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            line-height: 1.8;
+            transform: translateZ(30px);
+        }
+        
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 35px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 50px;
+            transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+            box-shadow: 0 10px 20px rgba(0, 247, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Orbitron', sans-serif;
+            position: relative;
+            overflow: hidden;
+            transform: translateZ(40px);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px) translateZ(50px);
+            box-shadow: 0 15px 30px rgba(0, 247, 255, 0.5);
+            background: linear-gradient(45deg, var(--accent), var(--primary));
+        }
+        
+        .cta-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .cta-button:hover:before {
+            left: 100%;
+        }
+        
+        .hero-image-container {
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45%;
+            height: 70%;
+            perspective: 1000px;
+        }
+        
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80') center/cover;
+            border-radius: 20px;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.8);
+            transform-style: preserve-3d;
+            animation: float 8s ease-in-out infinite;
+            border: 1px solid var(--glass-border);
+            transition: transform 0.5s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(-50%) rotateX(0deg) rotateY(0deg) scale(1); }
+            25% { transform: translateY(-50%) rotateX(5deg) rotateY(5deg) scale(1.02); }
+            50% { transform: translateY(-50%) rotateX(0deg) rotateY(10deg) scale(1.03); }
+            75% { transform: translateY(-50%) rotateX(-5deg) rotateY(5deg) scale(1.02); }
+        }
+        
+        .hero-cube {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            opacity: 0.15;
+            border-radius: 20px;
+            transform: rotate(45deg);
+            z-index: -1;
+            animation: rotate 20s linear infinite;
+            filter: blur(1px);
+        }
+        
+        .hero-cube:nth-child(1) {
+            top: 10%;
+            left: 10%;
+        }
+        
+        .hero-cube:nth-child(2) {
+            bottom: 10%;
+            right: 10%;
+            animation-direction: reverse;
+            background: linear-gradient(45deg, var(--accent), var(--primary));
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg) translateZ(0); }
+            100% { transform: rotate(360deg) translateZ(100px); }
+        }
+        
+        /* Floating Particles */
+        .floating-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            opacity: 0.5;
+            filter: blur(1px);
+            z-index: -1;
+            animation: floatParticle linear infinite;
+        }
+        
+        @keyframes floatParticle {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(100vw, -100vh) rotate(360deg); }
+        }
+        
+        /* Section Styles */
+        .section {
+            padding: 150px 100px;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 80px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+        
+        /* About Section */
+        .about-content {
+            display: flex;
+            gap: 80px;
+            align-items: center;
+            transform-style: preserve-3d;
+        }
+        
+        .about-text {
+            flex: 1;
+            transform: translateZ(30px);
+        }
+        
+        .about-text h3 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+        
+        .about-image {
+            flex: 1;
+            position: relative;
+            height: 600px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.5);
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .about-image:hover {
+            transform: rotateY(10deg) rotateX(5deg) scale(1.02) translateZ(20px);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .about-image:hover img {
+            transform: scale(1.1);
+        }
+        
+        /* Services Section */
+        .services {
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(0, 0, 20, 0.9));
+            position: relative;
+            backdrop-filter: blur(5px);
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            transform-style: preserve-3d;
+        }
+        
+        .service-card {
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 50px 40px;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+            transform-style: preserve-3d;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(5px);
+            transform: translateZ(0);
+        }
+        
+        .service-card:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 247, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: 0.5s;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px) rotateY(5deg) translateZ(20px);
+            box-shadow: 0 25px 50px rgba(0, 247, 255, 0.2);
+            border: 1px solid rgba(0, 247, 255, 0.3);
+        }
+        
+        .service-card:hover:before {
+            left: 100%;
+        }
+        
+        .service-icon {
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .service-card:hover .service-icon {
+            transform: scale(1.2);
+            text-shadow: var(--neon-shadow);
+        }
+        
+        .service-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        /* Solutions Section */
+        .solutions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 100px;
+        }
+        
+        .solution-item {
+            display: flex;
+            gap: 80px;
+            align-items: center;
+            transform-style: preserve-3d;
+        }
+        
+        .solution-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        
+        .solution-content {
+            flex: 1;
+            transform: translateZ(30px);
+        }
+        
+        .solution-content h3 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+        
+        .solution-image {
+            flex: 1;
+            height: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.5);
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .solution-image:hover {
+            transform: rotateY(5deg) rotateX(5deg) scale(1.02) translateZ(20px);
+        }
+        
+        .solution-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .solution-image:hover img {
+            transform: scale(1.1);
+        }
+        
+        .solution-badge {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: var(--dark);
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            box-shadow: 0 10px 20px rgba(0, 247, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Orbitron', sans-serif;
+            z-index: 2;
+        }
+        
+        /* Video Modal */
+        .video-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .video-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .video-modal iframe {
+            width: 80%;
+            height: 80%;
+            border: none;
+            box-shadow: 0 0 50px rgba(0, 247, 255, 0.3);
+            border-radius: 10px;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+        
+        /* Market Section */
+        .market-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+            transform-style: preserve-3d;
+        }
+        
+        .stat-card {
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(5px);
+            transform: translateZ(0);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px) translateZ(20px);
+            box-shadow: 0 20px 40px rgba(0, 247, 255, 0.2);
+            border: 1px solid rgba(0, 247, 255, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 300% 300%;
+            animation: gradient 8s ease infinite;
+        }
+        
+        .stat-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+        
+        .stat-description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Business Model Section */
+        .model-container {
+            display: flex;
+            gap: 80px;
+            margin-bottom: 80px;
+            transform-style: preserve-3d;
+        }
+        
+        .model-image {
+            flex: 1;
+            height: 600px;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.5);
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .model-image:hover {
+            transform: rotateY(5deg) rotateX(5deg) scale(1.02) translateZ(20px);
+        }
+        
+        .model-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .model-image:hover img {
+            transform: scale(1.1);
+        }
+        
+        .model-content {
+            flex: 1;
+            transform: translateZ(30px);
+        }
+        
+        .model-content h3 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+        
+        .revenue-streams {
+            margin-top: 80px;
+        }
+        
+        .revenue-streams h3 {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+        
+        .stream-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .stream-item {
+            background: var(--glass);
+            border-radius: 15px;
+            padding: 30px;
+            border-left: 5px solid var(--primary);
+            transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(5px);
+            transform: translateZ(0);
+        }
+        
+        .stream-item:hover {
+            transform: translateY(-10px) translateZ(20px);
+            box-shadow: 0 20px 40px rgba(0, 247, 255, 0.2);
+            border-left: 5px solid var(--secondary);
+        }
+        
+        .stream-item h4 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        /* Challenges Section */
+        .challenges-container {
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 60px;
+            margin-bottom: 80px;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(5px);
+        }
+        
+        .challenges-container:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 247, 255, 0.05), transparent);
+            z-index: -1;
+        }
+        
+        .challenge-item {
+            margin-bottom: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateZ(20px);
+        }
+        
+        .challenge-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .challenge-item h4 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        /* Future Plans Section */
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            transform-style: preserve-3d;
+        }
+        
+        .timeline:after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 10px;
+            z-index: -1;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+            transform-style: preserve-3d;
+        }
+        
+        .timeline-item:after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            right: -15px;
+            background: var(--primary);
+            border: 5px solid var(--secondary);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+            box-shadow: 0 0 10px var(--primary);
+        }
+        
+        .left {
+            left: 0;
+        }
+        
+        .right {
+            left: 50%;
+        }
+        
+        .left:before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            right: 30px;
+            border: medium solid var(--glass-border);
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent var(--glass-border);
+        }
+        
+        .right:before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            left: 30px;
+            border: medium solid var(--glass-border);
+            border-width: 10px 10px 10px 0;
+            border-color: transparent var(--glass-border) transparent transparent;
+        }
+        
+        .right:after {
+            left: -15px;
+        }
+        
+        .timeline-content {
+            padding: 30px;
+            background: var(--glass);
+            position: relative;
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+            backdrop-filter: blur(5px);
+            transform: translateZ(0);
+        }
+        
+        .timeline-content:hover {
+            transform: translateY(-10px) translateZ(20px);
+            box-shadow: 0 25px 50px rgba(0, 247, 255, 0.2);
+            border: 1px solid rgba(0, 247, 255, 0.3);
+        }
+        
+        .timeline-content h4 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .timeline-date {
+            color: var(--secondary);
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: block;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+        
+        /* Conclusion Section */
+        .conclusion {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            transform-style: preserve-3d;
+        }
+        
+        .conclusion p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            transform: translateZ(20px);
+        }
+        
+        /* Tech Stack Section */
+        .tech-stack {
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(0, 0, 20, 0.9));
+            position: relative;
+            backdrop-filter: blur(5px);
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            transform-style: preserve-3d;
+        }
+        
+        .tech-card {
+            background: var(--glass);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(5px);
+            transform: translateZ(0);
+        }
+        
+        .tech-card:hover {
+            transform: translateY(-10px) rotateY(5deg) translateZ(20px);
+            box-shadow: 0 20px 40px rgba(0, 247, 255, 0.2);
+            border: 1px solid rgba(0, 247, 255, 0.3);
+        }
+        
+        .tech-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .tech-card:hover .tech-icon {
+            transform: scale(1.2);
+        }
+        
+        .tech-card h4 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        /* Video Showcase Section */
+        .video-showcase {
+            position: relative;
+        }
+        
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            transform-style: preserve-3d;
+        }
+        
+        .video-card {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--glass-border);
+            aspect-ratio: 16/9;
+            transform: translateZ(0);
+        }
+        
+        .video-card:hover {
+            transform: translateY(-10px) rotateY(5deg) translateZ(20px);
+            box-shadow: 0 30px 60px rgba(0, 247, 255, 0.3);
+        }
+        
+        .video-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .video-card:hover img {
+            transform: scale(1.1);
+        }
+        
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            background: rgba(0, 247, 255, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .play-button:hover {
+            background: var(--primary);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        .video-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(0, 0, 20, 0.9));
+            padding: 100px 100px 30px;
+            position: relative;
+            border-top: 1px solid var(--glass-border);
+            backdrop-filter: blur(5px);
+        }
+        
+        .footer-content {
+            display: flex;
+            gap: 80px;
+            margin-bottom: 80px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-column {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+        
+        .footer-links a i {
+            font-size: 1rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: var(--glass);
+            border-radius: 50%;
+            color: var(--text);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .social-links a:hover {
+            color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 247, 255, 0.3);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            z-index: -1;
+            opacity: 0.1;
+            filter: blur(1px);
+            animation: floatElement 15s ease-in-out infinite;
+        }
+        
+        @keyframes floatElement {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, -50px) rotate(5deg); }
+            50% { transform: translate(100px, 0) rotate(10deg); }
+            75% { transform: translate(50px, 50px) rotate(5deg); }
+        }
+        
+        /* 3D Floating Cubes */
+        .floating-cube {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            opacity: 0.1;
+            border-radius: 15px;
+            transform: rotate(45deg);
+            z-index: -1;
+            animation: floatCube 20s linear infinite;
+            filter: blur(1px);
+        }
+        
+        @keyframes floatCube {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-100px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+        
+        /* Market Dashboard Styles */
+        .market-dashboard {
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(5px);
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+        }
+        
+        .market-dashboard:hover {
+            transform: translateY(-10px) rotateX(2deg) rotateY(2deg);
+            box-shadow: 0 30px 60px rgba(0, 247, 255, 0.2);
+        }
+        
+        .market-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .market-filter {
+            background: rgba(20, 20, 30, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .market-filter h4 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .filter-group {
+            margin-bottom: 15px;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+        }
+        
+        select, .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            background: rgba(30, 30, 40, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 5px;
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .market-tabs {
+            display: flex;
+            background: rgba(20, 20, 30, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            text-align: center;
+            flex: 1;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+        }
+        
+        .tab.active {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: var(--dark);
+            font-weight: 700;
+        }
+        
+        .tab:hover:not(.active) {
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+        }
+        
+        .market-content {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .commodity-selector {
+            width: 250px;
+            background: rgba(20, 20, 30, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .category-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .category {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+        }
+        
+        .category.active, .category:hover {
+            background: rgba(0, 247, 255, 0.1);
+            color: var(--primary);
+        }
+        
+        .commodity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .commodity {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+        }
+        
+        .commodity.active, .commodity:hover {
+            background: rgba(0, 247, 255, 0.1);
+            color: var(--primary);
+        }
+        
+        .market-graph-container {
+            flex: 1;
+            background: rgba(20, 20, 30, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .graph-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .graph-header h3 {
+            color: var(--primary);
+            margin: 0;
+        }
+        
+        .graph-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .graph-option {
+            padding: 8px 15px;
+            background: rgba(30, 30, 40, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .graph-option.active, .graph-option:hover {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: var(--dark);
+            font-weight: 700;
+        }
+        
+        .market-graph {
+            height: 400px;
+            position: relative;
+        }
+        
+        .graph-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .time-range {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .time-btn {
+            padding: 5px 10px;
+            background: rgba(30, 30, 40, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 3px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+        
+        .time-btn.active, .time-btn:hover {
+            background: rgba(0, 247, 255, 0.2);
+            color: var(--primary);
+        }
+        
+        .graph-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 5px 15px;
+            background: rgba(30, 30, 40, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 3px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .action-btn:hover {
+            background: rgba(0, 247, 255, 0.2);
+            color: var(--primary);
+        }
+        
+        .market-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(20, 20, 30, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* AI Assistant Styles */
+        .ai-container {
+            display: flex;
+            gap: 40px;
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(5px);
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+        }
+        
+        .ai-container:hover {
+            transform: translateY(-10px) rotateX(2deg) rotateY(2deg);
+            box-shadow: 0 30px 60px rgba(0, 247, 255, 0.2);
+        }
+        
+        .ai-avatar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .avatar-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+            border: 3px solid var(--primary);
+            box-shadow: 0 0 20px var(--primary);
+        }
+        
+        .avatar-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .pulse-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(0, 247, 255, 0.3);
+            animation: pulse 2s infinite;
+            z-index: 1;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            70% { transform: scale(1.3); opacity: 0; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+        
+        .ai-status {
+            padding: 5px 15px;
+            background: rgba(0, 255, 0, 0.2);
+            color: #0f0;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        
+        .ai-chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(20, 20, 30, 0.7);
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            padding: 15px 20px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: var(--dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-header h3 {
+            margin: 0;
+            color: var(--dark);
+        }
+        
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: var(--dark);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 300px;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            position: relative;
+        }
+        
+        .ai-message {
+            align-self: flex-start;
+            background: rgba(30, 30, 40, 0.8);
+            border-top-left-radius: 0;
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: var(--dark);
+            border-top-right-radius: 0;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid var(--glass-border);
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 10px 15px;
+            background: rgba(30, 30, 40, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            color: var(--text);
+            outline: none;
+        }
+        
+        .chat-input button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: var(--dark);
+            border: none;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .chat-input button:hover {
+            transform: scale(1.1);
+        }
+        
+        .ai-suggestions {
+            width: 250px;
+            background: rgba(20, 20, 30, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .ai-suggestions h4 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .suggestion {
+            padding: 10px 15px;
+            background: rgba(30, 30, 40, 0.8);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .suggestion:hover {
+            background: rgba(0, 247, 255, 0.2);
+            color: var(--primary);
+        }
+        
+        /* 3D Visualization Styles */
+        .visualization-container {
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(5px);
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+        }
+        
+        .visualization-container:hover {
+            transform: translateY(-10px) rotateX(2deg) rotateY(2deg);
+            box-shadow: 0 30px 60px rgba(0, 247, 255, 0.2);
+        }
+        
+        .viz-controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+        
+        .control-group select {
+            width: 100%;
+            padding: 10px 15px;
+            background: rgba(30, 30, 40, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 5px;
+            color: var(--text);
+        }
+        
+        .viz-canvas {
+            height: 500px;
+            width: 100%;
+            background: rgba(10, 10, 20, 0.5);
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+        }
+        
+        /* Interactive Web Development Success Graph */
+        .webdev-success-graph {
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 80px 0;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(5px);
+        }
+        
+        .graph-container {
+            display: flex;
+            height: 500px;
+            position: relative;
+        }
+        
+        .y-axis {
+            display: flex;
+            flex-direction: column-reverse;
+            justify-content: space-between;
+            padding-right: 20px;
+            text-align: right;
+            width: 60px;
+        }
+        
+        .y-axis-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .graph-area {
+            flex: 1;
+            position: relative;
+            border-left: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .graph-bars {
+            display: flex;
+            height: 100%;
+            align-items: flex-end;
+            padding: 0 20px;
+            gap: 30px;
+        }
+        
+        .bar-container {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            position: relative;
+        }
+        
+        .bar {
+            background: linear-gradient(to top, var(--primary), var(--accent));
+            border-radius: 5px 5px 0 0;
+            position: relative;
+            transition: height 1s ease;
+        }
+        
+        .bar:hover {
+            filter: brightness(1.2);
+        }
+        
+        .bar-label {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .bar-value {
+            position: absolute;
+            top: -30px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        .x-axis {
+            display: flex;
+            justify-content: space-between;
+            padding-left: 60px;
+            padding-top: 20px;
+        }
+        
+        .x-axis-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .graph-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+        
+        /* AI Comparison Section */
+        .ai-comparison {
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 80px 0;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(5px);
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .ai-card {
+            background: rgba(20, 20, 30, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .ai-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 247, 255, 0.2);
+        }
+        
+        .ai-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .ai-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin-right: 20px;
+        }
+        
+        .ai-name {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .ai-stats {
+            margin-top: 20px;
+        }
+        
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .stat-name {
+            color: var(--text-secondary);
+        }
+        
+        .stat-value {
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        .stat-bar {
+            height: 5px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .stat-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 5px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1600px) {
+            .hero h1 {
+                font-size: 4rem;
+            }
+            
+            .section {
+                padding: 120px 80px;
+            }
+        }
+        
+        @media (max-width: 1400px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            h2 {
+                font-size: 3rem;
+            }
+            
+            .section {
+                padding: 100px 60px;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .hero {
+                padding: 0 60px;
+            }
+            
+            .hero-image-container {
+                width: 50%;
+            }
+            
+            .section {
+                padding: 80px 50px;
+            }
+            
+            footer {
+                padding: 80px 50px 30px;
+            }
+            
+            .model-container, .about-content {
+                gap: 50px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            h2 {
+                font-size: 2.5rem;
+            }
+            
+            .about-content, .solution-item, .model-container {
+                flex-direction: column;
+            }
+            
+            .solution-item:nth-child(even) {
+                flex-direction: column;
+            }
+            
+            .about-image, .solution-image, .model-image {
+                width: 100%;
+                height: 400px;
+            }
+            
+            .timeline:after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item:before {
+                left: 60px;
+                border: medium solid var(--glass-border);
+                border-width: 10px 10px 10px 0;
+                border-color: transparent var(--glass-border) transparent transparent;
+            }
+            
+            .left:after, .right:after {
+                left: 18px;
+            }
+            
+            .right {
+                left: 0%;
+            }
+            
+            .hero-image-container {
+                position: relative;
+                right: auto;
+                top: auto;
+                transform: none;
+                width: 100%;
+                height: 400px;
+                margin-top: 50px;
+            }
+            
+            .hero-image {
+                animation: none;
+                transform: none !important;
+            }
+            
+            .hero-content {
+                text-align: center;
+                margin: 0 auto;
+                animation: none;
+            }
+            
+            .cta-button {
+                margin: 0 auto;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                padding: 20px 30px;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 80%;
+                height: 100vh;
+                background: rgba(10, 10, 10, 0.95);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 40px;
+                transition: 0.5s;
+                z-index: 999;
+                backdrop-filter: blur(10px);
+                border-right: 1px solid var(--glass-border);
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .hero {
+                padding: 0 30px;
+                text-align: center;
+                height: auto;
+                padding-top: 120px;
+                padding-bottom: 80px;
+            }
+            
+            .hero-content {
+                margin: 0 auto;
+            }
+            
+            .section {
+                padding: 80px 30px;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            footer {
+                padding: 60px 30px 30px;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 50px;
+            }
+            
+            .video-modal iframe {
+                width: 95%;
+                height: 50%;
+            }
+            
+            .market-content {
+                flex-direction: column;
+            }
+            
+            .commodity-selector {
+                width: 100%;
+            }
+            
+            .ai-container {
+                flex-direction: column;
+            }
+            
+            .ai-avatar {
+                flex-direction: row;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+            
+            .ai-suggestions {
+                width: 100%;
+                margin-top: 20px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            nav {
+                padding: 15px 20px;
+            }
+            
+            nav.scrolled {
+                padding: 10px 20px;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .cta-button {
+                padding: 15px 30px;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .service-card, .stat-card, .stream-item, .tech-card {
+                padding: 25px 20px;
+            }
+            
+            .challenges-container {
+                padding: 30px 20px;
+            }
+            
+            .timeline-content {
+                padding: 20px;
+            }
+            
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .market-controls {
+                flex-direction: column;
+            }
+            
+            .market-tabs {
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            
+            .tab {
+                min-width: 120px;
+            }
+            
+            .graph-options {
+                flex-wrap: wrap;
+            }
+            
+            .market-graph {
+                height: 300px;
+            }
+            
+            .viz-canvas {
+                height: 400px;
+            }
+            
+            .market-dashboard, .ai-container, .visualization-container {
+                padding: 20px;
+            }
+            
+            .graph-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .graph-footer {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .time-range {
+                flex-wrap: wrap;
+            }
+            
+            .viz-canvas {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader"></div>
+        <div class="loading-text">LOADING APEXDEV</div>
+        <div class="loading-progress">
+            <div class="loading-progress-bar"></div>
+        </div>
+    </div>
+    
+    <!-- 3D Scene Container -->
+    <div class="scene-container" id="scene-container"></div>
+    
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">Apex<span>Dev</span></a>
+        <div class="nav-links">
+            <a href="#about"><i class="fas fa-user-tie"></i> About</a>
+            <a href="#services"><i class="fas fa-code"></i> Services</a>
+            <a href="#solutions"><i class="fas fa-lightbulb"></i> Solutions</a>
+            <a href="#market"><i class="fas fa-chart-line"></i> Market</a>
+            <a href="#model"><i class="fas fa-briefcase"></i> Business Model</a>
+            <a href="#challenges"><i class="fas fa-exclamation-triangle"></i> Challenges</a>
+            <a href="#future"><i class="fas fa-rocket"></i> Future Plans</a>
+            <a href="#tech"><i class="fas fa-microchip"></i> Tech Stack</a>
+            <a href="#videos"><i class="fas fa-video"></i> Videos</a>
+            <a href="#webdev-graph"><i class="fas fa-chart-bar"></i> Web Dev Stats</a>
+            <a href="#ai-comparison"><i class="fas fa-robot"></i> AI Comparison</a>
+            <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+        </div>
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="gradient-text">Transforming Ideas Into <span class="typing-text"></span></h1>
+            <p>ApexDev delivers cutting-edge web solutions that drive business growth through innovative design, robust functionality, and measurable results. Our expert team combines technical excellence with creative vision to build high-performance digital experiences.</p>
+            <div class="button-group">
+                <a href="#contact" class="cta-button">Get Started <i class="fas fa-arrow-right"></i></a>
+                <a href="#video-modal" class="cta-button cta-outline video-button" data-video="dQw4w9WgXcQ">Watch Demo <i class="fas fa-play"></i></a>
+            </div>
+        </div>
+        <div class="hero-image-container">
+            <div class="hero-image"></div>
+        </div>
+        <div class="hero-cube"></div>
+        <div class="hero-cube"></div>
+        
+        <!-- Floating particles -->
+        <div class="floating-particle" style="width: 10px; height: 10px; top: 20%; left: 15%; animation-duration: 50s;"></div>
+        <div class="floating-particle" style="width: 15px; height: 15px; top: 70%; left: 80%; animation-duration: 70s;"></div>
+        <div class="floating-particle" style="width: 8px; height: 8px; top: 40%; left: 60%; animation-duration: 60s;"></div>
+    </section>
+    
+    <!-- About Section -->
+    <section id="about" class="section">
+        <h2 class="section-title gradient-text">Executive Summary</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Who We Are</h3>
+                <p>ApexDev is a premier web development company dedicated to delivering cutting-edge digital solutions tailored to modern business needs. We specialize in creating high-performance websites, responsive web applications, and scalable e-commerce platforms using the latest technologies like React, Node.js</p>
+                <p>Our expert team combines innovative design with robust functionality to ensure seamless user experiences across all devices. With a strong focus on speed, security, and SEO optimization, we help businesses enhance their online presence and drive growth.</p>
+                <p>From startups to enterprises, we offer end-to-end development services, including UI/UX design, backend integration, and cloud deployment. Our agile approach ensures efficient project management, timely delivery, and cost-effective solutions without compromising quality.</p>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Projects Completed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">98%</div>
+                        <div class="stat-label">Client Satisfaction</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">40+</div>
+                        <div class="stat-label">Team Members</div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="ApexDev Team">
+                <div class="floating-element" style="width: 100px; height: 100px; background: var(--accent); top: -50px; right: -50px; animation-duration: 20s;"></div>
+            </div>
+        </div>
+        <div class="floating-cube" style="top: 20%; left: 5%; animation-delay: 2s;"></div>
+        <div class="floating-cube" style="bottom: 10%; right: 10%; animation-delay: 4s;"></div>
+    </section>
+    
+    <!-- Services Section -->
+    <section id="services" class="section services">
+        <h2 class="section-title gradient-text">Our Services</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3>Custom Web Development</h3>
+                <p>Bespoke websites and web applications tailored to your specific business requirements, built with clean, efficient code and modern frameworks.</p>
+                <a href="#" class="learn-more">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Responsive Design</h3>
+                <p>Mobile-first approach ensuring your website looks and performs flawlessly across all devices and screen sizes.</p>
+                <a href="#" class="learn-more">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h3>E-Commerce Solutions</h3>
+                <p>Powerful online stores with secure payment gateways, inventory management, and conversion optimization features.</p>
+                <a href="#" class="learn-more">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>SEO Optimization</h3>
+                <p>Technical and content SEO strategies to improve your search rankings and drive qualified organic traffic.</p>
+                <a href="#" class="learn-more">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Web Security</h3>
+                <p>Comprehensive security measures including SSL, firewalls, and regular vulnerability assessments to protect your digital assets.</p>
+                <a href="#" class="learn-more">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <h3>Cloud Deployment</h3>
+                <p>Scalable cloud hosting solutions with load balancing, auto-scaling, and global CDN for optimal performance.</p>
+                <a href="#" class="learn-more">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+        <div class="floating-cube" style="top: 30%; right: 15%; animation-delay: 1s;"></div>
+    </section>
+    
+    <!-- Solutions Section -->
+    <section id="solutions" class="section">
+        <h2 class="section-title gradient-text">Solution Overview</h2>
+        <div class="solutions-container">
+            <div class="solution-item">
+                <div class="solution-content">
+                    <h3>Context-Aware Web Security Framework</h3>
+                    <p>Our intelligent security framework dynamically adjusts authentication protocols based on user behavior and access patterns. Unlike traditional static login systems, our solution employs geofencing technology to detect unusual access locations, triggering multi-factor authentication when users attempt access from unrecognized regions.</p>
+                    <p>The system integrates seamlessly with existing web architectures while providing granular control over security levels for different application modules.</p>
+                    <a href="#video-modal" class="cta-button cta-outline video-button" data-video="9zEQFtYFCck">Watch Demo <i class="fas fa-play"></i></a>
+                </div>
+                <div class="solution-image">
+                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Security Solution">
+                    <div class="solution-badge">Innovation</div>
+                </div>
+            </div>
+            
+            <div class="solution-item">
+                <div class="solution-content">
+                    <h3>Smart Personalization Engine</h3>
+                    <p>Our AI-driven personalization platform analyzes user location data and browsing patterns to deliver hyper-relevant content. The system automatically adjusts website layouts, promotions, and language preferences based on the visitor's geographic location and past interactions.</p>
+                    <p>This goes beyond basic geo-IP detection by incorporating machine learning to predict user intent, resulting in 35% higher conversion rates compared to standard localization approaches.</p>
+                    <a href="#video-modal" class="cta-button cta-outline video-button" data-video="dQw4w9WgXcQ">Watch Demo <i class="fas fa-play"></i></a>
+                </div>
+                <div class="solution-image">
+                    <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=765&q=80" alt="Personalization Engine">
+                    <div class="solution-badge">AI-Powered</div>
+                </div>
+            </div>
+            
+            <div class="solution-item">
+                <div class="solution-content">
+                    <h3>Performance-Optimized Web Architecture</h3>
+                    <p>Our proprietary web framework implements intelligent resource loading based on device capabilities and network conditions. Our context-aware platform delivers lightweight versions of websites to mobile users in low-bandwidth areas while maintaining full functionality for desktop users.</p>
+                    <p>This adaptive approach reduces bounce rates by 40% and improves Google Core Web Vitals scores by an average of 30 points.</p>
+                    <a href="#video-modal" class="cta-button cta-outline video-button" data-video="dQw4w9WgXcQ">Watch Demo <i class="fas fa-play"></i></a>
+                </div>
+                <div class="solution-image">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Performance Optimization">
+                    <div class="solution-badge">High Performance</div>
+                </div>
+            </div>
+        </div>
+        <div class="floating-cube" style="bottom: 10%; left: 10%; animation-delay: 3s;"></div>
+    </section>
+    
+    <!-- Market Analysis Section -->
+    <section id="market" class="section">
+        <h2 class="section-title gradient-text">Market Analysis</h2>
+        <div class="market-stats">
+            <div class="stat-card">
+                <div class="stat-number">$89B</div>
+                <div class="stat-title">Market Size by 2027</div>
+                <div class="stat-description">Projected global web development market value</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">38%</div>
+                <div class="stat-title">North America Share</div>
+                <div class="stat-description">Dominates the global market currently</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">12.4%</div>
+                <div class="stat-title">Asia-Pacific Growth</div>
+                <div class="stat-description">Fastest growing region through 2030</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">60%</div>
+                <div class="stat-title">Mobile Traffic</div>
+                <div class="stat-description">Of all web traffic comes from smartphones</div>
+            </div>
+        </div>
+        
+        <div class="about-content" style="margin-top: 80px;">
+            <div class="about-text">
+                <h3>Industry Overview</h3>
+                <p>The web development industry is experiencing rapid growth, fueled by digital transformation across all business sectors. Current trends show increasing demand for mobile-first designs, with 60% of web traffic now coming from smartphones. The e-commerce segment dominates market share, projected to grow at 15% annually through 2025.</p>
+                <p>Cloud-based solutions are becoming standard, adopted by 75% of enterprises for better scalability. The progressive web app (PWA) market is expanding at 30% CAGR due to superior user engagement. AI integration in web development is accelerating, with 40% of businesses implementing some form of AI-powered features.</p>
+                <p>Cybersecurity concerns drive 20% annual growth in secure web development services. The industry faces a global talent shortage, with 1.4 million unfilled developer jobs projected by 2025. Small businesses represent the fastest-growing client segment, seeking affordable yet professional web solutions.</p>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Market Analysis">
+                <div class="floating-element" style="width: 80px; height: 80px; background: var(--secondary); bottom: -40px; left: -40px; animation-duration: 25s;"></div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Business Model Section -->
+    <section id="model" class="section">
+        <h2 class="section-title gradient-text">Business Model</h2>
+        <div class="model-container">
+            <div class="model-content">
+                <h3>Hybrid Revenue Model</h3>
+                <p>ApexDev operates on a hybrid revenue model combining project-based fees with recurring SaaS-style income streams. Our primary revenue comes from custom web development projects, priced at $5,000-$50,000 based on complexity, with a 20-30% gross margin.</p>
+                <p>We offer three-tiered service packages (Starter, Growth, Enterprise) to cater to different budget levels while maintaining profitability. A 15% client retention rate generates ongoing revenue through website maintenance contracts ($150-$500/month) and hosting services with premium markup.</p>
+                <p>Our white-label development for digital agencies contributes 25% of annual revenue, providing steady workflow during seasonal dips. The technology partnership program earns referral fees from recommended SaaS platforms while giving clients discounted tools.</p>
+            </div>
+            <div class="model-image">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Business Model">
+                <div class="floating-element" style="width: 120px; height: 120px; background: var(--primary); top: -60px; right: -60px; animation-duration: 30s;"></div>
+            </div>
+        </div>
+        
+        <div class="revenue-streams">
+            <h3>Revenue Streams</h3>
+            <div class="stream-grid">
+                <div class="stream-item">
+                    <h4>Custom Web Development</h4>
+                    <p>Core revenue from bespoke website builds ($5K–$100K per project)</p>
+                </div>
+                <div class="stream-item">
+                    <h4>Retainer Maintenance Plans</h4>
+                    <p>Monthly contracts (15–30% of client base) for updates, security, and backups ($150–$2K/month)</p>
+                </div>
+                <div class="stream-item">
+                    <h4>Premium Hosting & DevOps</h4>
+                    <p>High-margin managed hosting with 24/7 support (300% markup on infrastructure costs)</p>
+                </div>
+                <div class="stream-item">
+                    <h4>E-Commerce Solutions</h4>
+                    <p>Revenue-sharing models (2–5% of sales) or fixed-fee store setups ($10K–$50K)</p>
+                </div>
+                <div class="stream-item">
+                    <h4>SaaS Licensing</h4>
+                    <p>Recurring income from proprietary tools (e.g., AI theme builder, $99–$499/month)</p>
+                </div>
+                <div class="stream-item">
+                    <h4>White-Label Services</h4>
+                    <p>Bulk development for agencies at discounted rates ($75–$150/hour)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Challenges Section -->
+    <section id="challenges" class="section">
+        <h2 class="section-title gradient-text">Challenges & Lessons Learned</h2>
+        <div class="challenges-container">
+            <div class="challenge-item">
+                <h4>Client Education Requirements</h4>
+                <p>Initially, we underestimated client education requirements, discovering that 60% of small business owners couldn't articulate their technical needs - prompting us to develop our proprietary Digital Needs Assessment Framework.</p>
+            </div>
+            <div class="challenge-item">
+                <h4>Talent Shortage Crisis</h4>
+                <p>The talent shortage crisis forced us to create an in-house upskilling program, reducing our dependency on the volatile job market while improving team retention by 40%.</p>
+            </div>
+            <div class="challenge-item">
+                <h4>Scope Creep</h4>
+                <p>We learned that scope creep accounted for 35% of project delays, leading to our ironclad change-order process with automated tracking.</p>
+            </div>
+            <div class="challenge-item">
+                <h4>Technical Debt</h4>
+                <p>Early technical debt from rushed MVP deployments cost us 300+ maintenance hours quarterly, teaching us to enforce strict code review protocols.</p>
+            </div>
+            <div class="challenge-item">
+                <h4>Cloud Vulnerabilities</h4>
+                <p>The 2023 AWS outage exposed single-cloud vulnerabilities, pushing us to architect multi-cloud failover systems.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Future Plans Section -->
+    <section id="future" class="section">
+        <h2 class="section-title gradient-text">Future Plans</h2>
+        <div class="timeline">
+            <div class="timeline-item left">
+                <div class="timeline-content">
+                    <span class="timeline-date">2024 Q1-Q2</span>
+                    <h4>AI-Powered Website Generation</h4>
+                    <p>Launch our proprietary SaaS platform offering AI-powered website generation with industry-specific templates that reduce development time by 70%.</p>
+                </div>
+            </div>
+            <div class="timeline-item right">
+                <div class="timeline-content">
+                    <span class="timeline-date">2024 Q3</span>
+                    <h4>Blockchain-Based Solutions</h4>
+                    <p>Invest heavily in blockchain-based web solutions, developing decentralized identity verification systems for enhanced security and user control.</p>
+                </div>
+            </div>
+            <div class="timeline-item left">
+                <div class="timeline-content">
+                    <span class="timeline-date">2024 Q4</span>
+                    <h4>Voice-First Web Interfaces</h4>
+                    <p>Pioneer voice-first web interfaces, capitalizing on the projected 50% voice search dominance by 2026.</p>
+                </div>
+            </div>
+            <div class="timeline-item right">
+                <div class="timeline-content">
+                    <span class="timeline-date">2025</span>
+                    <h4>Regional Development Hubs</h4>
+                    <p>Establish regional development hubs in Europe and Asia to provide 24/7 project turnaround while optimizing labor costs.</p>
+                </div>
+            </div>
+            <div class="timeline-item left">
+                <div class="timeline-content">
+                    <span class="timeline-date">2026</span>
+                    <h4>Predictive Analytics Modules</h4>
+                    <p>Develop predictive analytics modules that forecast traffic patterns and automatically scale resources.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Tech Stack Section -->
+    <section id="tech" class="section tech-stack">
+        <h2 class="section-title gradient-text">Our Technology Stack</h2>
+        <div class="tech-grid">
+            <div class="tech-card">
+                <div class="tech-icon">
+                    <i class="fab fa-html5"></i>
+                </div>
+                <h4>HTML5</h4>
+                <p>Semantic markup for structured content and accessibility</p>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">
+                    <i class="fab fa-css3-alt"></i>
+                </div>
+                <h4>CSS3</h4>
+                <p>Modern styling with animations and responsive design</p>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">
+                    <i class="fab fa-js"></i>
+                </div>
+                <h4>JavaScript</h4>
+                <p>Interactive and dynamic web experiences</p>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">
+                    <i class="fab fa-react"></i>
+                </div>
+                <h4>React</h4>
+                <p>Component-based UI development</p>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">
+                    <i class="fab fa-node-js"></i>
+                </div>
+                <h4>Node.js</h4>
+                <p>Scalable server-side JavaScript runtime</p>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">
+                    <i class="fab fa-python"></i>
+                </div>
+                <h4>Python</h4>
+                <p>Backend development and data processing</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Video Showcase Section -->
+    <section id="videos" class="section video-showcase">
+        <h2 class="section-title gradient-text">Video Showcase</h2>
+        <div class="video-grid">
+            <div class="video-card">
+                <img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Web Development Process">
+                <button class="play-button video-button" data-video="dQw4w9WgXcQ">
+                    <i class="fas fa-play"></i>
+                </button>
+                <div class="video-title">Our Development Process</div>
+            </div>
+            <div class="video-card">
+                <img src="https://i.ytimg.com/vi/9zEQFtYFCck/maxresdefault.jpg" alt="Security Framework">
+                <button class="play-button video-button" data-video="9zEQFtYFCck">
+                    <i class="fas fa-play"></i>
+                </button>
+                <div class="video-title">Security Framework Demo</div>
+            </div>
+            <div class="video-card">
+                <img src="https://i.ytimg.com/vi/LXb3EKWsInQ/maxresdefault.jpg" alt="AI Integration">
+                <button class="play-button video-button" data-video="LXb3EKWsInQ">
+                    <i class="fas fa-play"></i>
+                </button>
+                <div class="video-title">AI Integration in Web Dev</div>
+            </div>
+            <div class="video-card">
+                <img src="https://i.ytimg.com/vi/7UIBIaEZVWw/maxresdefault.jpg" alt="Performance Optimization">
+                <button class="play-button video-button" data-video="7UIBIaEZVWw">
+                    <i class="fas fa-play"></i>
+                </button>
+                <div class="video-title">Performance Optimization</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Market Data Visualization Section -->
+    <section id="market-data" class="section">
+        <h2 class="section-title gradient-text">Real-time Market Analytics</h2>
+        <div class="market-dashboard">
+            <div class="market-controls">
+                <div class="market-filter">
+                    <h4><i class="fas fa-filter"></i> Market Filters</h4>
+                    <div class="filter-group">
+                        <select class="region-select">
+                            <option>The Forge Regional Market</option>
+                            <option>Domain Regional Market</option>
+                            <option>Sinq Laison Regional Market</option>
+                            <option>Heimatar Regional Market</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <input type="text" placeholder="Browse Search Quickbar" class="search-input">
+                    </div>
+                    <div class="filter-group">
+                        <label>Time Range:</label>
+                        <select class="time-select">
+                            <option>30 Day</option>
+                            <option>7 Day</option>
+                            <option>24 Hour</option>
+                            <option>1 Year</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="market-tabs">
+                    <div class="tab active">Details</div>
+                    <div class="tab">Groups</div>
+                    <div class="tab">My Orders</div>
+                    <div class="tab">Corporation Orders</div>
+                    <div class="tab">Settings</div>
+                </div>
+            </div>
+            
+            <div class="market-content">
+                <div class="commodity-selector">
+                    <div class="category-menu">
+                        <div class="category active">Ore & Minerals</div>
+                        <div class="category">Planetary Materials</div>
+                        <div class="category">Ice Products</div>
+                        <div class="category">Moon Materials</div>
+                        <div class="category">Salvage Materials</div>
+                    </div>
+                    <div class="commodity-list">
+                        <div class="commodity active">Megacite</div>
+                        <div class="commodity">Mexallon</div>
+                        <div class="commodity">Tritanium</div>
+                        <div class="commodity">Pyerite</div>
+                        <div class="commodity">Isogen</div>
+                        <div class="commodity">Nocxium</div>
+                        <div class="commodity">Zydrine</div>
+                        <div class="commodity">Megacyte</div>
+                    </div>
+                </div>
+                
+                <div class="market-graph-container">
+                    <div class="graph-header">
+                        <h3>Megacite Market Trends</h3>
+                        <div class="graph-options">
+                            <button class="graph-option active">Moving Avg. (5d)</button>
+                            <button class="graph-option">Moving Avg. (20d)</button>
+                            <button class="graph-option">Donchian Channel</button>
+                            <button class="graph-option">Median Day Price</button>
+                        </div>
+                    </div>
+                    <div class="market-graph" id="market-graph">
+                        <!-- Graph will be rendered here by Chart.js -->
+                        <canvas id="price-chart"></canvas>
+                    </div>
+                    <div class="graph-footer">
+                        <div class="time-range">
+                            <button class="time-btn active">1Y</button>
+                            <button class="time-btn">6M</button>
+                            <button class="time-btn">3M</button>
+                            <button class="time-btn">1M</button>
+                            <button class="time-btn">1W</button>
+                            <button class="time-btn">1D</button>
+                        </div>
+                        <div class="graph-actions">
+                            <button class="action-btn"><i class="fas fa-folder-plus"></i> New Folder</button>
+                            <button class="action-btn"><i class="fas fa-table"></i> Show Table</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="market-stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">3,400.00</div>
+                    <div class="stat-label">Current Price</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">3,210.45</div>
+                    <div class="stat-label">5-Day Avg</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">+5.2%</div>
+                    <div class="stat-label">7-Day Change</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">12.4M</div>
+                    <div class="stat-label">Daily Volume</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Assistant Section -->
+    <section id="ai-assistant" class="section">
+        <h2 class="section-title gradient-text">AI Market Analyst</h2>
+        <div class="ai-container">
+            <div class="ai-avatar">
+                <div class="avatar-image">
+                    <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=765&q=80" alt="AI Assistant">
+                    <div class="pulse-animation"></div>
+                </div>
+                <div class="ai-status">Online</div>
+            </div>
+            <div class="ai-chat">
+                <div class="chat-header">
+                    <h3>Market Analyst Bot</h3>
+                    <div class="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message ai-message">
+                        <div class="message-content">
+                            Hello! I'm your AI market analyst. How can I help you with market data today?
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" placeholder="Ask about market trends..." id="user-input">
+                    <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+            <div class="ai-suggestions">
+                <h4>Quick Questions:</h4>
+                <div class="suggestion">What's the current trend for Megacite?</div>
+                <div class="suggestion">Show me the best performing commodities</div>
+                <div class="suggestion">Predict prices for next week</div>
+                <div class="suggestion">Analyze market volatility</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3D Data Visualization Section -->
+    <section id="3d-visualization" class="section">
+        <h2 class="section-title gradient-text">3D Market Visualization</h2>
+        <div class="visualization-container">
+            <div class="viz-controls">
+                <div class="control-group">
+                    <label>View Mode:</label>
+                    <select id="view-mode">
+                        <option value="surface">3D Surface</option>
+                        <option value="bubble">Bubble Chart</option>
+                        <option value="bar">3D Bars</option>
+                        <option value="scatter">Scatter Plot</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>X-Axis:</label>
+                    <select id="x-axis">
+                        <option value="time">Time</option>
+                        <option value="commodity">Commodity</option>
+                        <option value="region">Region</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Y-Axis:</label>
+                    <select id="y-axis">
+                        <option value="price">Price</option>
+                        <option value="volume">Volume</option>
+                        <option value="change">% Change</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Z-Axis:</label>
+                    <select id="z-axis">
+                        <option value="volume">Volume</option>
+                        <option value="price">Price</option>
+                        <option value="velocity">Velocity</option>
+                    </select>
+                </div>
+            </div>
+            <div class="viz-canvas" id="3d-graph"></div>
+        </div>
+    </section>
+
+    <!-- Web Development Success Graph Section -->
+    <section id="webdev-graph" class="section">
+        <h2 class="section-title gradient-text">Web Development Success Metrics</h2>
+        <div class="webdev-success-graph">
+            <h3 class="graph-title">Web Development Project Success Rates (2023)</h3>
+            <div class="graph-container">
+                <div class="y-axis">
+                    <div class="y-axis-label">100%</div>
+                    <div class="y-axis-label">80%</div>
+                    <div class="y-axis-label">60%</div>
+                    <div class="y-axis-label">40%</div>
+                    <div class="y-axis-label">20%</div>
+                    <div class="y-axis-label">0%</div>
+                </div>
+                <div class="graph-area">
+                    <div class="graph-bars">
+                        <div class="bar-container">
+                            <div class="bar" style="height: 92%;" data-value="92%"></div>
+                            <div class="bar-value">92%</div>
+                            <div class="bar-label">On-Time Delivery</div>
+                        </div>
+                        <div class="bar-container">
+                            <div class="bar" style="height: 88%;" data-value="88%"></div>
+                            <div class="bar-value">88%</div>
+                            <div class="bar-label">Budget Adherence</div>
+                        </div>
+                        <div class="bar-container">
+                            <div class="bar" style="height: 95%;" data-value="95%"></div>
+                            <div class="bar-value">95%</div>
+                            <div class="bar-label">Client Satisfaction</div>
+                        </div>
+                        <div class="bar-container">
+                            <div class="bar" style="height: 85%;" data-value="85%"></div>
+                            <div class="bar-value">85%</div>
+                            <div class="bar-label">Feature Completion</div>
+                        </div>
+                        <div class="bar-container">
+                            <div class="bar" style="height: 90%;" data-value="90%"></div>
+                            <div class="bar-value">90%</div>
+                            <div class="bar-label">Performance Targets</div>
+                        </div>
+                        <div class="bar-container">
+                            <div class="bar" style="height: 83%;" data-value="83%"></div>
+                            <div class="bar-value">83%</div>
+                            <div class="bar-label">Post-Launch Stability</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="x-axis">
+                <div class="x-axis-label">On-Time Delivery</div>
+                <div class="x-axis-label">Budget Adherence</div>
+                <div class="x-axis-label">Client Satisfaction</div>
+                <div class="x-axis-label">Feature Completion</div>
+                <div class="x-axis-label">Performance Targets</div>
+                <div class="x-axis-label">Post-Launch Stability</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Comparison Section -->
+    <section id="ai-comparison" class="section">
+        <h2 class="section-title gradient-text">AI Technology Comparison</h2>
+        <div class="ai-comparison">
+            <div class="comparison-grid">
+                <div class="ai-card">
+                    <div class="ai-card-header">
+                        <div class="ai-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="ai-name">ApexDev AI</div>
+                    </div>
+                    <div class="ai-stats">
+                        <div class="stat-row">
+                            <span class="stat-name">Accuracy</span>
+                            <span class="stat-value">94%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 94%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Speed</span>
+                            <span class="stat-value">98%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 98%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Adaptability</span>
+                            <span class="stat-value">96%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 96%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Learning Rate</span>
+                            <span class="stat-value">92%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 92%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-card">
+                    <div class="ai-card-header">
+                        <div class="ai-icon">
+                            <i class="fab fa-google"></i>
+                        </div>
+                        <div class="ai-name">Google AI</div>
+                    </div>
+                    <div class="ai-stats">
+                        <div class="stat-row">
+                            <span class="stat-name">Accuracy</span>
+                            <span class="stat-value">91%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 91%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Speed</span>
+                            <span class="stat-value">89%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 89%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Adaptability</span>
+                            <span class="stat-value">87%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 87%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Learning Rate</span>
+                            <span class="stat-value">90%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-card">
+                    <div class="ai-card-header">
+                        <div class="ai-icon">
+                            <i class="fab fa-microsoft"></i>
+                        </div>
+                        <div class="ai-name">Microsoft AI</div>
+                    </div>
+                    <div class="ai-stats">
+                        <div class="stat-row">
+                            <span class="stat-name">Accuracy</span>
+                            <span class="stat-value">88%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 88%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Speed</span>
+                            <span class="stat-value">85%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 85%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Adaptability</span>
+                            <span class="stat-value">83%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 83%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Learning Rate</span>
+                            <span class="stat-value">86%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 86%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-card">
+                    <div class="ai-card-header">
+                        <div class="ai-icon">
+                            <i class="fab fa-aws"></i>
+                        </div>
+                        <div class="ai-name">AWS AI</div>
+                    </div>
+                    <div class="ai-stats">
+                        <div class="stat-row">
+                            <span class="stat-name">Accuracy</span>
+                            <span class="stat-value">89%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 89%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Speed</span>
+                            <span class="stat-value">92%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 92%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Adaptability</span>
+                            <span class="stat-value">85%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 85%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Learning Rate</span>
+                            <span class="stat-value">88%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 88%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-card">
+                    <div class="ai-card-header">
+                        <div class="ai-icon">
+                            <i class="fab fa-ibm"></i>
+                        </div>
+                        <div class="ai-name">IBM Watson</div>
+                    </div>
+                    <div class="ai-stats">
+                        <div class="stat-row">
+                            <span class="stat-name">Accuracy</span>
+                            <span class="stat-value">87%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 87%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Speed</span>
+                            <span class="stat-value">84%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 84%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Adaptability</span>
+                            <span class="stat-value">89%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 89%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Learning Rate</span>
+                            <span class="stat-value">85%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-card">
+                    <div class="ai-card-header">
+                        <div class="ai-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="ai-name">OpenAI</div>
+                    </div>
+                    <div class="ai-stats">
+                        <div class="stat-row">
+                            <span class="stat-name">Accuracy</span>
+                            <span class="stat-value">93%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 93%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Speed</span>
+                            <span class="stat-value">90%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 90%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Adaptability</span>
+                            <span class="stat-value">91%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 91%;"></div>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Learning Rate</span>
+                            <span class="stat-value">94%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-progress" style="width: 94%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>About Us</h3>
+                <ul class="footer-links">
+                    <li><a href="#about"><i class="fas fa-chevron-right"></i> Our Story</a></li>
+                    <li><a href="#services"><i class="fas fa-chevron-right"></i> Services</a></li>
+                    <li><a href="#solutions"><i class="fas fa-chevron-right"></i> Solutions</a></li>
+                    <li><a href="#tech"><i class="fas fa-chevron-right"></i> Technology</a></li>
+                    <li><a href="#future"><i class="fas fa-chevron-right"></i> Future Plans</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Documentation</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> API Reference</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Tutorials</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Blog</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Case Studies</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Help Center</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Community</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Status</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contact</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> 123 Tech Street, Silicon Valley</a></li>
+                    <li><a href="#"><i class="fas fa-phone"></i> +1 (555) 123-4567</a></li>
+                    <li><a href="#"><i class="fas fa-envelope"></i> info@apexdev.com</a></li>
+                    <li><a href="#"><i class="fas fa-clock"></i> Mon-Fri: 9AM - 6PM</a></li>
+                </ul>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 ApexDev. All rights reserved. | Developed by <a href="#" style="color: var(--primary);">MrCode</a></p>
+        </div>
+    </footer>
+
+    <!-- Video Modal -->
+    <div class="video-modal">
+        <iframe width="560" height="315" frameborder="0" allowfullscreen></iframe>
+        <div class="close-modal">&times;</div>
+    </div>
+
+    <!-- JavaScript for Dynamic Functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script>
+        // Preloader Completion
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+            progress += Math.random() * 10;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(progressInterval);
+                setTimeout(() => {
+                    document.querySelector('.preloader').classList.add('complete');
+                }, 500);
+            }
+            document.querySelector('.loading-progress-bar').style.width = progress + '%';
+        }, 100);
+        
+        // Typing Effect
+        const typingText = document.querySelector('.typing-text');
+        const words = ["Digital Reality", "Web Experiences", "Business Growth", "Innovation"];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        
+        function type() {
+            const currentWord = words[wordIndex];
+            const currentChar = currentWord.substring(0, charIndex);
+            typingText.textContent = currentChar;
+            
+            if (!isDeleting && charIndex < currentWord.length) {
+                charIndex++;
+                setTimeout(type, 100);
+            } else if (isDeleting && charIndex > 0) {
+                charIndex--;
+                setTimeout(type, 50);
+            } else {
+                isDeleting = !isDeleting;
+                wordIndex = (!isDeleting && wordIndex === words.length - 1) ? 0 : (!isDeleting ? wordIndex + 1 : wordIndex);
+                setTimeout(type, 1000);
+            }
+        }
+        
+        setTimeout(type, 1000);
+        
+        // Initialize Market Chart
+        const ctx = document.getElementById('price-chart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Megacite Price',
+                    data: [2800, 2950, 3100, 3300, 3400, 3200, 3100, 3000, 2900, 3100, 3300, 3400],
+                    borderColor: 'rgba(0, 247, 255, 1)',
+                    backgroundColor: 'rgba(0, 247, 255, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: '5-Day Moving Avg',
+                    data: [2750, 2900, 3050, 3250, 3350, 3250, 3150, 3050, 2950, 3050, 3250, 3350],
+                    borderColor: 'rgba(255, 0, 228, 1)',
+                    backgroundColor: 'rgba(255, 0, 228, 0.1)',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(10, 10, 20, 0.9)',
+                        titleColor: 'rgba(0, 247, 255, 1)',
+                        bodyColor: 'rgba(255, 255, 255, 0.7)',
+                        borderColor: 'rgba(0, 247, 255, 0.5)',
+                        borderWidth: 1
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    axis: 'x',
+                    intersect: false
+                }
+            }
+        });
+        
+        // Update chart data periodically to simulate live data
+        function updateChartData() {
+            const newData = chart.data.datasets[0].data.map(value => {
+                const change = (Math.random() - 0.5) * 200;
+                return Math.max(2000, Math.min(4000, value + change));
+            });
+            
+            chart.data.datasets[0].data = newData;
+            
+            // Calculate new moving average
+            const movingAvg = [];
+            for (let i = 0; i < newData.length; i++) {
+                const start = Math.max(0, i - 2);
+                const end = i + 1;
+                const slice = newData.slice(start, end);
+                const avg = slice.reduce((a, b) => a + b, 0) / slice.length;
+                movingAvg.push(avg);
+            }
+            
+            chart.data.datasets[1].data = movingAvg;
+            chart.update();
+        }
+        
+        setInterval(updateChartData, 3000);
+        
+        // 3D Visualization with Three.js
+        function init3DVisualization() {
+            const container = document.getElementById('3d-graph');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            
+            // Create scene
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a0a);
+            
+            // Create camera
+            const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            camera.position.z = 5;
+            
+            // Create renderer
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(width, height);
+            container.appendChild(renderer.domElement);
+            
+            // Add controls
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            
+            // Create data points
+            const dataPoints = [];
+            for (let i = 0; i < 12; i++) {
+                dataPoints.push({
+                    x: i - 6,
+                    y: Math.random() * 4 - 2,
+                    z: Math.random() * 4 - 2,
+                    value: Math.random() * 100 + 50
+                });
+            }
+            
+            // Create spheres for data points
+            const spheres = [];
+            dataPoints.forEach(point => {
+                const geometry = new THREE.SphereGeometry(point.value / 100, 32, 32);
+                const material = new THREE.MeshBasicMaterial({ 
+                    color: new THREE.Color(
+                        0.5 + point.x / 12,
+                        0.5 + point.y / 8,
+                        0.5 + point.z / 8
+                    ),
+                    transparent: true,
+                    opacity: 0.8
+                });
+                const sphere = new THREE.Mesh(geometry, material);
+                sphere.position.set(point.x, point.y, point.z);
+                scene.add(sphere);
+                spheres.push(sphere);
+            });
+            
+            // Create axes
+            const axesHelper = new THREE.AxesHelper(5);
+            scene.add(axesHelper);
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                // Rotate spheres slightly
+                spheres.forEach(sphere => {
+                    sphere.rotation.x += 0.005;
+                    sphere.rotation.y += 0.005;
+                });
+                
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                const width = container.clientWidth;
+                const height = container.clientHeight;
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, height);
+            });
+        }
+        
+        // Initialize 3D visualization when section is in view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    init3DVisualization();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        observer.observe(document.getElementById('3d-visualization'));
+        
+        // AI Chat Functionality
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        
+        const aiResponses = [
+            "The current trend for Megacite shows a steady increase over the past month, with a 5.2% rise in prices.",
+            "Based on recent data, the best performing commodities are Megacite and Tritanium, both showing over 5% growth this week.",
+            "Our predictive models suggest Megacite prices will likely increase by 2-3% in the coming week due to increased demand.",
+            "Market volatility is currently moderate, with a volatility index of 34.2, which is slightly higher than the 30-day average.",
+            "The regional market analysis shows The Forge region has the highest trading volume for Megacite this month.",
+            "Looking at historical patterns, we typically see a price dip in mid-month followed by recovery towards month-end."
+        ];
+        
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(isUser ? 'user-message' : 'ai-message');
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.classList.add('message-content');
+            contentDiv.textContent = content;
+            
+            const timeDiv = document.createElement('div');
+            timeDiv.classList.add('message-time');
+            timeDiv.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            messageDiv.appendChild(contentDiv);
+            messageDiv.appendChild(timeDiv);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function sendMessage() {
+            const message = userInput.value.trim();
+            if (message) {
+                addMessage(message, true);
+                userInput.value = '';
+                
+                // Show typing indicator
+                document.querySelector('.typing-indicator').style.display = 'flex';
+                
+                // Simulate AI response after delay
+                setTimeout(() => {
+                    document.querySelector('.typing-indicator').style.display = 'none';
+                    const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)];
+                    addMessage(randomResponse);
+                }, 1500 + Math.random() * 2000);
+            }
+        }
+        
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Quick suggestion click handler
+        document.querySelectorAll('.suggestion').forEach(suggestion => {
+            suggestion.addEventListener('click', () => {
+                userInput.value = suggestion.textContent;
+                sendMessage();
+            });
+        });
+        
+        // Video Modal Functionality
+        const videoModal = document.querySelector('.video-modal');
+        const closeModal = videoModal.querySelector('.close-modal');
+        const videoIframe = videoModal.querySelector('iframe');
+        
+        document.querySelectorAll('.video-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const videoId = button.getAttribute('data-video');
+                videoIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+                videoModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        closeModal.addEventListener('click', () => {
+            videoModal.classList.remove('active');
+            videoIframe.src = '';
+            document.body.style.overflow = 'auto';
+        });
+        
+        videoModal.addEventListener('click', (e) => {
+            if (e.target === videoModal) {
+                videoModal.classList.remove('active');
+                videoIframe.src = '';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelector('.tab.active').classList.remove('active');
+                tab.classList.add('active');
+            });
+        });
+        
+        // Category functionality
+        document.querySelectorAll('.category').forEach(cat => {
+            cat.addEventListener('click', () => {
+                document.querySelector('.category.active').classList.remove('active');
+                cat.classList.add('active');
+            });
+        });
+        
+        // Commodity functionality
+        document.querySelectorAll('.commodity').forEach(comm => {
+            comm.addEventListener('click', () => {
+                document.querySelector('.commodity.active').classList.remove('active');
+                comm.classList.add('active');
+                
+                // Update chart title
+                document.querySelector('.graph-header h3').textContent = `${comm.textContent} Market Trends`;
+                
+                // Generate new random data for the selected commodity
+                const baseValue = Math.random() * 2000 + 2000;
+                const newData = chart.data.labels.map((_, i) => {
+                    return baseValue + Math.sin(i) * 300 + (Math.random() - 0.5) * 200;
+                });
+                
+                chart.data.datasets[0].data = newData;
+                
+                // Calculate new moving average
+                const movingAvg = [];
+                for (let i = 0; i < newData.length; i++) {
+                    const start = Math.max(0, i - 2);
+                    const end = i + 1;
+                    const slice = newData.slice(start, end);
+                    const avg = slice.reduce((a, b) => a + b, 0) / slice.length;
+                    movingAvg.push(avg);
+                }
+                
+                chart.data.datasets[1].data = movingAvg;
+                chart.update();
+                
+                // Update stats
+                const currentPrice = newData[newData.length - 1];
+                const fiveDayAvg = movingAvg[movingAvg.length - 1];
+                const sevenDayChange = ((newData[newData.length - 1] - newData[newData.length - 8]) / newData[newData.length - 8] * 100).toFixed(1);
+                const dailyVolume = Math.floor(Math.random() * 5000000) + 8000000;
+                
+                document.querySelectorAll('.stat-card .stat-value')[0].textContent = currentPrice.toFixed(2);
+                document.querySelectorAll('.stat-card .stat-value')[1].textContent = fiveDayAvg.toFixed(2);
+                document.querySelectorAll('.stat-card .stat-value')[2].textContent = `${sevenDayChange}%`;
+                document.querySelectorAll('.stat-card .stat-value')[3].textContent = dailyVolume.toLocaleString();
+            });
+        });
+        
+        // Graph option functionality
+        document.querySelectorAll('.graph-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelector('.graph-option.active').classList.remove('active');
+                option.classList.add('active');
+                
+                // In a real app, this would change the chart display
+                // For demo, we'll just update the moving average line
+                const newData = chart.data.datasets[0].data.map(value => {
+                    const change = option.textContent.includes('20d') ? 
+                        (Math.random() - 0.5) * 100 : 
+                        (Math.random() - 0.5) * 200;
+                    return value + change;
+                });
+                
+                chart.data.datasets[1].data = newData;
+                chart.update();
+            });
+        });
+        
+        // Time range functionality
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelector('.time-btn.active').classList.remove('active');
+                btn.classList.add('active');
+                
+                // In a real app, this would change the time range displayed
+                // For demo, we'll adjust the x-axis labels
+                const ranges = {
+                    '1Y': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    '6M': ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    '3M': ['Oct', 'Nov', 'Dec'],
+                    '1M': ['Dec 1', 'Dec 8', 'Dec 15', 'Dec 22', 'Dec 29'],
+                    '1W': ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    '1D': ['12AM', '3AM', '6AM', '9AM', '12PM', '3PM', '6PM', '9PM']
+                };
+                
+                chart.data.labels = ranges[btn.textContent];
+                chart.update();
+            });
+        });
+        
+        // View mode functionality for 3D visualization
+        document.getElementById('view-mode').addEventListener('change', (e) => {
+            console.log(`View mode changed to: ${e.target.value}`);
+        });
+        
+        // Axis selection functionality
+        document.getElementById('x-axis').addEventListener('change', (e) => {
+            console.log(`X-axis changed to: ${e.target.value}`);
+        });
+        
+        document.getElementById('y-axis').addEventListener('change', (e) => {
+            console.log(`Y-axis changed to: ${e.target.value}`);
+        });
+        
+        document.getElementById('z-axis').addEventListener('change', (e) => {
+            console.log(`Z-axis changed to: ${e.target.value}`);
+        });
+        
+        // Mobile menu toggle
+        document.querySelector('.menu-toggle').addEventListener('click', () => {
+            document.querySelector('.nav-links').classList.toggle('active');
+            document.querySelector('.menu-toggle i').classList.toggle('fa-bars');
+            document.querySelector('.menu-toggle i').classList.toggle('fa-times');
+        });
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelector('.nav-links').classList.remove('active');
+                document.querySelector('.menu-toggle i').classList.remove('fa-times');
+                document.querySelector('.menu-toggle i').classList.add('fa-bars');
+            });
+        });
+        
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                document.querySelector('nav').classList.add('scrolled');
+            } else {
+                document.querySelector('nav').classList.remove('scrolled');
+            }
+        });
+        
+        // Animate bars in Web Development Success Graph
+        const bars = document.querySelectorAll('.bar');
+        bars.forEach(bar => {
+            const targetHeight = bar.style.height;
+            bar.style.height = '0%';
+            
+            setTimeout(() => {
+                bar.style.height = targetHeight;
+            }, 500);
+        });
+    </script>
+</body>
+</html>

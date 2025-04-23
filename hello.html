@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexDev - Next-Gen Web Solutions</title>
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.min.js"></script>
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary: #00f0ff;
+            --secondary: #ff00e4;
+            --dark: #0a0a0a;
+            --light: #f0f0f0;
+            --accent: #ff5e00;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        /* 3D Canvas Container */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(10px);
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--light);
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            max-width: 600px;
+            z-index: 10;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .cta-button:hover::before {
+            opacity: 1;
+        }
+        
+        .hero-image {
+            position: absolute;
+            right: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 500px;
+            height: 500px;
+            z-index: 5;
+        }
+        
+        /* Floating Particles */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(0, 240, 255, 0.5);
+            border-radius: 50%;
+            filter: blur(5px);
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-50px) rotate(180deg);
+            }
+        }
+        
+        /* Sections */
+        section {
+            padding: 100px 10%;
+            position: relative;
+        }
+        
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 50px;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+        
+        /* Cards */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .card {
+            background: rgba(20, 20, 20, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(0, 240, 255, 0.1),
+                rgba(255, 0, 228, 0.1)
+            );
+            transform: rotate(30deg);
+            z-index: -1;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 30px rgba(0, 240, 255, 0.2);
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .card p {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        /* Timeline */
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 50px auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            top: 15px;
+            z-index: 1;
+        }
+        
+        .left {
+            left: 0;
+        }
+        
+        .right {
+            left: 50%;
+        }
+        
+        .left::after {
+            right: -10px;
+        }
+        
+        .right::after {
+            left: -10px;
+        }
+        
+        .timeline-content {
+            padding: 20px 30px;
+            background: rgba(20, 20, 20, 0.7);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .timeline-content h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+            margin-top: 50px;
+        }
+        
+        .stat-item {
+            padding: 30px;
+            background: rgba(20, 20, 20, 0.7);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+        
+        /* Contact Form */
+        .contact-form {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(20, 20, 20, 0.7);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(30, 30, 30, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+        
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        /* Footer */
+        footer {
+            background: rgba(10, 10, 10, 0.9);
+            padding: 50px 10%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+            opacity: 1;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--light);
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: var(--primary);
+            color: var(--dark);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+        }
+        
+        /* 3D Model Viewer */
+        .model-viewer {
+            width: 100%;
+            height: 500px;
+            margin: 50px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Video Embed */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            margin: 50px 0;
+            border-radius: 15px;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero-image {
+                width: 400px;
+                height: 400px;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: rgba(10, 10, 10, 0.95);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 30px;
+                transition: all 0.5s ease;
+                z-index: 999;
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+            
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 150px;
+            }
+            
+            .hero-content {
+                max-width: 100%;
+                margin-bottom: 50px;
+            }
+            
+            .hero-image {
+                position: relative;
+                right: auto;
+                top: auto;
+                transform: none;
+                width: 100%;
+                max-width: 400px;
+                height: auto;
+                margin: 0 auto;
+            }
+            
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item::after {
+                left: 21px;
+            }
+            
+            .left::after, .right::after {
+                left: 21px;
+            }
+            
+            .right {
+                left: 0;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .card-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-form {
+                padding: 20px;
+            }
+        }
+        
+        /* Custom Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .fade-in.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Glow Effects */
+        .glow {
+            animation: glow 2s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+            }
+            to {
+                box-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
+            }
+        }
+        
+        /* Floating Animation */
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        /* Background Grid */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Background Canvas -->
+    <div id="canvas-container"></div>
+    <div class="grid-bg"></div>
+    
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">Apex<span>Dev</span></a>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#services">Services</a>
+            <a href="#solutions">Solutions</a>
+            <a href="#market">Market</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <div class="hamburger">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Transforming Ideas Into Digital Masterpieces</h1>
+            <p>ApexDev delivers cutting-edge web solutions that combine innovative design with robust functionality. Our expert team creates high-performance, secure, and scalable digital experiences tailored to your business needs.</p>
+            <a href="#contact" class="cta-button">Get Started</a>
+        </div>
+        <div class="hero-image">
+            <!-- 3D Model will be placed here -->
+        </div>
+        
+        <!-- Floating Particles -->
+        <div class="particles" id="particles"></div>
+    </section>
+    
+    <!-- About Section -->
+    <section id="about" class="fade-in">
+        <h2 class="section-title">Executive Summary</h2>
+        <div class="card-container">
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h3>Our Mission</h3>
+                <p>To empower businesses with innovative web solutions that drive growth, enhance user experiences, and future-proof digital presence in an ever-evolving technological landscape.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h3>Our Vision</h3>
+                <p>To become the global leader in intelligent web development by pioneering AI-driven solutions and setting new standards for performance, security, and user engagement.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h3>Our Values</h3>
+                <p>Innovation, Excellence, Integrity, and Client Success drive every project we undertake. We believe in building long-term partnerships based on trust and measurable results.</p>
+            </div>
+        </div>
+        
+        <!-- 3D Model Viewer -->
+        <div class="model-viewer" id="model-viewer"></div>
+        
+        <!-- Problem Statement -->
+        <h2 class="section-title">Problem Statement</h2>
+        <div class="card glow">
+            <h3>The Digital Challenge</h3>
+            <p>In today's digital-first economy, businesses struggle with outdated websites, poor user experience, and slow load speeds that drive customers away. Many rely on generic templates or inefficient development approaches, resulting in non-scalable, insecure, and non-responsive web solutions.</p>
+            <p>The lack of technical expertise in-house forces businesses to depend on unreliable freelancers or expensive agencies that fail to deliver customized, future-proof solutions. Startups and SMEs face budget constraints while needing high-quality web development to compete with larger enterprises.</p>
+        </div>
+    </section>
+    
+    <!-- Services Section -->
+    <section id="services" class="fade-in">
+        <h2 class="section-title">Our Services</h2>
+        <div class="card-container">
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <h3>Custom Web Development</h3>
+                <p>Tailored websites built from scratch to match your exact business requirements, with clean code architecture and future scalability in mind.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Responsive Design</h3>
+                <p>Mobile-first approach ensuring your website looks and performs flawlessly across all devices and screen sizes.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h3>E-Commerce Solutions</h3>
+                <p>Powerful online stores with secure payment gateways, inventory management, and conversion-optimized checkout flows.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>SEO Optimization</h3>
+                <p>Technical and content SEO strategies to improve search rankings and drive qualified organic traffic to your site.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Web Security</h3>
+                <p>Comprehensive security measures including SSL, firewalls, malware protection, and regular vulnerability assessments.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <h3>Cloud Deployment</h3>
+                <p>Scalable cloud hosting solutions with automated backups, CDN integration, and performance monitoring.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Solutions Section -->
+    <section id="solutions" class="fade-in">
+        <h2 class="section-title">Innovative Solutions</h2>
+        
+        <!-- Video Embed -->
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="ApexDev Solutions" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="timeline">
+            <div class="timeline-item left">
+                <div class="timeline-content">
+                    <h3>Context-Aware Web Security</h3>
+                    <p>Our intelligent security framework dynamically adjusts authentication protocols based on user behavior and access patterns, employing geofencing technology to detect unusual access locations.</p>
+                </div>
+            </div>
+            <div class="timeline-item right">
+                <div class="timeline-content">
+                    <h3>Smart Personalization Engine</h3>
+                    <p>AI-driven platform analyzes user location data and browsing patterns to deliver hyper-relevant content, resulting in 35% higher conversion rates compared to standard localization approaches.</p>
+                </div>
+            </div>
+            <div class="timeline-item left">
+                <div class="timeline-content">
+                    <h3>Performance-Optimized Architecture</h3>
+                    <p>Proprietary framework implements intelligent resource loading based on device capabilities and network conditions, reducing bounce rates by 40% and improving Core Web Vitals scores.</p>
+                </div>
+            </div>
+            <div class="timeline-item right">
+                <div class="timeline-content">
+                    <h3>Sentiment-Driven Web Design</h3>
+                    <p>Pioneering sentiment analysis integration automatically adjusts UI elements based on real-time user emotion detection, creating self-optimizing websites for maximum engagement.</p>
+                </div>
+            </div>
+            <div class="timeline-item left">
+                <div class="timeline-content">
+                    <h3>Cloud-Powered Geofencing</h3>
+                    <p>Infrastructure-assisted solution offloads location processing to our edge computing network, enabling sophisticated location-based experiences without compromising performance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Market Analysis Section -->
+    <section id="market" class="fade-in">
+        <h2 class="section-title">Market Analysis</h2>
+        
+        <div class="stats">
+            <div class="stat-item floating">
+                <div class="stat-number">$89B</div>
+                <div class="stat-label">Projected Market by 2027</div>
+            </div>
+            <div class="stat-item floating" style="animation-delay: 0.2s;">
+                <div class="stat-number">70%</div>
+                <div class="stat-label">SMEs Need Web Solutions</div>
+            </div>
+            <div class="stat-item floating" style="animation-delay: 0.4s;">
+                <div class="stat-number">43%</div>
+                <div class="stat-label">Cyberattacks Target SMBs</div>
+            </div>
+            <div class="stat-item floating" style="animation-delay: 0.6s;">
+                <div class="stat-number">50%</div>
+                <div class="stat-label">Searches Are Voice-Activated</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Industry Overview</h3>
+            <p>The web development industry is experiencing rapid growth, fueled by digital transformation across all business sectors. Current trends show increasing demand for mobile-first designs, with 60% of web traffic now coming from smartphones. The e-commerce segment dominates market share, projected to grow at 15% annually through 2025.</p>
+            <p>Cloud-based solutions are becoming standard, adopted by 75% of enterprises for better scalability. The progressive web app (PWA) market is expanding at 30% CAGR due to superior user engagement. AI integration in web development is accelerating, with 40% of businesses implementing some form of AI-powered features.</p>
+        </div>
+        
+        <!-- Another 3D Model -->
+        <div class="model-viewer" id="market-model"></div>
+    </section>
+    
+    <!-- Business Model Section -->
+    <section class="fade-in">
+        <h2 class="section-title">Business Model</h2>
+        
+        <div class="card-container">
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <h3>Revenue Streams</h3>
+                <ul>
+                    <li>Custom Web Development</li>
+                    <li>Retainer Maintenance Plans</li>
+                    <li>Premium Hosting & DevOps</li>
+                    <li>E-Commerce Solutions</li>
+                    <li>SaaS Licensing</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <h3>Cost Structure</h3>
+                <ul>
+                    <li>Salaried Tech Talent (60%)</li>
+                    <li>Cloud Infrastructure (8-12%)</li>
+                    <li>Freelance Specialists (15-20%)</li>
+                    <li>Sales & Marketing (12-15%)</li>
+                    <li>R&D Reinvestment (5-8%)</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h3>Key Partnerships</h3>
+                <ul>
+                    <li>Cloud Providers (AWS, Vercel)</li>
+                    <li>Technology Alliances (Adobe, Shopify)</li>
+                    <li>Local Business Associations</li>
+                    <li>Payment Processors</li>
+                    <li>UI/UX Design Studios</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Key Outcomes Section -->
+    <section class="fade-in">
+        <h2 class="section-title">Key Outcomes</h2>
+        
+        <div class="card">
+            <h3>SEO-Optimized Websites</h3>
+            <p>Our technical SEO framework guarantees 90+ Lighthouse scores through optimized code structure, lightning-fast load times (&lt;1.5s), and mobile-responsive designs. We implement schema markup and semantic HTML5 to boost search visibility, resulting in 40-60% more organic traffic within 6 months.</p>
+        </div>
+        
+        <div class="card" style="margin-top: 30px;">
+            <h3>Enterprise-Grade Security</h3>
+            <p>Our multi-layered defense system includes Web Application Firewalls (WAF), DDoS protection, and daily malware scanning that blocks 99.9% of attacks. We implement OWASP Top 10 safeguards with automated vulnerability patching and zero-trust architecture for sensitive data.</p>
+        </div>
+        
+        <!-- System Requirements -->
+        <div class="card-container" style="margin-top: 50px;">
+            <div class="card">
+                <h3>Backend</h3>
+                <ul>
+                    <li>Node.js 18+ or PHP 8.2+</li>
+                    <li>2GB+ RAM allocation per core</li>
+                    <li>Redis 6.2+ for session caching</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Frontend</h3>
+                <ul>
+                    <li>Modern browsers supporting ES2022+</li>
+                    <li>Webpack 5+ or Vite 4+</li>
+                    <li>CSS Grid/Flexbox compatibility</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Database</h3>
+                <ul>
+                    <li>PostgreSQL 14+ or MongoDB 6.0+</li>
+                    <li>500+ IOPS capability</li>
+                    <li>Automated backups</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Technologies Section -->
+    <section class="fade-in">
+        <h2 class="section-title">Technologies We Use</h2>
+        
+        <div class="card-container">
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fab fa-android"></i>
+                </div>
+                <h3>Android Studio</h3>
+                <p>The official IDE for Android app development, offering powerful tools for building, testing, and debugging applications across all Android devices.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3>Kotlin</h3>
+                <p>Modern programming language for Android development, offering concise syntax, null safety, and full interoperability with Java.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-mobile"></i>
+                </div>
+                <h3>Android Jetpack</h3>
+                <p>Suite of libraries to help developers follow best practices, reduce boilerplate code, and write code that works consistently across Android versions.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h3>MySQL</h3>
+                <p>The world's most popular open-source database, known for its reliability, scalability, and ease of use in web applications.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fab fa-html5"></i>
+                </div>
+                <h3>HTML5</h3>
+                <p>The latest evolution of the standard markup language, introducing new elements and APIs for modern web applications.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fab fa-css3-alt"></i>
+                </div>
+                <h3>CSS3</h3>
+                <p>Style sheet language enabling responsive designs, animations, and sophisticated layouts without JavaScript.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fab fa-js"></i>
+                </div>
+                <h3>JavaScript</h3>
+                <p>High-level programming language for creating interactive web pages and applications, with frameworks like React and Node.js.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>TensorFlow</h3>
+                <p>End-to-end open source platform for machine learning, enabling AI-powered features in web and mobile applications.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Future Plans Section -->
+    <section class="fade-in">
+        <h2 class="section-title">Future Plans</h2>
+        
+        <div class="card">
+            <h3>Strategic Expansion</h3>
+            <p>Over the next three years, we will launch our proprietary SaaS platform, offering AI-powered website generation with industry-specific templates that reduce development time by 70%. We're investing heavily in blockchain-based web solutions, developing decentralized identity verification systems for enhanced security and user control.</p>
+            <p>Our acquisition roadmap targets complementary digital agencies to expand service offerings and geographic reach. ApexDev Labs will pioneer voice-first web interfaces, capitalizing on the projected 50% voice search dominance by 2026.</p>
+        </div>
+        
+        <!-- Another Video Embed -->
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="ApexDev Future" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section id="contact" class="fade-in">
+        <h2 class="section-title">Contact Us</h2>
+        
+        <div class="contact-form">
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                <button type="submit" class="cta-button">Send Message</button>
+            </form>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>ApexDev</h3>
+                <p>Cutting-edge web solutions that drive business growth and deliver exceptional user experiences.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#solutions">Solutions</a></li>
+                    <li><a href="#market">Market</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Services</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Web Development</a></li>
+                    <li><a href="#">Mobile Apps</a></li>
+                    <li><a href="#">UI/UX Design</a></li>
+                    <li><a href="#">E-Commerce</a></li>
+                    <li><a href="#">SEO</a></li>
+                    <li><a href="#">Cloud Solutions</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contact Info</h3>
+                <ul class="footer-links">
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Tech Park, Silicon Valley, CA</li>
+                    <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                    <li><i class="fas fa-envelope"></i> info@apexdev.com</li>
+                    <li><i class="fas fa-clock"></i> Mon-Fri: 9AM - 6PM</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 ApexDev. All Rights Reserved. Designed by MrCode</p>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        // Mobile Navigation Toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.innerHTML = navLinks.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+        
+        // Scroll Animation
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const fadeInOnScroll = () => {
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight - 100) {
+                    element.classList.add('active');
+                }
+            });
+        };
+        
+        window.addEventListener('scroll', fadeInOnScroll);
+        window.addEventListener('load', fadeInOnScroll);
+        
+        // Form Submission
+        const contactForm = document.getElementById('contactForm');
+        
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            // Here you would typically send the form data to a server
+            console.log({ name, email, message });
+            
+            // Show success message
+            alert('Thank you for your message! We will get back to you soon.');
+            contactForm.reset();
+        });
+        
+        // Floating Particles
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 30;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Random size between 5px and 15px
+            const size = Math.random() * 10 + 5;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Random position
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            // Random animation duration and delay
+            particle.style.animationDuration = `${Math.random() * 20 + 10}s`;
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+        
+        // Three.js 3D Scene
+        const canvasContainer = document.getElementById('canvas-container');
+        
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000, 0);
+        canvasContainer.appendChild(renderer.domElement);
+        
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0x00f0ff, 0.8);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+        
+        const directionalLight2 = new THREE.DirectionalLight(0xff00e4, 0.8);
+        directionalLight2.position.set(-1, -1, -1);
+        scene.add(directionalLight2);
+        
+        // Geometry - Complex 3D Model
+        let model;
+        const loader = new THREE.GLTFLoader();
+        
+        // Load a 3D model (in a real scenario, you would have your own model file)
+        // For demo purposes, we'll create a geometric model instead
+        const geometry = new THREE.IcosahedronGeometry(1, 2);
+        const material = new THREE.MeshPhongMaterial({ 
+            color: 0x00f0ff,
+            emissive: 0x00f0ff,
+            emissiveIntensity: 0.2,
+            specular: 0xffffff,
+            shininess: 50,
+            wireframe: false,
+            transparent: true,
+            opacity: 0.9
+        });
+        
+        model = new THREE.Mesh(geometry, material);
+        scene.add(model);
+        
+        // Position camera
+        camera.position.z = 5;
+        
+        // Animation loop
+        const animate = () => {
+            requestAnimationFrame(animate);
+            
+            if (model) {
+                model.rotation.x += 0.005;
+                model.rotation.y += 0.01;
+            }
+            
+            renderer.render(scene, camera);
+        };
+        
+        animate();
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Second 3D Model for Market Section
+        const marketModelContainer = document.getElementById('market-model');
+        const marketScene = new THREE.Scene();
+        const marketCamera = new THREE.PerspectiveCamera(75, marketModelContainer.clientWidth / marketModelContainer.clientHeight, 0.1, 1000);
+        const marketRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        marketRenderer.setSize(marketModelContainer.clientWidth, marketModelContainer.clientHeight);
+        marketRenderer.setClearColor(0x000000, 0);
+        marketModelContainer.appendChild(marketRenderer.domElement);
+        
+        // Market model lights
+        const marketAmbientLight = new THREE.AmbientLight(0x404040);
+        marketScene.add(marketAmbientLight);
+        
+        const marketDirectionalLight = new THREE.DirectionalLight(0xff00e4, 0.8);
+        marketDirectionalLight.position.set(1, 1, 1);
+        marketScene.add(marketDirectionalLight);
+        
+        // Market model geometry
+        const marketGeometry = new THREE.TorusKnotGeometry(0.5, 0.2, 100, 16);
+        const marketMaterial = new THREE.MeshPhongMaterial({ 
+            color: 0xff00e4,
+            emissive: 0xff00e4,
+            emissiveIntensity: 0.2,
+            specular: 0xffffff,
+            shininess: 50,
+            wireframe: false,
+            transparent: true,
+            opacity: 0.9
+        });
+        
+        const marketModel = new THREE.Mesh(marketGeometry, marketMaterial);
+        marketScene.add(marketModel);
+        
+        // Position camera
+        marketCamera.position.z = 2;
+        
+        // Market model animation
+        const animateMarketModel = () => {
+            requestAnimationFrame(animateMarketModel);
+            
+            marketModel.rotation.x += 0.005;
+            marketModel.rotation.y += 0.01;
+            
+            marketRenderer.render(marketScene, marketCamera);
+        };
+        
+        animateMarketModel();
+        
+        // Handle market model container resize
+        const resizeMarketModel = () => {
+            marketCamera.aspect = marketModelContainer.clientWidth / marketModelContainer.clientHeight;
+            marketCamera.updateProjectionMatrix();
+            marketRenderer.setSize(marketModelContainer.clientWidth, marketModelContainer.clientHeight);
+        };
+        
+        window.addEventListener('resize', resizeMarketModel);
+        
+        // Initialize market model size
+        resizeMarketModel();
+        
+        // Hero Section 3D Model
+        const heroModelContainer = document.querySelector('.hero-image');
+        const heroScene = new THREE.Scene();
+        const heroCamera = new THREE.PerspectiveCamera(75, heroModelContainer.clientWidth / heroModelContainer.clientHeight, 0.1, 1000);
+        const heroRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        heroRenderer.setSize(heroModelContainer.clientWidth, heroModelContainer.clientHeight);
+        heroRenderer.setClearColor(0x000000, 0);
+        heroModelContainer.appendChild(heroRenderer.domElement);
+        
+        // Hero model lights
+        const heroAmbientLight = new THREE.AmbientLight(0x404040);
+        heroScene.add(heroAmbientLight);
+        
+        const heroDirectionalLight1 = new THREE.DirectionalLight(0x00f0ff, 0.8);
+        heroDirectionalLight1.position.set(1, 1, 1);
+        heroScene.add(heroDirectionalLight1);
+        
+        const heroDirectionalLight2 = new THREE.DirectionalLight(0xff00e4, 0.8);
+        heroDirectionalLight2.position.set(-1, -1, -1);
+        heroScene.add(heroDirectionalLight2);
+        
+        // Hero model geometry - more complex shape
+        const heroGeometry = new THREE.BufferGeometry();
+        
+        // Create a complex shape with multiple points
+        const heroPoints = [];
+        const heroSize = 0.8;
+        
+        for (let i = 0; i < 50; i++) {
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.random() * Math.PI;
+            const radius = heroSize * (0.95 + Math.random() * 0.1);
+            
+            heroPoints.push(
+                radius * Math.sin(phi) * Math.cos(theta),
+                radius * Math.sin(phi) * Math.sin(theta),
+                radius * Math.cos(phi)
+            );
+        }
+        
+        heroGeometry.setAttribute('position', new THREE.Float32BufferAttribute(heroPoints, 3));
+        
+        const heroMaterial = new THREE.PointsMaterial({
+            color: 0x00f0ff,
+            size: 0.05,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        
+        const heroModel = new THREE.Points(heroGeometry, heroMaterial);
+        heroScene.add(heroModel);
+        
+        // Position camera
+        heroCamera.position.z = 2;
+        
+        // Hero model animation
+        const animateHeroModel = () => {
+            requestAnimationFrame(animateHeroModel);
+            
+            heroModel.rotation.x += 0.001;
+            heroModel.rotation.y += 0.002;
+            
+            // Pulsing effect
+            const time = Date.now() * 0.001;
+            heroModel.scale.x = heroModel.scale.y = heroModel.scale.z = 1 + Math.sin(time * 2) * 0.1;
+            
+            heroRenderer.render(heroScene, heroCamera);
+        };
+        
+        animateHeroModel();
+        
+        // Handle hero model container resize
+        const resizeHeroModel = () => {
+            heroCamera.aspect = heroModelContainer.clientWidth / heroModelContainer.clientHeight;
+            heroCamera.updateProjectionMatrix();
+            heroRenderer.setSize(heroModelContainer.clientWidth, heroModelContainer.clientHeight);
+        };
+        
+        window.addEventListener('resize', resizeHeroModel);
+        
+        // Initialize hero model size
+        resizeHeroModel();
+    </script>
+</body>
+</html>
